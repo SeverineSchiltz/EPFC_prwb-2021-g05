@@ -47,7 +47,7 @@ class Router
                 return new $controller_class_name();
             }
         } else {
-            throw new Exception("Controller '$controller_name' does'nt exist");
+            throw new Exception("Controller '$controller_name' doesn't exist");
         }
     }
 
@@ -62,7 +62,7 @@ class Router
         if (method_exists($controller, $action_name)) {
             $controller->$action_name();
         } else {
-            throw new Exception("Action '$action_name' does'nt exist in this controller.");
+            throw new Exception("Action '$action_name' doesn't exist in this controller.");
         }
     }
 
