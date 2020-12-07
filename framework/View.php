@@ -21,7 +21,7 @@ class View
             $web_root = Configuration::get("web_root");
             require $this->file;
         } else {
-            throw new Exception("File '$this->file' does'nt exist");
+            throw new Exception("File '$this->file' doesn't exist");
         }
     }
 
