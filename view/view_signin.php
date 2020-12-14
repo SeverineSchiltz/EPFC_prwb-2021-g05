@@ -19,7 +19,7 @@
                 <div class="col-sm-6 form">
                     <h2>Sign in</h2>
                     <hr>
-                    <form action="main/login" method="post">
+                    <form action="main/signin" method="post">
                         <div class="form-group">
                             <div class="input-group mail">
                                 <div class="input-group-prepend">
@@ -27,7 +27,7 @@
                                         <i class="fa fa-user"></i>
                                     </span>
                                 </div> 
-                                <input id="pseudo" name="pseudo" type="text" value="<?= $pseudo ?>" placeholder="Mail" class="form-control">
+                                <input id="mail" name="mail" type="text" value="<?= $mail ?>" placeholder="Mail" class="form-control">
                             </div>
                             
                             <div class="input-group password">
