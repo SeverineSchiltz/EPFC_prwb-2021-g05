@@ -17,7 +17,7 @@ class ControllerMain extends Controller {
     }
 
     //gestion de la connexion d'un utilisateur
-    public function login() {
+    public function signin() {
         $pseudo = '';
         $password = '';
         $errors = [];
@@ -30,7 +30,7 @@ class ControllerMain extends Controller {
                 $this->log_user(Member::get_member_by_pseudo($pseudo));
             }
         }
-        (new View("login"))->show(array("pseudo" => $pseudo, "password" => $password, "errors" => $errors));
+        (new View("signin"))->show(array("pseudo" => $pseudo, "password" => $password, "errors" => $errors));
     }
 
     //gestion de l'inscription d'un utilisateur
