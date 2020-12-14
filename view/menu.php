@@ -2,11 +2,11 @@
     <div class="title">Trello!</div>
     <div class="spacer"></div>
     <div class="buttons">
-        <button class="signin btn">
+        <a class="signin btn" href="main/signin">
             <i class="fa fa-sign-in"></i>
-        </button>
-        <button class="signup btn">
+        </a>
+        <a class="signup btn" href="main/signup">
             <i class="fa fa-user-plus"></i>
-        </button>
+        </a>
     </div>
 </div>
