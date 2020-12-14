@@ -10,7 +10,7 @@ class ControllerMain extends Controller {
     //sinon, produit la vue d'accueil.
     public function index() {
         if ($this->user_logged()) {
-            $this->redirect("user", "board");
+            $this->redirect("user", "main_menu");
         } else {
             (new View("home"))->show();
         }

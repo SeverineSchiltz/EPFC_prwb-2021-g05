@@ -1,7 +1,17 @@
 <div class="menu">
     <div class="title">Trello!</div>
     <div class="spacer"></div>
-    <div class="buttons">
+    <?php if (isset($user) && $user->mail): ?>
+        <div class="page-title">%TITLE%</div>
+        <div class="right-menu">
+            <i class="fa fa-user"></i>
+            <span class="username"><?php echo $user->full_name ?></span>
+            <a class="signout btn" href="main/logout">
+                <i class="fa fa-sign-out"></i>
+            </a>
+        </div>
+    <?php else: ?>
+    <div class="right-menu">
         <a class="signin btn" href="main/signin">
             <i class="fa fa-sign-in"></i>
         </a>
@@ -9,4 +19,5 @@
             <i class="fa fa-user-plus"></i>
         </a>
     </div>
+    <?php endif; ?>
 </div>

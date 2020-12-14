@@ -6,10 +6,12 @@ class User extends Model {
 
     public $mail;
     public $hashed_password;
+    public $full_name;
 
-    public function __construct($mail, $hashed_password) {
+    public function __construct($mail, $hashed_password, $full_name) {
         $this->mail = $mail;
         $this->hashed_password = $hashed_password;
+        $this->full_name = $full_name;
     }
 
     public function update() {
@@ -28,7 +30,7 @@ class User extends Model {
         if ($query->rowCount() == 0) {
             return false;
         } else {
-            return new User($data["Mail"], $data["Password"]);
+            return new User($data["Mail"], $data["Password"], $data["FullName"]);
         }
     }
 
