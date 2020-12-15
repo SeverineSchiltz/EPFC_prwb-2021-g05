@@ -18,7 +18,10 @@
             $buffer=ob_get_contents();
             ob_end_clean();
 
-            $buffer=str_replace("%TITLE%","Boards",$buffer);
+            // $buffer=str_replace("%TITLE%","Boards",$buffer);
+            // $buffer=str_replace("%SUBTITLE%","",$buffer);
+            $buffer=str_replace("%TITLE%","Board \"Projet PRWB\"",$buffer);
+            $buffer=str_replace("%SUBTITLE%","Boards",$buffer);
             echo $buffer;
         ?>
         <div class="content">
