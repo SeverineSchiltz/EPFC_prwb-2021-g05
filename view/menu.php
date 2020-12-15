@@ -12,10 +12,10 @@
         </div>
     <?php else: ?>
     <div class="right-menu">
-        <a class="signin btn" href="main/signin">
+        <a class="signin btn" href="user/signin">
             <i class="fa fa-sign-in"></i>
         </a>
-        <a class="signup btn" href="main/signup">
+        <a class="signup btn" href="user/signup">
             <i class="fa fa-user-plus"></i>
         </a>
     </div>
