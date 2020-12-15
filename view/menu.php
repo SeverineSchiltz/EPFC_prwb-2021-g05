@@ -12,7 +12,7 @@
         </div>
     <?php else: ?>
     <div class="right-menu">
-        <a class="signin btn" href="user/signin">
+        <a class="signin btn" href="user/login">
             <i class="fa fa-sign-in"></i>
         </a>
         <a class="signup btn" href="user/signup">

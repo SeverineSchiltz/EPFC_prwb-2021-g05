@@ -13,7 +13,7 @@ class ControllerUser extends Controller {
     }
     
     //gestion de la connexion d'un utilisateur
-    public function signin() {
+    public function login() {
         $mail = '';
         $password = '';
         $errors = [];
