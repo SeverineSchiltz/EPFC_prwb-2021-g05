@@ -14,7 +14,7 @@
     <body>
         <?php include 'menu.php'; ?>
         <div class="content">
-            Hello guest! Please <a href="main/signin">login</a> or <a href="main/signup">signup</a>.
+            Hello guest! Please <a href="user/login">login</a> or <a href="user/signup">signup</a>.
         </div>
     </body>
 </html>

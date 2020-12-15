@@ -19,7 +19,7 @@
                 <div class="col-sm-6 form">
                     <h2>Sign in</h2>
                     <hr>
-                    <form action="user/signin" method="post">
+                    <form action="user/login" method="post">
                         <div class="form-group">
                             <div class="input-group mail">
                                 <div class="input-group-prepend">
