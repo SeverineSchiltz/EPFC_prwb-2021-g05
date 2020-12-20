@@ -38,8 +38,8 @@
                             <?= $column->title?> 
                             <i class="fa fa-edit"></i> 
                             <i class="fa fa-trash"></i> 
-                            <i class="fa fa-arrow-circle-left"></i> 
-                            <i class="fa fa-arrow-circle-right"></i>
+                            <?php if($column->position != 0) echo "<i class=\"fa fa-arrow-circle-left\"></i>" ?>
+                            <?php if($column->position != $column->get_last_position()) echo "<i class=\"fa fa-arrow-circle-right\"></i>" ?>
                         </div>                        
                         <?php foreach($column->get_cards() as $card): ?>
                             <div class="card">
@@ -50,10 +50,10 @@
                                     <i class="fa fa-eye"></i> 
                                     <i class="fa fa-edit"></i> 
                                     <i class="fa fa-trash"></i> 
-                                    <i class="fa fa-arrow-circle-up"></i> 
-                                    <i class="fa fa-arrow-circle-down"></i>
-                                    <i class="fa fa-arrow-circle-left"></i> 
-                                    <i class="fa fa-arrow-circle-right"></i>
+                                    <?php if($card->position != 0) echo "<i class=\"fa fa-arrow-circle-up\"></i>" ?>
+                                    <?php if($card->position != $card->get_last_position()) echo "<i class=\"fa fa-arrow-circle-down\"></i>" ?>                                   
+                                    <?php if($column->position != 0) echo "<i class=\"fa fa-arrow-circle-left\"></i>" ?>
+                                    <?php if($column->position != $column->get_last_position()) echo "<i class=\"fa fa-arrow-circle-right\"></i>" ?>
                                 </div>
                             </div>
                         <?php endforeach; ?>     

@@ -51,4 +51,10 @@ class Column extends Model {
         }
         return $cards;
     }
+
+    public function get_last_position() {
+        $query = self::execute("select Position from `column` where Board = :id order by Position DESC limit 1", array("id" => $this->board->board_id)); 
+        $row = $query->fetch();
+        return $row['Position'];
+    }
 }
