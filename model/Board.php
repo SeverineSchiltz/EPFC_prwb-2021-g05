@@ -119,4 +119,25 @@ class Board extends Model {
     public function get_title() {
         return "Board \"".$this->title."\"";
     }
-}
+
+    public function get_duration_since_creation() {
+        return $this->get_duration_since_date($this->created_at);
+    }
+
+    public function get_duration_since_last_edit() {        
+        return $this->get_duration_since_date($this->$last_modified);
+    }
+
+    public function get_duration_since_date($date) {
+        $date = new DateTime($date);
+        $now = new DateTime("now");
+        $interval = $date->diff($now);
+
+        if($interval->y>0)
+            return $interval->y.($interval->y>1?" years":" year");
+        else if($interval->m>0)
+            return $interval->m.($interval->m>1?" months":" month");
+        else
+            return $interval->d.($interval->d>1?" days":" day");
+    }
+ }

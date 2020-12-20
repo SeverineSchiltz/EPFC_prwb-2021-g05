@@ -29,7 +29,7 @@
                     <i class="fa fa-edit"></i> 
                     <i class="fa fa-trash"></i>
                 </h2>
-                Created 1 month ago by <a href="board/index">Boris Verhaegen</a>. Never modified.
+                Created <?= $board->get_duration_since_creation() ?> ago by <a href="board/index"><?= $user->full_name ?></a>. <?= $board->last_modified?$board->get_duration_since_last_edit:"Never modified." ?>
             </div>
             <div class="columns">
                 <?php foreach($columns as $column): ?>
