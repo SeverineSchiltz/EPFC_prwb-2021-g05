@@ -1,0 +1,58 @@
+.content {
+  padding: 1.25em 1.5em;
+  margin-top: 60px;
+  flex-grow: 1;
+}
+
+a {
+  text-decoration: none;
+}
+
+.columns {
+  display: flex;
+  margin: 1em 1em 0 0;
+  align-items: flex-start;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  background: #ebecf0;
+  margin-right: 0.5em;
+  min-width: 25em;
+  font-weight: bold;
+  border-radius: 0.2em;
+  padding: 0.5em;
+}
+
+.column-title {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 1em;
+}
+
+.column-title > i {
+  position: relative;
+  top: 5px;
+  margin-left: 5px;
+}
+
+.card {
+  margin: 0.25em 0;
+  padding: 0.5em;
+  height: auto;
+}
+
+.add-card {  
+  margin: 0.25em 0;
+}
+
+.add-card .input-group-text {
+  background-color: #157ffb;
+  color: white;
+}
+
+.add-column .input-group-text {
+  background-color: #157ffb;
+  color: white;
+}

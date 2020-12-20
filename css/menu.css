@@ -1,10 +1,13 @@
 .menu {
+  position: fixed;
+  top: 0;
   padding: 0.75em 0.75em 0.25em;
   display: flex;
   background: #157ffb;
   color: white;
   font-size: larger;
   font-weight: 600;
+  width: 100%;
 }
 
 .spacer {
@@ -34,6 +37,10 @@
   font-size: large;
 }
 
+.right-menu > a {
+  font-size: large;
+  color: white;
+}
 
 .username {
   margin: 0 0 0 0.25em;

@@ -4,9 +4,11 @@
     <?php if (isset($user) && $user->mail): ?>
         <div class="page-title">%TITLE%</div>
         <div class="right-menu">
-            <div class="page-subtitle">%SUBTITLE%</div>            
-            <i class="fa fa-user"></i>
-            <span class="username"><?php echo $user->full_name ?></span>
+            <div class="page-subtitle">%SUBTITLE%</div>
+            <a href="board/index">
+                <i class="fa fa-user"></i>
+                <span class="username"><?php echo $user->full_name ?></span>
+            </a>            
             <a class="signout btn" href="main/logout">
                 <i class="fa fa-sign-out"></i>
             </a>
