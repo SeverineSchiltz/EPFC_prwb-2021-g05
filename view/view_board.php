@@ -57,9 +57,9 @@
                                 </div>
                             </div>
                         <?php endforeach; ?>     
-                        <form action="card/add" id="add-card" class="input-group add-card">
-                            <input id="add-card" name="add-card" type="add-card" value="<?= $title ?>" placeholder="Add a card" class="form-control">
-                            <button class="input-group-text" type="submit" form="add-card">    
+                        <form action=<?php echo "card/add/".$column->position ?> id=<?php echo "add-card".$column->position ?> class="input-group add-card">
+                            <input id="add-card" name="title" type="add-card" placeholder="Add a card" class="form-control">
+                            <button class="input-group-text" type="submit" form=<?php echo "add-card".$column->position ?>>    
                                 <i class="fa fa-plus"></i>
                             </button>
                         </form>  
@@ -67,7 +67,7 @@
                 <?php endforeach; ?> 
                 <div class="column">
                     <form action="column/add" id="add-column" class="input-group add-column">
-                        <input id="add-column" name="add-column" type="add-column" value="<?= $title ?>" placeholder="Add a column" class="form-control">
+                        <input id="add-column" name="title" type="add-column" placeholder="Add a column" class="form-control">
                         <button class="input-group-text" type="submit" form="add-column">    
                             <i class="fa fa-plus"></i>
                         </button>
