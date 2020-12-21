@@ -10,7 +10,6 @@ class Board extends Model {
     public $title;
     public $created_at;
     public $last_modified;
-    public $columns;
 
     public function __construct($board_id, $author, $title, $created_at, $last_modified = NULL) {
         $this->board_id = $board_id;
@@ -88,7 +87,7 @@ class Board extends Model {
                 $this->created_at = $board->created_at;
                 return $this;
             } else {
-                return $errors; //un tableau d'erreur
+                return $errors; //un tableau d'erreurs
             }
         } else {
             $errors = $this->validate();
@@ -97,13 +96,17 @@ class Board extends Model {
                     'board_id' => $this->board_id,
                     'title' => $this->title
                 ));
-                $board = self::get_board($board_id);
+                $board = self::get_board($this->board_id);
                 $this->last_modified = $board->lasted_modified;
                 return $this;
             } else {
-                return $errors; //un tableau d'erreur
+                return $errors; //un tableau d'erreurs
             }
         }
+    }
+
+    public function get_columns() {
+        return Column::get_columns($this);
     }
 
     public function get_nb_columns() {
@@ -116,7 +119,38 @@ class Board extends Model {
         }
     }
 
+    public function get_next_column_position() {
+        return $this->get_nb_columns();
+    }
+
     public function get_title() {
         return "Board \"".$this->title."\"";
     }
-}
+
+    public function get_duration_since_creation() {
+        return $this->get_duration_since_date($this->created_at);
+    }
+
+    public function get_duration_since_last_edit() {        
+        return $this->get_duration_since_date($this->last_modified);
+    }
+
+    public function get_duration_since_date($date) {
+        $date = new DateTime($date);
+        $now = new DateTime("now");
+        $interval = $date->diff($now);
+
+        if($interval->y>0)
+            return $interval->y.($interval->y>1?" years":" year");
+        else if($interval->m>0)
+            return $interval->m.($interval->m>1?" months":" month");
+        else if($interval->d>0)
+            return $interval->d.($interval->d>1?" days":" day");
+        else if($interval->h>0)
+            return $interval->h.($interval->h>1?" hours":" hour");
+        else if($interval->i>0)
+            return $interval->i.($interval->i>1?" minutes":" minute");
+        else
+            return " less than a minute";
+    }
+ }

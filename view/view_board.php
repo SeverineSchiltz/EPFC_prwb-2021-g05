@@ -29,17 +29,17 @@
                     <i class="fa fa-edit"></i> 
                     <i class="fa fa-trash"></i>
                 </h2>
-                Created 1 month ago by <a href="board/index">Boris Verhaegen</a>. Never modified.
+                Created <?= $board->get_duration_since_creation() ?> ago by <a href="board/index"><?= $user->full_name ?></a>. <?= $board->last_modified?$board->get_duration_since_last_edit:"Never modified." ?>
             </div>
             <div class="columns">
-                <?php foreach($columns as $column): ?>
+                <?php foreach($board->get_columns() as $column): ?>
                     <div class="column">
                         <div class="column-title">
                             <?= $column->title?> 
                             <i class="fa fa-edit"></i> 
                             <i class="fa fa-trash"></i> 
-                            <i class="fa fa-arrow-circle-left"></i> 
-                            <i class="fa fa-arrow-circle-right"></i>
+                            <?php if($column->position != 0) echo "<i class=\"fa fa-arrow-circle-left\"></i>" ?>
+                            <?php if($column->position != $column->get_last_position()) echo "<i class=\"fa fa-arrow-circle-right\"></i>" ?>
                         </div>                        
                         <?php foreach($column->get_cards() as $card): ?>
                             <div class="card">
@@ -50,30 +50,40 @@
                                     <i class="fa fa-eye"></i> 
                                     <i class="fa fa-edit"></i> 
                                     <i class="fa fa-trash"></i> 
-                                    <i class="fa fa-arrow-circle-up"></i> 
-                                    <i class="fa fa-arrow-circle-down"></i>
-                                    <i class="fa fa-arrow-circle-left"></i> 
-                                    <i class="fa fa-arrow-circle-right"></i>
+                                    <?php if($card->position != 0) echo "<i class=\"fa fa-arrow-circle-up\"></i>" ?>
+                                    <?php if($card->position != $card->get_last_position()) echo "<i class=\"fa fa-arrow-circle-down\"></i>" ?>                                   
+                                    <?php if($column->position != 0) echo "<i class=\"fa fa-arrow-circle-left\"></i>" ?>
+                                    <?php if($column->position != $column->get_last_position()) echo "<i class=\"fa fa-arrow-circle-right\"></i>" ?>
                                 </div>
                             </div>
                         <?php endforeach; ?>     
-                        <form action="card/add" id="add-card" class="input-group add-card">
-                            <input id="add-card" name="add-card" type="add-card" value="<?= $title ?>" placeholder="Add a card" class="form-control">
-                            <button class="input-group-text" type="submit" form="add-card">    
+                        <form action=<?php echo "card/index/".$column->column_id ?> id=<?php echo "add-card".$column->column_id ?> class="input-group add-card">
+                            <input name="title" type="text" placeholder="Add a card" class="form-control">
+                            <button class="input-group-text" type="submit" form=<?php echo "add-card".$column->column_id ?>>    
                                 <i class="fa fa-plus"></i>
                             </button>
                         </form>  
                     </div>
                 <?php endforeach; ?> 
                 <div class="column">
-                    <form action="column/add" id="add-column" class="input-group add-column">
-                        <input id="add-column" name="add-column" type="add-column" value="<?= $title ?>" placeholder="Add a column" class="form-control">
+                    <form action=<?php echo "column/index/".$board->board_id ?> id="add-column" class="input-group add-column" method="post">
+                        <input name="title" type="text" placeholder="Add a column" class="form-control">
                         <button class="input-group-text" type="submit" form="add-column">    
                             <i class="fa fa-plus"></i>
                         </button>
                     </form>  
                 </div>
             </div>
+            <?php if (count($errors) != 0): ?>
+                <div class='errors'>
+                    <p>Please correct the following error(s) :</p>
+                    <ul>
+                        <?php foreach ($errors as $error): ?>
+                            <li><?= $error ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            <?php endif; ?>
         </div>
     </body>
 </html>
