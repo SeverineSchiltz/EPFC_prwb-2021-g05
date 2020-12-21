@@ -88,16 +88,26 @@ class Column extends Model {
                     'title' => $this->title
                 ));
                 $column = self::get_column(self::lastInsertId());
-                $this->column_id = $column->post_id;
+                $this->column_id = $column->column_id;
                 $this->created_at = $column->created_at;
                 return $this;
             } else {
                 return $errors; //un tableau d'erreurs
             }
         } else {
-            //"UPDATE" SQL.
-            //TO DO
-            throw new Exception("Not Implemented.");
+            $errors = $this->validate();
+            if(empty($errors)){
+                self::execute('UPDATE `column` SET Position = :position, Title = :title, ModifiedAt = current_timestamp() WHERE ID = :id', array(
+                    'id' => $this->column_id,
+                    'position' => $this->position,
+                    'title' => $this->title
+                ));
+                $column = self::get_column($this->column_id);
+                $this->last_modified = $column->last_modified;
+                return $this;
+            } else {
+                return $errors; //un tableau d'erreurs
+            }
         }
     }
 }

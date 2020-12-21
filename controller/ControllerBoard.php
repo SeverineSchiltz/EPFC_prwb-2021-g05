@@ -26,7 +26,8 @@ class ControllerBoard extends Controller {
         $user = $this->get_user_or_redirect();
         if (isset($_GET["param1"]) && $_GET["param1"] !== "") {
             $board = board::get_board($_GET["param1"]);
-        }
-        (new View("board"))->show(array("board" => $board, "user" => $user, "errors" => $errors));
+            (new View("board"))->show(array("board" => $board, "user" => $user, "errors" => $errors));
+        } 
+        else $this->index();
     }
 }

@@ -23,11 +23,9 @@ class ControllerColumn extends Controller {
                 $errors[] = "Title isn't set";
             }
     
-            $board = Board::get_board($_GET["param1"]);
-            (new View("board"))->show(array("board" => $board, "user" => $user, "columns" => Column::get_columns($board), "errors" => $errors));
+            $this->redirect("board", "board", $_GET["param1"]);
         } else {
-            $success = "";
-            (new View("main_menu"))->show(array("user" => $user, "errors" => $errors, "success" => $success, "personal_boards" => Board::get_boards($user), "other_boards" => Board::get_other_boards($user)));
+            $this->redirect("board", "index");
         }
     }
 
