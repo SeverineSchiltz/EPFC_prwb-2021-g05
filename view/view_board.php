@@ -57,17 +57,17 @@
                                 </div>
                             </div>
                         <?php endforeach; ?>     
-                        <form action="card/add" id="add-card" class="input-group add-card">
-                            <input id="add-card" name="add-card" type="add-card" value="<?= $title ?>" placeholder="Add a card" class="form-control">
-                            <button class="input-group-text" type="submit" form="add-card">    
+                        <form action=<?php echo "card/add/".$column->column_id ?> id=<?php echo "add-card".$column->column_id ?> class="input-group add-card">
+                            <input name="title" type="text" placeholder="Add a card" class="form-control">
+                            <button class="input-group-text" type="submit" form=<?php echo "add-card".$column->column_id ?>>    
                                 <i class="fa fa-plus"></i>
                             </button>
                         </form>  
                     </div>
                 <?php endforeach; ?> 
                 <div class="column">
-                    <form action="column/add" id="add-column" class="input-group add-column">
-                        <input id="add-column" name="add-column" type="add-column" value="<?= $title ?>" placeholder="Add a column" class="form-control">
+                    <form action=<?php echo "column/add/".$board->board_id ?> id="add-column" class="input-group add-column">
+                        <input name="title" type="text" placeholder="Add a column" class="form-control">
                         <button class="input-group-text" type="submit" form="add-column">    
                             <i class="fa fa-plus"></i>
                         </button>

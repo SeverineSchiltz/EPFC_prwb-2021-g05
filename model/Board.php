@@ -97,7 +97,7 @@ class Board extends Model {
                     'board_id' => $this->board_id,
                     'title' => $this->title
                 ));
-                $board = self::get_board($board_id);
+                $board = self::get_board($this->board_id);
                 $this->last_modified = $board->lasted_modified;
                 return $this;
             } else {
@@ -125,7 +125,7 @@ class Board extends Model {
     }
 
     public function get_duration_since_last_edit() {        
-        return $this->get_duration_since_date($this->$last_modified);
+        return $this->get_duration_since_date($this->last_modified);
     }
 
     public function get_duration_since_date($date) {
