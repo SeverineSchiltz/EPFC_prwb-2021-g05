@@ -39,7 +39,7 @@ class User extends Model {
         $data = $query->fetchAll();
         $results = [];
         foreach ($data as $row) {
-            $results[] = new User($row["Mail"], $row["Password"]);
+            $results[] = new User($row["Mail"], $row["Password"], $row['FullName']);
         }
         return $results;
     }
@@ -106,5 +106,9 @@ class User extends Model {
             $errors[] = "Can't find a user with the mail '$mail'. Please sign up.";
         }
         return $errors;
+    }
+
+    public function add_column($column) {
+        return $column->update();
     }
 }

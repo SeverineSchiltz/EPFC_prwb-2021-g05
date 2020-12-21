@@ -10,7 +10,6 @@ class Board extends Model {
     public $title;
     public $created_at;
     public $last_modified;
-    public $columns;
 
     public function __construct($board_id, $author, $title, $created_at, $last_modified = NULL) {
         $this->board_id = $board_id;
@@ -88,7 +87,7 @@ class Board extends Model {
                 $this->created_at = $board->created_at;
                 return $this;
             } else {
-                return $errors; //un tableau d'erreur
+                return $errors; //un tableau d'erreurs
             }
         } else {
             $errors = $this->validate();
@@ -101,9 +100,13 @@ class Board extends Model {
                 $this->last_modified = $board->lasted_modified;
                 return $this;
             } else {
-                return $errors; //un tableau d'erreur
+                return $errors; //un tableau d'erreurs
             }
         }
+    }
+
+    public function get_columns() {
+        return Column::get_columns($this);
     }
 
     public function get_nb_columns() {
@@ -114,6 +117,10 @@ class Board extends Model {
             $row = $query->fetch();
             return $row['nb_columns'];
         }
+    }
+
+    public function get_next_column_position() {
+        return $this->get_nb_columns();
     }
 
     public function get_title() {
@@ -137,7 +144,13 @@ class Board extends Model {
             return $interval->y.($interval->y>1?" years":" year");
         else if($interval->m>0)
             return $interval->m.($interval->m>1?" months":" month");
-        else
+        else if($interval->d>0)
             return $interval->d.($interval->d>1?" days":" day");
+        else if($interval->h>0)
+            return $interval->h.($interval->h>1?" hours":" hour");
+        else if($interval->i>0)
+            return $interval->i.($interval->i>1?" minutes":" minute");
+        else
+            return " less than a minute";
     }
  }
