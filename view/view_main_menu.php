@@ -32,8 +32,12 @@
              <?php endforeach; ?> 
                 
             <!-- add board form -->
-                
+            <!--    
             <form id="board_form" action="boards.php?param1=<?= $recipient->mail ?>" method="post">
+                <input id="private" name="private" type="text" placeholder="Add a board"><input id="post" type="submit" value="Post">
+            </form>
+            -->
+            <form id="board_form" action="board" method="post">
                 <input id="private" name="private" type="text" placeholder="Add a board"><input id="post" type="submit" value="Post">
             </form>
             

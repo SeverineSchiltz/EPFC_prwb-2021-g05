@@ -11,4 +11,5 @@ class ControllerMain extends Controller {
     public function index() {
         $this->redirect("board", "index");
     }
+
 }
