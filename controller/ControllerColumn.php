@@ -3,7 +3,6 @@
 require_once 'model/User.php';
 require_once 'model/Board.php';
 require_once 'model/Column.php';
-require_once 'controller/ControllerBoard.php';
 require_once 'framework/View.php';
 require_once 'framework/Controller.php';
 
@@ -21,9 +20,23 @@ class ControllerColumn extends Controller {
                 $errors = $this->add($user, $board, $position);
             } else {
                 $errors[] = "Title isn't set";
-            }
-    
+            }    
+            // (new View("board"))->show(array("board" => $board, "user" => $user, "errors" => $errors));
+            $_SESSION['errors'] = $errors;
             $this->redirect("board", "board", $_GET["param1"]);
+        } else {
+            $this->redirect("board", "index");
+        }
+    }
+
+    //bouger la colonne
+    public function move() {
+        $errors = [];
+        $user = $this->get_user_or_redirect();
+        if ((isset($_GET["param1"]) && $_GET["param1"] !== "") && (isset($_GET["param2"]) && $_GET["param2"] !== "")) {
+            $board = Board::get_board($_GET["param2"]);
+    
+            $this->redirect("board", "board", $_GET["param2"]);
         } else {
             $this->redirect("board", "index");
         }
