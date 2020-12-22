@@ -27,7 +27,7 @@
                 <h2>
                     <?= $board->get_menu_title() ?> 
                     <i class="fa fa-edit"></i> 
-                    <i class="fa fa-trash"></i>
+                    <a href=<?= "board/delete/".$board->board_id ?> class="invisible-link"><i class="fa fa-trash"></i></a>
                 </h2>
                 Created <?= $board->get_duration_since_creation() ?> ago by <a href="board/index"><?= $user->full_name ?></a>. <?= $board->last_modified?"Modified ".$board->get_duration_since_last_edit()." ago.":"Never modified." ?>
             </div>
@@ -94,7 +94,7 @@
             </div>
             <?php if (count($errors) != 0): ?>
                 <div class='errors'>
-                    <p>Please correct the following error(s) :</p>
+                    <p>The following error(s) occured :</p>
                     <ul>
                         <?php foreach ($errors as $error): ?>
                             <li><?= $error ?></li>

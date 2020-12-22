@@ -63,13 +63,19 @@ class Board extends Model {
             return new Board($row['ID'], User::get_user_by_mail($row['Mail']), $row['Title'], $row['CreatedAt'], $row['ModifiedAt']);
         }
     }
+
+    public function has_columns() {
+        return $this->get_nb_columns()!=0;
+    }
    
-    //supprimer le board si l'initiateur en a le droit
-    //renvoie le board si ok. false sinon.
+    //supprimer le tableau
+    
     public function delete($initiator) {
         if ($this->author == $initiator) {
-            self::execute('DELETE FROM board WHERE board_id = :id', array('id' => $this->board_id));
-            return $this;
+            foreach($this->get_columns() as $column)
+                $column->delete();
+            self::execute('DELETE FROM board WHERE ID = :id', array('id' => $this->board_id));
+            return true;
         }
         return false;
     }
