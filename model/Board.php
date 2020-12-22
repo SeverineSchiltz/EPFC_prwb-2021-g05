@@ -137,8 +137,15 @@ class Board extends Model {
         return $this->get_duration_since_date($this->created_at);
     }
 
+    public function get_last_modification() {
+        $last_modified = $this->last_modified;
+        foreach($this->get_columns() as $column) 
+            $last_modified = $last_modified > $column->get_last_modification() ? $last_modified : $column->get_last_modification();
+        return $last_modified;
+    }
+
     public function get_duration_since_last_edit() {        
-        return $this->get_duration_since_date($this->last_modified);
+        return $this->get_duration_since_date($this->get_last_modification());
     }
 
     public function get_duration_since_date($date) {

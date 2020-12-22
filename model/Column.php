@@ -84,6 +84,13 @@ class Column extends Model {
         return $row['Position'];
     }
 
+    public function get_last_modification() {
+        $last_modified = $this->last_modified;
+        foreach($this->get_cards() as $card) 
+            $last_modified = $last_modified > $card->get_last_modification() ? $last_modified : $card->get_last_modification();
+        return $last_modified;
+    }
+
     //renvoie un tableau d'erreur(s) 
     //le tableau est vide s'il n'y a pas d'erreur.
     public function validate(){

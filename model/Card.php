@@ -47,4 +47,8 @@ class Card extends Model {
         }
         return $cards;
     }
+
+    public function get_last_modification() {
+        return $this->last_modified;
+    }
 }

@@ -29,7 +29,7 @@
                     <i class="fa fa-edit"></i> 
                     <a href=<?= "board/delete/".$board->board_id ?> class="invisible-link"><i class="fa fa-trash"></i></a>
                 </h2>
-                Created <?= $board->get_duration_since_creation() ?> ago by <a href="board/index"><?= $board->author->full_name ?></a>. <?= $board->last_modified?"Modified ".$board->get_duration_since_last_edit()." ago.":"Never modified." ?>
+                Created <?= $board->get_duration_since_creation() ?> ago by <a href="board/index"><?= $board->author->full_name ?></a>. <?= $board->get_last_modification()?"Modified ".$board->get_duration_since_last_edit()." ago.":"Never modified." ?>
             </div>
             <div class="columns">
                 <?php foreach($board->get_columns() as $column): ?>
