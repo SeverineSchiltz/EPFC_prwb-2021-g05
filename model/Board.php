@@ -63,13 +63,19 @@ class Board extends Model {
             return new Board($row['ID'], User::get_user_by_mail($row['Mail']), $row['Title'], $row['CreatedAt'], $row['ModifiedAt']);
         }
     }
+
+    public function has_columns() {
+        return $this->get_nb_columns()!=0;
+    }
    
-    //supprimer le board si l'initiateur en a le droit
-    //renvoie le board si ok. false sinon.
+    //supprimer le tableau
+    
     public function delete($initiator) {
         if ($this->author == $initiator) {
-            self::execute('DELETE FROM board WHERE board_id = :id', array('id' => $this->board_id));
-            return $this;
+            foreach($this->get_columns() as $column)
+                $column->delete();
+            self::execute('DELETE FROM board WHERE ID = :id', array('id' => $this->board_id));
+            return true;
         }
         return false;
     }
@@ -123,7 +129,7 @@ class Board extends Model {
         return $this->get_nb_columns();
     }
 
-    public function get_title() {
+    public function get_menu_title() {
         return "Board \"".$this->title."\"";
     }
 
@@ -131,8 +137,15 @@ class Board extends Model {
         return $this->get_duration_since_date($this->created_at);
     }
 
+    public function get_last_modification() {
+        $last_modified = $this->last_modified;
+        foreach($this->get_columns() as $column) 
+            $last_modified = $last_modified > $column->get_last_modification() ? $last_modified : $column->get_last_modification();
+        return $last_modified;
+    }
+
     public function get_duration_since_last_edit() {        
-        return $this->get_duration_since_date($this->last_modified);
+        return $this->get_duration_since_date($this->get_last_modification());
     }
 
     public function get_duration_since_date($date) {

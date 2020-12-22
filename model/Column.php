@@ -42,24 +42,53 @@ class Column extends Model {
         }
     }
 
-    //supprimer la colonne si l'initiateur en a le droit
-    //renvoie la colonne si ok. false sinon.
-    public function delete($initiator) {
-        if ($this->author == $initiator) {
-            self::execute('DELETE FROM `column` WHERE column_id = :id', array('id' => $this->column_id));
-            return $this;
+    public static function get_column_board_position($board, $position) {
+        $query = self::execute("select * from `column` where Board = :board and Position = :position", array("board" => $board->board_id, "position" => $position));
+        if ($query->rowCount() == 0) {
+            return false;
+        } else {
+            $row = $query->fetch();
+            return new Column(Board::get_board($row['Board']), $row['Position'], $row['Title'], $row['CreatedAt'], $row['ID'], $row['ModifiedAt']);
         }
-        return false;
+    }
+
+    //supprimer la colonne
+    public function delete() {
+        foreach($this->get_cards() as $card)
+            $card->delete();
+        self::execute('DELETE FROM `column` WHERE ID = :id', array('id' => $this->column_id));
+        return $this;
     }
 
     public function get_cards() {
         return Card::get_cards($this);
     }
 
+    public function get_nb_cards() {
+        $query = self::execute("select count(*) as nb_cards from card where `Column` = :id", array("id" => $this->column_id));
+        if ($query->rowCount() == 0) {
+            return 0;
+        } else {
+            $row = $query->fetch();
+            return $row['nb_cards'];
+        }
+    }
+
+    public function has_cards() {
+        return $this->get_nb_cards()!=0;
+    }
+
     public function get_last_position() {
         $query = self::execute("select Position from `column` where Board = :id order by Position DESC limit 1", array("id" => $this->board->board_id)); 
         $row = $query->fetch();
         return $row['Position'];
+    }
+
+    public function get_last_modification() {
+        $last_modified = $this->last_modified;
+        foreach($this->get_cards() as $card) 
+            $last_modified = $last_modified > $card->get_last_modification() ? $last_modified : $card->get_last_modification();
+        return $last_modified;
     }
 
     //renvoie un tableau d'erreur(s) 
@@ -76,6 +105,34 @@ class Column extends Model {
             $errors[] = "Position must be numeric";
         }
         return $errors;
+    }
+
+    public function move_right() {
+        $errors = array();
+        $right_column = $this->get_column_board_position($this->board, $this->position+1); //the column to the right, the one we are swapping with
+        if($right_column) {
+            $right_column->position--;
+            $this->position++;
+            $right_column->update();
+            $this->update();
+        } else {
+            $errors[] = "Couldn't find a column to the right";
+            return $errors;
+        }
+    }
+
+    public function move_left() {
+        $errors = array();
+        $left_column = $this->get_column_board_position($this->board, $this->position-1); //the column to the left, the one we are swapping with
+        if($left_column) {
+            $left_column->position++;
+            $this->position--;
+            $left_column->update();
+            $this->update();
+        } else {
+            $errors[] = "Couldn't find a column to the left";
+            return $errors;
+        }
     }
 
     public function update() {
@@ -109,5 +166,36 @@ class Column extends Model {
                 return $errors; //un tableau d'erreurs
             }
         }
+    }
+
+    public function get_menu_title() {
+        return "Column \"".$this->title."\"";
+    }
+
+    public function get_duration_since_creation() {
+        return $this->get_duration_since_date($this->created_at);
+    }
+
+    public function get_duration_since_last_edit() {        
+        return $this->get_duration_since_date($this->last_modified);
+    }
+
+    public function get_duration_since_date($date) {
+        $date = new DateTime($date);
+        $now = new DateTime("now");
+        $interval = $date->diff($now);
+
+        if($interval->y>0)
+            return $interval->y.($interval->y>1?" years":" year");
+        else if($interval->m>0)
+            return $interval->m.($interval->m>1?" months":" month");
+        else if($interval->d>0)
+            return $interval->d.($interval->d>1?" days":" day");
+        else if($interval->h>0)
+            return $interval->h.($interval->h>1?" hours":" hour");
+        else if($interval->i>0)
+            return $interval->i.($interval->i>1?" minutes":" minute");
+        else
+            return " less than a minute";
     }
 }

@@ -20,14 +20,77 @@ class ControllerBoard extends Controller {
         }
     }
 
-    //affichage du board donné
+    //affichage du tableau donné
     public function board() {
         $errors = [];
         $user = $this->get_user_or_redirect();
         if (isset($_GET["param1"]) && $_GET["param1"] !== "") {
             $board = board::get_board($_GET["param1"]);
+            if(isset($_SESSION['errors'])) 
+                $errors = $_SESSION['errors'];
             (new View("board"))->show(array("board" => $board, "user" => $user, "errors" => $errors));
+            unset($_SESSION['errors']);
         } 
         else $this->index();
+    }
+
+    public function delete() {
+        $errors = [];
+        $user = $this->get_user_or_redirect();
+        if (isset($_GET["param1"]) && $_GET["param1"] !== "") {
+
+            $board = Board::get_board($_GET["param1"]);
+
+            if($user != $board->author) {
+                $errors[] = "You cannot delete someone else's board";
+                $_SESSION['errors'] = $errors;
+                $this->redirect("board", "board", $board->board_id);
+            } else if($board->has_columns()) {
+                if(!(isset($_POST['confirmation']) && $_POST['confirmation'])) {
+                    $this->redirect("board", "delete_confirm", $board->board_id);
+                }
+                else {
+                    $board = $this->delete_board();
+    
+                    if ($board) {
+                        $this->redirect("board", "index");
+                    } else {
+                        throw new Exception("Wrong/missing ID or action not permitted");
+                    }
+                } 
+            } else {   
+                $_POST['board_id'] = $board->board_id;
+                $board = $this->delete_board();
+    
+                if ($board) {
+                    $this->redirect("board", "index");
+                } else {
+                    throw new Exception("Wrong/missing ID or action not permitted");
+                }
+            }
+        } else {    
+            $this->redirect("board", "index");
+        }
+    }
+
+    //suppression du tableau donné
+    public function delete_confirm() {
+        $user = $this->get_user_or_redirect();
+        $board = Board::get_board($_GET["param1"]);
+
+        (new View("board_delete"))->show(array("user" => $user, "board" => $board));
+    }
+
+    private function delete_board() {
+        $user = $this->get_user_or_redirect();
+
+        if (isset($_POST['board_id']) && $_POST['board_id'] != "") {
+            $board_id = $_POST['board_id'];
+            $board = Board::get_board($board_id);
+            if ($board) {
+                return $board->delete($user);
+            } 
+        }
+        return false;
     }
 }
