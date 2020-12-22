@@ -45,13 +45,25 @@ class ControllerBoard extends Controller {
                 $errors[] = "You cannot delete someone else's board";
                 $_SESSION['errors'] = $errors;
                 $this->redirect("board", "board", $board->board_id);
-            } else if($board->has_columns() && !(isset($_POST['confirmation']) && $_POST['confirmation'])) {
+            } else if($board->has_columns()) {
+                if(!(isset($_POST['confirmation']) && $_POST['confirmation'])) {
                     $this->redirect("board", "delete_confirm", $board->board_id);
-            } else {
+                }
+                else {
+                    $board = $this->delete_board();
+    
+                    if ($board) {
+                        $this->redirect("board", "index");
+                    } else {
+                        throw new Exception("Wrong/missing ID or action not permitted");
+                    }
+                } 
+            } else {   
+                $_POST['board_id'] = $board->board_id;
                 $board = $this->delete_board();
-
+    
                 if ($board) {
-                    $board = $this->redirect("board", "index");
+                    $this->redirect("board", "index");
                 } else {
                     throw new Exception("Wrong/missing ID or action not permitted");
                 }
@@ -81,6 +93,4 @@ class ControllerBoard extends Controller {
         }
         return false;
     }
-
-
 }
