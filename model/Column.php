@@ -52,18 +52,30 @@ class Column extends Model {
         }
     }
 
-    //supprimer la colonne si l'initiateur en a le droit
-    //renvoie la colonne si ok. false sinon.
-    public function delete($initiator) {
-        if ($this->author == $initiator) {
-            self::execute('DELETE FROM `column` WHERE column_id = :id', array('id' => $this->column_id));
-            return $this;
-        }
-        return false;
+    //supprimer la colonne
+    public function delete() {
+        foreach($this->get_cards() as $card)
+            $card->delete();
+        self::execute('DELETE FROM `column` WHERE ID = :id', array('id' => $this->column_id));
+        return $this;
     }
 
     public function get_cards() {
         return Card::get_cards($this);
+    }
+
+    public function get_nb_cards() {
+        $query = self::execute("select count(*) as nb_cards from card where `Column` = :id", array("id" => $this->column_id));
+        if ($query->rowCount() == 0) {
+            return 0;
+        } else {
+            $row = $query->fetch();
+            return $row['nb_cards'];
+        }
+    }
+
+    public function has_cards() {
+        return $this->get_nb_cards()!=0;
     }
 
     public function get_last_position() {

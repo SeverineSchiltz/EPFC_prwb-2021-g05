@@ -37,7 +37,7 @@
                         <div class="column-title">
                             <?= $column->title?> 
                             <a href=<?= "column/edit/".$column->column_id ?> class="invisible-link"><i class="fa fa-edit"></i></a> 
-                            <i class="fa fa-trash"></i> 
+                            <a href=<?= "column/delete_confirm/".$column->column_id ?> class="invisible-link"><i class="fa fa-trash"></i></a>
                             <?php if($column->position != 0): ?>
                                 <form  action="column/move" method="post" id=<?= "move-left".$column->column_id ?>>
                                     <input type="hidden" name="direction" value="left">

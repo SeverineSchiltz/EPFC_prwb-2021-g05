@@ -51,6 +51,30 @@ class ControllerColumn extends Controller {
         }
     }
 
+    
+
+    //suppression de la colonne donnée
+    public function delete_confirm() {
+        $user = $this->get_user_or_redirect();
+        if (isset($_GET["param1"]) && $_GET["param1"] !== "") {
+
+            $column = Column::get_column($_GET["param1"]);
+
+            //on vérifie si la colonne a des cartes associées
+            //si oui, demande de confirmation
+            if($column->has_cards()
+                && !(isset($_POST['confirmation']) && $_POST['confirmation'])) 
+            {
+                (new View("column_delete"))->show(array("user" => $user, "column" => $column));
+            } else {
+                $column->delete();
+                $this->redirect("board", "board", $column->board->board_id);
+            }
+        } else {    
+            $this->redirect("board", "index");
+        }
+    }
+
     //bouger la colonne
     public function move() {
         $this->get_user_or_redirect();

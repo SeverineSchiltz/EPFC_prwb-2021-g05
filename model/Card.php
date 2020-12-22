@@ -28,12 +28,8 @@ class Card extends Model {
    
     //supprimer la si l'initiateur en a le droit
     //renvoie la carte si ok. false sinon.
-    public function delete($initiator) {
-        if ($this->author == $initiator) {
-            self::execute('DELETE FROM card WHERE card_id = :id', array('id' => $this->card_id));
-            return $this;
-        }
-        return false;
+    public function delete() {
+        self::execute('DELETE FROM card WHERE ID = :id', array('id' => $this->card_id));
     }
 
     public function get_last_position() {
