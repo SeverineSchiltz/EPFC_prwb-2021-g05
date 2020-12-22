@@ -27,7 +27,7 @@
                 <h2>
                     Edit a column
                 </h2>
-                Created <?= $column->get_duration_since_creation() ?> ago by <a href="board/index"><?= $user->full_name ?></a>. <?= $column->last_modified?"Modified ".$column->get_duration_since_last_edit()." ago.":"Never modified." ?>
+                Created <?= $column->get_duration_since_creation() ?> ago. <?= $column->last_modified?"Modified ".$column->get_duration_since_last_edit()." ago.":"Never modified." ?>
             </div>
             <form action=<?= "column/edit/".$column->column_id ?> method="post" id="column-edit" class="form">
                 <div class="form-group title-group">
