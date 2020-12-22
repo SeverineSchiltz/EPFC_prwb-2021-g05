@@ -51,30 +51,6 @@ class ControllerColumn extends Controller {
         }
     }
 
-    
-
-    //suppression de la colonne donnée
-    public function delete_confirm() {
-        $user = $this->get_user_or_redirect();
-        if (isset($_GET["param1"]) && $_GET["param1"] !== "") {
-
-            $column = Column::get_column($_GET["param1"]);
-
-            //on vérifie si la colonne a des cartes associées
-            //si oui, demande de confirmation
-            if($column->has_cards()
-                && !(isset($_POST['confirmation']) && $_POST['confirmation'])) 
-            {
-                (new View("column_delete"))->show(array("user" => $user, "column" => $column));
-            } else {
-                $column->delete();
-                $this->redirect("board", "board", $column->board->board_id);
-            }
-        } else {    
-            $this->redirect("board", "index");
-        }
-    }
-
     //bouger la colonne
     public function move() {
         $this->get_user_or_redirect();
@@ -113,5 +89,56 @@ class ControllerColumn extends Controller {
             }
         }
         return $errors;
+    }
+
+
+    //suppression de la colonne donnée
+    public function delete() {
+        $this->get_user_or_redirect();
+        if (isset($_GET["param1"]) && $_GET["param1"] !== "") {
+
+            $column = Column::get_column($_GET["param1"]);
+
+            //on vérifie si la colonne a des cartes associées
+            //si oui, demande de confirmation
+            if($column->has_cards()) {
+                if(!(isset($_POST['confirmation']) && $_POST['confirmation'])) {
+                    $this->redirect("column", "delete_confirm", $column->column_id);
+                } else {
+                    $column = $this->delete_column();
+                    if ($column) {
+                        $this->redirect("board", "board", $column->board->board_id);
+                    } else {
+                        throw new Exception("Wrong/missing ID or action not permitted");
+                    }
+                }
+            } else {
+                $column->delete();
+                $this->redirect("board", "board", $column->board->board_id);
+            }
+        } else {    
+            $this->redirect("board", "index");
+        }
+    }
+
+    //suppression du tableau donné
+    public function delete_confirm() {
+        $user = $this->get_user_or_redirect();
+        $column = Column::get_column($_GET["param1"]);
+
+        (new View("column_delete"))->show(array("user" => $user, "column" => $column));
+    }
+
+    private function delete_column() {
+        $user = $this->get_user_or_redirect();
+
+        if (isset($_POST['column_id']) && $_POST['column_id'] != "") {
+            $column_id = $_POST['column_id'];
+            $column = Column::get_column($column_id);
+            if ($column) {
+                return $column->delete();
+            } 
+        }
+        return false;
     }
 }

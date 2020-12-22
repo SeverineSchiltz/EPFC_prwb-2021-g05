@@ -33,8 +33,9 @@
                     <span>This process cannot be undone.</span>
                     <div class="buttons">
                         <a href=<?= "board/board/".$column->board->board_id ?> class="btn btn-secondary">Cancel</a>
-                        <form action=<?= "column/delete_confirm/".$column->column_id ?> method="post">
+                        <form action=<?= "column/delete/".$column->column_id ?> method="post">
                             <input type="hidden" name="confirmation" value="true">
+                            <input type="hidden" name="column_id" value=<?= $column->column_id ?>>
                             <input type="submit" value="Delete" class="btn btn-danger submit">
                         </form>
                     </div>
