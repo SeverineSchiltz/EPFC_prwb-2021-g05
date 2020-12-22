@@ -50,3 +50,7 @@ Thumbs.db
 
 # Visual studio
 .vscode/
+
+*.sql
+database/
+database/prwb_2021_g05_dump.sql
