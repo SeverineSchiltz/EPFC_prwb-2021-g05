@@ -36,8 +36,8 @@
                 <?php endforeach; ?> 
                     
                 <!-- add board form -->
-                <form id="form-add-board" action="board" method="post" class="input-group form-my-boards">
-                    <input id="input-board-name" name="board-name" type="text" placeholder="Add a board" class="form-control">
+                <form id="form-add-board" action="board/add" method="post" class="input-group form-my-boards">
+                    <input id="input-board-name" name="new_board_name" type="text" placeholder="Add a board" class="form-control" value="<?= $new_board_name?>">
                     <button class="input-group-text btt-add-board" type="submit"> 
                         <i class="fa fa-plus"></i>
                     </button>

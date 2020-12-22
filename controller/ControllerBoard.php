@@ -11,10 +11,10 @@ class ControllerBoard extends Controller {
     //page d'accueil.     
     public function index() {
         $errors = [];
-        $success = "";
+        $new_board_name = "";
         if ($this->user_logged()) {
             $user = $this->get_user_or_redirect();
-            (new View("main_menu"))->show(array("user" => $user, "errors" => $errors, "success" => $success, "personal_boards" => Board::get_boards($user), "other_boards" => Board::get_other_boards($user)));
+            (new View("main_menu"))->show(array("user" => $user, "errors" => $errors, "new_board_name" => $new_board_name, "personal_boards" => Board::get_boards($user), "other_boards" => Board::get_other_boards($user)));
         } else {
             (new View("home"))->show();
         }
@@ -93,4 +93,20 @@ class ControllerBoard extends Controller {
         }
         return false;
     }
+
+        //ajout d'un tableau
+        public function add() {
+            $user = $this->get_user_or_redirect();
+            $new_board_name = '';
+            $errors = [];
+            if (isset($_POST['new_board_name'])) {
+                $new_board_name = trim($_POST['new_board_name']);
+                $board = new Board(NULL,$user, $new_board_name, null);
+                $errors = $board->validate_board_name();
+                if (count($errors) == 0) { 
+                    $board->update(); 
+                }
+            }
+            (new View("main_menu"))->show(array("user" => $user, "new_board_name" => $new_board_name, "errors" => $errors, "personal_boards" => Board::get_boards($user), "other_boards" => Board::get_other_boards($user)));
+        }
 }

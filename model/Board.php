@@ -32,6 +32,15 @@ class Board extends Model {
         return $errors;
     }
 
+    public function validate_board_name(){
+        $errors = array();
+        if(!(isset($this->title) && is_string($this->title) && strlen($this->title) > 2)){
+            $errors[] = "Title length must be 3 minimum";
+        }
+        $errors = array_merge($errors, Board::validate_unicity($this->title));
+        return $errors;
+    }
+
     public static function get_boards($user) {
         $query = self::execute("select b.*, u.Mail from board b join user u on b.Owner = u.ID where u.Mail = :mail order by b.ModifiedAt, b.CreatedAt DESC", array("mail" => $user->mail));
         $data = $query->fetchAll();
@@ -81,7 +90,7 @@ class Board extends Model {
     }
 
     public function update() {
-        if($this->post_id == NULL) {
+        if($this->board_id == NULL) {
             $errors = $this->validate();
             if(empty($errors)){
                 self::execute('INSERT INTO board (Owner, Title) VALUES ((select ID from user where Mail = :mail),:title)', array(
@@ -108,6 +117,25 @@ class Board extends Model {
             } else {
                 return $errors; //un tableau d'erreurs
             }
+        }
+    }
+
+    public static function validate_unicity($title){
+        $errors = [];
+        $board = self::get_board_by_title($title);
+        if ($board) {
+            $errors[] = "This title already exists. Chose another one.";
+        } 
+        return $errors;
+    }
+
+    public static function get_board_by_title($title) {
+        $query = self::execute("SELECT * FROM board where Title = :title", array("title"=>$title));
+        $data = $query->fetch(); // un seul résultat au maximum
+        if ($query->rowCount() == 0) {
+            return false;
+        } else {
+            return new Board($data['ID'], null, $data['Title'], null);
         }
     }
 

@@ -44,24 +44,6 @@ class User extends Model {
         return $results;
     }
 
-    //renvoie un tableau d'erreur(s) 
-    //le tableau est vide s'il n'y a pas d'erreur.
-    //ne s'occupe que de la validation "métier" des champs obligatoires (le mail)
-    //les autres champs (mot de passe, description et image) sont gérés par d'autres
-    //méthodes.
-    /*
-    public function validate(){
-        $errors = array();
-        if (!(isset($this->mail) && is_string($this->mail) && strlen($this->mail) > 0)) {
-            $errors[] = "mail is required.";
-        } if (!(isset($this->mail) && is_string($this->mail) && strlen($this->mail) >= 3 && strlen($this->mail) <= 16)) {
-            $errors[] = "mail length must be between 3 and 16.";
-        } if (!(isset($this->mail) && is_string($this->mail) && preg_match("/^[a-zA-Z][a-zA-Z0-9]*$/", $this->mail))) {
-            $errors[] = "mail must start by a letter and must contain only letters and numbers.";
-        }
-        return $errors;
-    }*/
-
     public function validate(){
         $errors = array();
         $errors = User::validate_full_name($this->full_name);
