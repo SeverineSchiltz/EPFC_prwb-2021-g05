@@ -42,6 +42,16 @@ class Column extends Model {
         }
     }
 
+    public static function get_column_board_position($board, $position) {
+        $query = self::execute("select * from `column` where Board = :board and Position = :position", array("board" => $board->board_id, "position" => $position));
+        if ($query->rowCount() == 0) {
+            return false;
+        } else {
+            $row = $query->fetch();
+            return new Column(Board::get_board($row['Board']), $row['Position'], $row['Title'], $row['CreatedAt'], $row['ID'], $row['ModifiedAt']);
+        }
+    }
+
     //supprimer la colonne si l'initiateur en a le droit
     //renvoie la colonne si ok. false sinon.
     public function delete($initiator) {
@@ -76,6 +86,34 @@ class Column extends Model {
             $errors[] = "Position must be numeric";
         }
         return $errors;
+    }
+
+    public function move_right() {
+        $errors = array();
+        $right_column = $this->get_column_board_position($this->board, $this->position+1); //the column to the right, the one we are swapping with
+        if($right_column) {
+            $right_column->position--;
+            $this->position++;
+            $right_column->update();
+            $this->update();
+        } else {
+            $errors[] = "Couldn't find a column to the right";
+            return $errors;
+        }
+    }
+
+    public function move_left() {
+        $errors = array();
+        $left_column = $this->get_column_board_position($this->board, $this->position-1); //the column to the left, the one we are swapping with
+        if($left_column) {
+            $left_column->position++;
+            $this->position--;
+            $left_column->update();
+            $this->update();
+        } else {
+            $errors[] = "Couldn't find a column to the left";
+            return $errors;
+        }
     }
 
     public function update() {

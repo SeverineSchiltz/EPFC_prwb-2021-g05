@@ -25,7 +25,7 @@
         <div class="content">
             <div class="header">
                 <h2>
-                    <?php echo $board->get_title() ?> 
+                    <?= $board->get_title() ?> 
                     <i class="fa fa-edit"></i> 
                     <i class="fa fa-trash"></i>
                 </h2>
@@ -36,15 +36,33 @@
                     <div class="column">
                         <div class="column-title">
                             <?= $column->title?> 
-                            <i class="fa fa-edit"></i> 
+                            <a href=<?= "column/edit/".$column->column_id ?> class="invisible-link"><i class="fa fa-edit"></i></a> 
                             <i class="fa fa-trash"></i> 
-                            <?php if($column->position != 0) echo "<i class=\"fa fa-arrow-circle-left\"></i>" ?>
-                            <?php if($column->position != $column->get_last_position()) echo "<i class=\"fa fa-arrow-circle-right\"></i>" ?>
+                            <?php if($column->position != 0): ?>
+                                <form  action="column/move" method="post" id=<?= "move-left".$column->column_id ?>>
+                                    <input type="hidden" name="direction" value="left">
+                                    <input type="hidden" name="board_id" value=<?= $board->board_id ?>>
+                                    <input type="hidden" name="column_id" value=<?= $column->column_id ?>>
+                                    <button type="submit" class="invisible-btn" form=<?= "move-left".$column->column_id ?>>
+                                        <i class="fa fa-arrow-circle-left"></i>
+                                    </button>
+                                </form>
+                            <?php endif; ?>                            
+                            <?php if($column->position != $column->get_last_position()): ?>
+                                <form  action="column/move" method="post" id=<?= "move-right".$column->column_id ?>>
+                                    <input type="hidden" name="direction" value="right">
+                                    <input type="hidden" name="board_id" value=<?= $board->board_id ?>>
+                                    <input type="hidden" name="column_id" value=<?= $column->column_id ?>>
+                                    <button type="submit" class="invisible-btn" form=<?= "move-right".$column->column_id ?>>
+                                        <i class="fa fa-arrow-circle-right"></i>
+                                    </button>
+                                </form>
+                            <?php endif; ?>
                         </div>                        
                         <?php foreach($column->get_cards() as $card): ?>
                             <div class="card">
                                 <div class="card-title">
-                                <a href=<?php echo "card/view/".$card->card_id ?>><?=$card->title?></a>
+                                <a href=<?= "card/view/".$card->card_id ?>><?=$card->title?></a>
                                 </div>
                                 <div class="card-buttons">
                                     <i class="fa fa-eye"></i> 
@@ -57,16 +75,16 @@
                                 </div>
                             </div>
                         <?php endforeach; ?>     
-                        <form action=<?php echo "card/index/".$column->column_id ?> id=<?php echo "add-card".$column->column_id ?> class="input-group add-card">
+                        <form action=<?= "card/index/".$column->column_id ?> id=<?= "add-card".$column->column_id ?> class="input-group add-card">
                             <input name="title" type="text" placeholder="Add a card" class="form-control">
-                            <button class="input-group-text" type="submit" form=<?php echo "add-card".$column->column_id ?>>    
+                            <button class="input-group-text" type="submit" form=<?= "add-card".$column->column_id ?>>    
                                 <i class="fa fa-plus"></i>
                             </button>
                         </form>  
                     </div>
                 <?php endforeach; ?> 
                 <div class="column">
-                    <form action=<?php echo "column/index/".$board->board_id ?> id="add-column" class="input-group add-column" method="post">
+                    <form action=<?= "column/index/".$board->board_id ?> id="add-column" class="input-group add-column" method="post">
                         <input name="title" type="text" placeholder="Add a column" class="form-control">
                         <button class="input-group-text" type="submit" form="add-column">    
                             <i class="fa fa-plus"></i>

@@ -21,7 +21,6 @@ class ControllerColumn extends Controller {
             } else {
                 $errors[] = "Title isn't set";
             }    
-            // (new View("board"))->show(array("board" => $board, "user" => $user, "errors" => $errors));
             $_SESSION['errors'] = $errors;
             $this->redirect("board", "board", $_GET["param1"]);
         } else {
@@ -29,26 +28,39 @@ class ControllerColumn extends Controller {
         }
     }
 
+    //édition de la colonne donnée
+    public function edit() {
+        $user = $this->get_user_or_redirect();
+        if (isset($_GET["param1"]) && $_GET["param1"] !== "") {
+            $column = Column::get_column($_GET["param1"]);
+        }
+        (new View("column_edit"))->show(array("board" => $board, "user" => $user, "columns" => Column::get_columns($board)));
+    }
+
     //bouger la colonne
     public function move() {
-        $errors = [];
-        $user = $this->get_user_or_redirect();
-        if ((isset($_GET["param1"]) && $_GET["param1"] !== "") && (isset($_GET["param2"]) && $_GET["param2"] !== "")) {
-            $board = Board::get_board($_GET["param2"]);
-    
-            $this->redirect("board", "board", $_GET["param2"]);
+        $this->get_user_or_redirect();
+        if ((isset($_POST["board_id"]) && $_POST["board_id"] !== "") 
+            && (isset($_POST["direction"]) && $_POST["direction"] !== "") 
+            && (isset($_POST["column_id"]) && $_POST["column_id"] !== "")) 
+        {
+            $board_id = $_POST["board_id"];
+            $direction = $_POST["direction"];
+            $column_id = $_POST["column_id"];
+
+            $column = Column::get_column($column_id);
+            
+            if($direction === "left")
+                $errors = $column->move_left();
+            else if($direction === "right")
+                $errors = $column->move_right();
+
+            
+            $_SESSION['errors'] = $errors;
+            $this->redirect("board", "board", $board_id);
         } else {
             $this->redirect("board", "index");
         }
-    }
-
-    //affichage de la colonne donnée
-    public function view() {
-        $user = $this->get_user_or_redirect();
-        if (isset($_GET["param1"]) && $_GET["param1"] !== "") {
-            $board = board::get_board($_GET["param1"]);
-        }
-        (new View("column_view"))->show(array("board" => $board, "user" => $user, "columns" => Column::get_columns($board)));
     }
 
     //ajout d'une colonne
