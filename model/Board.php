@@ -123,7 +123,7 @@ class Board extends Model {
         return $this->get_nb_columns();
     }
 
-    public function get_title() {
+    public function get_menu_title() {
         return "Board \"".$this->title."\"";
     }
 

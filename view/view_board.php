@@ -18,18 +18,18 @@
             $buffer=ob_get_contents();
             ob_end_clean();
 
-            $buffer=str_replace("%TITLE%",$board->get_title(),$buffer);
+            $buffer=str_replace("%TITLE%",$board->get_menu_title(),$buffer);
             $buffer=str_replace("%SUBTITLE%","Boards",$buffer);
             echo $buffer;
         ?>
         <div class="content">
             <div class="header">
                 <h2>
-                    <?= $board->get_title() ?> 
+                    <?= $board->get_menu_title() ?> 
                     <i class="fa fa-edit"></i> 
                     <i class="fa fa-trash"></i>
                 </h2>
-                Created <?= $board->get_duration_since_creation() ?> ago by <a href="board/index"><?= $user->full_name ?></a>. <?= $board->last_modified?$board->get_duration_since_last_edit:"Never modified." ?>
+                Created <?= $board->get_duration_since_creation() ?> ago by <a href="board/index"><?= $user->full_name ?></a>. <?= $board->last_modified?"Modified ".$board->get_duration_since_last_edit()." ago.":"Never modified." ?>
             </div>
             <div class="columns">
                 <?php foreach($board->get_columns() as $column): ?>

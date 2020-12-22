@@ -30,11 +30,25 @@ class ControllerColumn extends Controller {
 
     //édition de la colonne donnée
     public function edit() {
+        $errors = [];
         $user = $this->get_user_or_redirect();
         if (isset($_GET["param1"]) && $_GET["param1"] !== "") {
+
             $column = Column::get_column($_GET["param1"]);
+
+            if(isset($_POST['column-title'])) {
+                $column->title = $_POST['column-title'];
+                $errors = $column->update();
+                if(!is_array($errors) || empty($errors))
+                    $this->redirect("board", "board", $column->board->board_id);
+                else                    
+                    (new View("column_edit"))->show(array("user" => $user, "column" => $column, "errors" => $errors));
+            } else {
+                (new View("column_edit"))->show(array("user" => $user, "column" => $column, "errors" => $errors));
+            }
+        } else {    
+            $this->redirect("board", "index");
         }
-        (new View("column_edit"))->show(array("board" => $board, "user" => $user, "columns" => Column::get_columns($board)));
     }
 
     //bouger la colonne

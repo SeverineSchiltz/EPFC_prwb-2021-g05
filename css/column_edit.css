@@ -1,0 +1,27 @@
+.content {
+  padding: 1.25em 1.5em;
+  margin-top: 60px;
+}
+
+a {
+  text-decoration: none;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form .label {  
+  margin: 1em 0 0.25em 0;
+  font-weight: 500;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.buttons {
+  margin: 1em 0 0 0;
+}
