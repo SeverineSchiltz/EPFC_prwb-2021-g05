@@ -35,7 +35,7 @@ class Board extends Model {
     public function validate_board_name(){
         $errors = array();
         if(!(isset($this->title) && is_string($this->title) && strlen($this->title) > 2)){
-            $errors[] = "Title length must be 3 minimum";
+            $errors[] = "Title length must be at least 3 characters";
         }
         $errors = array_merge($errors, Board::validate_unicity($this->title));
         return $errors;

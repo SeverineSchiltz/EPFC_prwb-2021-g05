@@ -54,7 +54,7 @@ class User extends Model {
     private static function validate_password($password){
         $errors = [];
         if (strlen($password) < 8) {
-            $errors[] = "Password length must be 8 minimum.";
+            $errors[] = "Password length must be at least 8 characters.";
         } if (!((preg_match("/[A-Z]/", $password)) && preg_match("/\d/", $password) && preg_match("/['\";:,.\/?\\-]/", $password))) {
             $errors[] = "Password must contain one uppercase letter, one number and one punctuation mark.";
         }
@@ -72,7 +72,7 @@ class User extends Model {
     public static function validate_full_name($full_name){
         $errors = [];
         if (!isset($full_name) || !is_string($full_name) || strlen($full_name) < 3) {
-            $errors[] = "Full name length must be 3 minimum.";
+            $errors[] = "Full name length must be at least 3 characters.";
         }
         return $errors;
     }
