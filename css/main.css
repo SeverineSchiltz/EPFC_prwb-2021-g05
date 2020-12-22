@@ -37,7 +37,7 @@ a {
     border: 0px;
 }
 
-.btboardsOther p{
+.btboardsOther span{
     margin: 0px;
     padding: 0px;
     background-color:rgb(40, 167, 69);
@@ -57,7 +57,7 @@ a {
     border: 0px;
 }
 
-.btboardsMe p{
+.btboardsMe span{
     margin: 0px;
     padding: 0px;
     background-color: #157ffb;

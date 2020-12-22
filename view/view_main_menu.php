@@ -30,7 +30,7 @@
                 <?php foreach($personal_boards as $board): ?>
                     <form class='form-my-boards' action=<?php echo "board/board/".$board->board_id ?> method='post'>
                         <button type="submit" class="btn btboardsMe">
-                            <p class="board-title"><?= $board->title?> (<?= $board->get_nb_columns()?> columns)</p>
+                            <span class="board-title"><?= $board->title?> (<?= $board->get_nb_columns()?> columns)</span>
                         </button>
                     </form>
                 <?php endforeach; ?> 
@@ -55,17 +55,18 @@
             <?php endif; ?>
 
             <h2>Others' boards</h2>
-            <div class="boards">               
+            <div class="boards">          
             <!-- others' boards -->
                 <?php foreach($other_boards as $board): ?>
-                <form class='link' action=<?php echo "board/board/".$board->board_id ?> method='post'>
-                    <button type="submit" class="btn btboardsOther">
-                        <p class="board-title"><?= $board->title?> (<?= $board->get_nb_columns()?> columns)</p>
-                        <p class="author-name">by <?=$board->author->full_name?></p>
-                    </button>
-                </form>
+                    <form class='link' action=<?php echo "board/board/".$board->board_id ?> method='post'>
+                        <button type="submit" class="btn btboardsOther">
+                            <span class="board-title"><?= $board->title?> (<?= $board->get_nb_columns()?> columns)</span>
+                            <br/>
+                            <span class="author-name">by <?=$board->author->full_name?></span>
+                        </button>
+                    </form>
                 <?php endforeach; ?> 
-            </div>
+            </div>    
         </div>
     </body>
 </html>
