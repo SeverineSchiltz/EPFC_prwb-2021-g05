@@ -121,8 +121,4 @@ class User extends Model {
         }
         return $errors;
     }
-
-    public function add_column($column) {
-        return $column->update();
-    }
 }

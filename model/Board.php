@@ -154,7 +154,13 @@ class Board extends Model {
     }
 
     public function get_next_column_position() {
-        return $this->get_nb_columns();
+        $query = self::execute("select Position as last_position from `column` where Board = :id order by Position DESC limit 1", array("id" => $this->board_id));
+        if ($query->rowCount() == 0) {
+            return 0;
+        } else {
+            $row = $query->fetch();
+            return $row['last_position']+1;
+        }
     }
 
     public function get_menu_title() {

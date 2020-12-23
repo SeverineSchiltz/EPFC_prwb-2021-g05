@@ -17,7 +17,7 @@ class ControllerColumn extends Controller {
             $position = $board->get_next_column_position();
 
             if (isset($_POST['title'])) {
-                $errors = $this->add($user, $board, $position);
+                $errors = $this->add($board, $position);
             } else {
                 $errors[] = "Title isn't set";
             }    
@@ -74,14 +74,14 @@ class ControllerColumn extends Controller {
     }
 
     //ajout d'une colonne
-    private function add($user, $board, $position) {
+    private function add($board, $position) {
         $errors = [];
         if (isset($_POST['title'])) {
             $title = $_POST['title'];
             $column = new Column($board, $position, $title);
             $errors = $column->validate();
             if(empty($errors)){
-                $user->add_column($column);                
+                $column->update();                
             }
         }
         return $errors;
