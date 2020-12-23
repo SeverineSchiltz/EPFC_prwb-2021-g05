@@ -17,7 +17,6 @@
             include("menu.php");
             $buffer=ob_get_contents();
             ob_end_clean();
-
             $buffer=str_replace("%TITLE%","Boards",$buffer);
             $buffer=str_replace("%SUBTITLE%","",$buffer);
             echo $buffer;

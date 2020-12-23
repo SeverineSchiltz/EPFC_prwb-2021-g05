@@ -69,7 +69,7 @@
                                         <a href=<?= "card/view/".$card->card_id ?> class="invisible-link"><i class="fa fa-eye"></i></a> 
                                         <a href=<?= "card/edit/".$card->card_id ?> class="invisible-link"><i class="fa fa-edit"></i></a> 
                                         <a href=<?= "card/delete_confirm/".$card->card_id ?> class="invisible-link"><i class="fa fa-trash"></i></a> 
-                                        <input type="hidden" name="card_id"value=<?= $card->card_id ?>>
+                                        <input type="hidden" name="card_id" value=<?= $card->card_id ?>>
                                         <?php if($card->position != $card->get_first_position()): ?>
                                             <button type="submit" class="invisible-btn-card" name="direction" value="up">
                                                 <i class="fa fa-arrow-circle-up"></i>
