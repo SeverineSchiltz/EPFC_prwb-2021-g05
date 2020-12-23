@@ -62,20 +62,39 @@
                         <?php foreach($column->get_cards() as $card): ?>
                             <div class="card">
                                 <div class="card-title">
-                                <a href=<?= "card/view/".$card->card_id ?>><?=$card->title?></a>
+                                <a href=<?= "card/index/".$card->card_id ?>><?=$card->title?></a>
                                 </div>
                                 <div class="card-buttons">
-                                    <i class="fa fa-eye"></i> 
-                                    <i class="fa fa-edit"></i> 
-                                    <i class="fa fa-trash"></i> 
-                                    <?php if($card->position != $card->get_first_position()) echo "<i class=\"fa fa-arrow-circle-up\"></i>" ?>
-                                    <?php if($card->position != $card->get_last_position()) echo "<i class=\"fa fa-arrow-circle-down\"></i>" ?>                                   
-                                    <?php if($column->position != $column->get_first_position()) echo "<i class=\"fa fa-arrow-circle-left\"></i>" ?>
-                                    <?php if($column->position != $column->get_last_position()) echo "<i class=\"fa fa-arrow-circle-right\"></i>" ?>
+                                    <form  action="card/move/" method="post">
+                                        <a href=<?= "card/view/".$card->card_id ?> class="invisible-link"><i class="fa fa-eye"></i></a> 
+                                        <a href=<?= "card/edit/".$card->card_id ?> class="invisible-link"><i class="fa fa-edit"></i></a> 
+                                        <a href=<?= "card/delete_confirm/".$card->card_id ?> class="invisible-link"><i class="fa fa-trash"></i></a> 
+                                        <input type="hidden" name="card_id"value=<?= $card->card_id ?>>
+                                        <?php if($card->position != $card->get_first_position()): ?>
+                                            <button type="submit" class="invisible-btn-card" name="direction" value="up">
+                                                <i class="fa fa-arrow-circle-up"></i>
+                                            </button>
+                                        <?php endif; ?>
+                                        <?php if($card->position != $card->get_last_position()): ?>
+                                            <button type="submit" class="invisible-btn-card" name="direction" value="down">
+                                                <i class="fa fa-arrow-circle-down"></i>
+                                            </button>
+                                        <?php endif; ?>
+                                        <?php if($column->position != $column->get_first_position()): ?>
+                                            <button type="submit" class="invisible-btn-card" name="direction" value="left">
+                                                <i class="fa fa-arrow-circle-left"></i>
+                                            </button>
+                                        <?php endif; ?>
+                                        <?php if($column->position != $column->get_last_position()): ?>
+                                            <button type="submit" class="invisible-btn-card" name="direction" value="right" >
+                                                <i class="fa fa-arrow-circle-right"></i>
+                                            </button>
+                                        <?php endif; ?>
+                                    </form>
                                 </div>
                             </div>
                         <?php endforeach; ?>     
-                        <form action=<?= "card/index/".$column->column_id ?> id=<?= "add-card".$column->column_id ?> class="input-group add-card">
+                        <form action=<?= "card/add/".$column->column_id ?> id=<?= "add-card".$column->column_id ?> class="input-group add-card">
                             <input name="title" type="text" placeholder="Add a card" class="form-control">
                             <button class="input-group-text" type="submit" form=<?= "add-card".$column->column_id ?>>    
                                 <i class="fa fa-plus"></i>

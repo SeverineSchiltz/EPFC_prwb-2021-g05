@@ -78,3 +78,15 @@ a {
 .invisible-link:hover {
   color: rgb(59, 59, 59);
 }
+
+.invisible-btn-card{
+  color: black;
+  background-color: white;
+  border: none;
+  margin: 0px;
+  padding: 0px;
+}
+
+.invisible-btn-card:hover {
+  color: rgb(59, 59, 59);
+}

@@ -105,6 +105,7 @@ class ControllerBoard extends Controller {
                 $errors = $board->validate_board_name();
                 if (count($errors) == 0) { 
                     $board->update(); 
+                    $new_board_name = '';
                 }
             }
             (new View("main_menu"))->show(array("user" => $user, "new_board_name" => $new_board_name, "errors" => $errors, "personal_boards" => Board::get_boards($user), "other_boards" => Board::get_other_boards($user)));

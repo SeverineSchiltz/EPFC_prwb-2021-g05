@@ -57,4 +57,20 @@ class Card extends Model {
     public function get_last_modification() {
         return $this->last_modified;
     }
+
+    public function get_title() {
+        return $this->title;
+    }
+
+    
+    public static function get_card($id) {
+        $query = self::execute("select * from card where ID = :id", array("id" => $id));
+        $data = $query->fetch(); 
+        $cards = [];
+        if ($query->rowCount() == 0) {
+            return false;
+        } else {
+            return new Card($data['ID'], $data['Column'], $data['Position'], $data['Author'], $data['Title'], $data['Body'], $data['CreatedAt'], $data['ModifiedAt']);
+        }
+    }
 }
