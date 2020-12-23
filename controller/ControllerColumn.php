@@ -63,13 +63,9 @@ class ControllerColumn extends Controller {
             $column_id = $_POST["column_id"];
 
             $column = Column::get_column($column_id);
-            
-            if($direction === "left")
-                $errors = $column->move_left();
-            else if($direction === "right")
-                $errors = $column->move_right();
+    
+            $errors = $column->move($direction);
 
-            
             $_SESSION['errors'] = $errors;
             $this->redirect("board", "board", $board_id);
         } else {

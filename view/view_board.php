@@ -38,7 +38,7 @@
                             <?= $column->title?> 
                             <a href=<?= "column/edit/".$column->column_id ?> class="invisible-link"><i class="fa fa-edit"></i></a> 
                             <a href=<?= "column/delete/".$column->column_id ?> class="invisible-link"><i class="fa fa-trash"></i></a>
-                            <?php if($column->position != 0): ?>
+                            <?php if($column->position != $column->get_first_position()): ?>
                                 <form  action="column/move" method="post" id=<?= "move-left".$column->column_id ?>>
                                     <input type="hidden" name="direction" value="left">
                                     <input type="hidden" name="board_id" value=<?= $board->board_id ?>>
@@ -68,9 +68,9 @@
                                     <i class="fa fa-eye"></i> 
                                     <i class="fa fa-edit"></i> 
                                     <i class="fa fa-trash"></i> 
-                                    <?php if($card->position != 0) echo "<i class=\"fa fa-arrow-circle-up\"></i>" ?>
+                                    <?php if($card->position != $card->get_first_position()) echo "<i class=\"fa fa-arrow-circle-up\"></i>" ?>
                                     <?php if($card->position != $card->get_last_position()) echo "<i class=\"fa fa-arrow-circle-down\"></i>" ?>                                   
-                                    <?php if($column->position != 0) echo "<i class=\"fa fa-arrow-circle-left\"></i>" ?>
+                                    <?php if($column->position != $column->get_first_position()) echo "<i class=\"fa fa-arrow-circle-left\"></i>" ?>
                                     <?php if($column->position != $column->get_last_position()) echo "<i class=\"fa fa-arrow-circle-right\"></i>" ?>
                                 </div>
                             </div>

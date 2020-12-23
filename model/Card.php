@@ -36,7 +36,13 @@ class Card extends Model {
         $query = self::execute("select Position from card where `Column` = :id order by Position DESC limit 1", array("id" => $this->column->column_id)); 
         $row = $query->fetch();
         return $row['Position'];
-    }    
+    }   
+
+    public function get_first_position() {
+        $query = self::execute("select Position from card where `Column` = :id order by Position ASC limit 1", array("id" => $this->column->column_id)); 
+        $row = $query->fetch();
+        return $row['Position'];
+    }     
 
     public static function get_cards($column) {
         $query = self::execute("select * from card where `Column` = :id order by Position ASC", array("id" => $column->column_id));
