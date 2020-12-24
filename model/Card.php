@@ -68,4 +68,16 @@ class Card extends Model {
             return new Card($data['ID'], $data['Column'], $data['Position'], $data['Author'], $data['Title'], $data['Body'], $data['CreatedAt'], $data['ModifiedAt']);
         }
     }
+
+    public function get_author_name() {
+        $query = self::execute("SELECT * FROM user u INNER JOIN card c ON c.Author = u.ID where c.ID = :id", array("id" => $this->card_id));
+        $data = $query->fetch(); 
+        $cards = [];
+        if ($query->rowCount() == 0) {
+            return false;
+        } else {
+            return $data['FullName'];
+        }
+    }
+
 }

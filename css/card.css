@@ -1,0 +1,17 @@
+.content {
+    padding: 1.25em 1.5em;
+    margin-top: 60px;
+    flex-grow: 1;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  .invisible-link {
+    color: black;
+  }
+
+  .invisible-link:hover {
+    color: rgb(59, 59, 59);
+  }

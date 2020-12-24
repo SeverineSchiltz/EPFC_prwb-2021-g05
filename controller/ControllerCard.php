@@ -8,20 +8,23 @@ class ControllerCard extends Controller {
 
     //page d'accueil.     
     public function index() {
-
+        $this->view();
     }
 
     public function view() {
         $user = $this->get_user_or_redirect();
         $card_id = "";
-        $errors = [];
-        $card_id = $_GET["param1"];
-        $card = Card::get_card($card_id);
-        if (!isset($_GET["param1"]) || $_GET["param1"] == "") {
+        if (isset($_GET["param1"]) && $_GET["param1"] != "" && is_numeric($_GET["param1"])) {
             $card_id = $_GET["param1"];
             $card = Card::get_card($card_id);
+            if($card){
+                (new View("card"))->show(array("card" => $card, "user" => $user));
+            }else{
+                $this->redirect("board","index");
+            }
+        }else{
+            $this->redirect("board","index");
         }
-        (new View("card"))->show(array("card" => $card, "user" => $user, "errors" => $errors));
     }
     
             
