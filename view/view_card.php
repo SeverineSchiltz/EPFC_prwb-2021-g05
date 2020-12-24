@@ -13,7 +13,7 @@
     </head>
     <body>
         <?php
-            $menu_title = 'Card "'.$card->get_title().'"';
+            $menu_title = 'Card "'.$card->title.'"';
             $menu_subtitle = "Boards";
             include("menu.php");
         ?>
