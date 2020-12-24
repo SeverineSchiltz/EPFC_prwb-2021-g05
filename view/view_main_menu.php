@@ -13,13 +13,9 @@
     </head>
     <body>
         <?php
-            ob_start();
+            $title = "Boards";
+            $subtitle = "";
             include("menu.php");
-            $buffer=ob_get_contents();
-            ob_end_clean();
-            $buffer=str_replace("%TITLE%","Boards",$buffer);
-            $buffer=str_replace("%SUBTITLE%","",$buffer);
-            echo $buffer;
         ?>
         <div class="content">
             <h2>Your boards</h2>

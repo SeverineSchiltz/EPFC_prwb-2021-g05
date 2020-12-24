@@ -12,7 +12,11 @@
         <link href="css/signin.css" rel="stylesheet" type="text/css"/>
     </head>
     <body>
-        <?php include 'menu.php'; ?>
+        <?php
+            $title = "";
+            $subtitle = "";
+            include("menu.php");
+        ?>
         <div class="content container">
             <div class="row">
                 <div class="col-sm-3"></div>

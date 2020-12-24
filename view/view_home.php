@@ -12,7 +12,11 @@
         <link href="css/home.css" rel="stylesheet" type="text/css"/>
     </head>
     <body>
-        <?php include 'menu.php'; ?>
+        <?php
+            $title = "";
+            $subtitle = "";
+            include("menu.php");
+        ?>
         <div class="content">
             Hello guest! Please <a href="user/login">login</a> or <a href="user/signup">signup</a>.
         </div>

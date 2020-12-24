@@ -13,13 +13,9 @@
     </head>
     <body>
         <?php
-            ob_start();
+            $title = 'Card "'.$card->get_title().'"';
+            $subtitle = "Boards";
             include("menu.php");
-            $buffer=ob_get_contents();
-            ob_end_clean();
-            $buffer=str_replace("%TITLE%",'Card "'.$card->get_title().'"',$buffer);
-            $buffer=str_replace("%SUBTITLE%","Boards",$buffer);
-            echo $buffer;
         ?>
         <div class="content">
 
