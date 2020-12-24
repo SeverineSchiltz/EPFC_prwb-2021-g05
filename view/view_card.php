@@ -13,8 +13,8 @@
     </head>
     <body>
         <?php
-            $title = 'Card "'.$card->get_title().'"';
-            $subtitle = "Boards";
+            $menu_title = 'Card "'.$card->get_title().'"';
+            $menu_subtitle = "Boards";
             include("menu.php");
         ?>
         <div class="content">

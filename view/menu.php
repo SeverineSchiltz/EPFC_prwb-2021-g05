@@ -2,9 +2,9 @@
     <div class="title">Trello!</div>
     <div class="spacer"></div>
     <?php if (isset($user) && $user->mail): ?>
-        <div class="page-title"><?php echo $title ?></div>
+        <div class="page-title"><?php echo $menu_title ?></div>
         <div class="right-menu">
-            <div class="page-subtitle"><?php echo $subtitle ?></div>
+            <div class="page-subtitle"><?php echo $menu_subtitle ?></div>
             <a href="board/index">
                 <i class="fa fa-user"></i>
                 <span class="username"><?php echo $user->full_name ?></span>
