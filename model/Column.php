@@ -22,6 +22,10 @@ class Column extends Model {
         $this->last_modified = $last_modified;
     }
 
+    public function get_title(){
+        return $this->title;
+    }
+
     public static function get_columns($board) {
         $query = self::execute("select * from `column` where Board = :board_id order by Position ASC", array("board_id" => $board->board_id));
         $data = $query->fetchAll();
@@ -217,5 +221,9 @@ class Column extends Model {
             return $interval->i.($interval->i>1?" minutes":" minute");
         else
             return " less than a minute";
+    }
+
+    public function get_board_title() {
+        return $this->board->get_title();
     }
 }

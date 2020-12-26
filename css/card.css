@@ -10,8 +10,28 @@
 
   .invisible-link {
     color: black;
+    font-size: large;
   }
 
   .invisible-link:hover {
     color: rgb(59, 59, 59);
+  }
+
+  h4{
+    font-size: medium;
+    color: rgb(145, 151, 157);
+  }
+
+  h4 span{
+    color: #157ffb;
+    font-size: large;
+  }
+
+  .card-header{
+    background-color: white;
+    border: none;
+  }
+
+  textarea{
+    height:100px;
   }

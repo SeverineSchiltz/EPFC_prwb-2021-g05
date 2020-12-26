@@ -42,6 +42,16 @@ class User extends Model {
         }
     }
 
+    public static function get_user_by_id($id) {
+        $query = self::execute("SELECT * FROM User where ID = :id", array("id"=>$id));
+        $data = $query->fetch(); // un seul résultat au maximum
+        if ($query->rowCount() == 0) {
+            return false;
+        } else {
+            return new User($data["Mail"], $data["Password"], $data["FullName"]);
+        }
+    }
+
     public static function get_users() {
         $query = self::execute("SELECT * FROM User", array());
         $data = $query->fetchAll();

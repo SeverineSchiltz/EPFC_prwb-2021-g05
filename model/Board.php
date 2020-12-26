@@ -18,6 +18,10 @@ class Board extends Model {
         $this->created_at = $created_at;
         $this->last_modified = $last_modified;
     }
+
+    public function get_title(){
+        return $this->title;
+    }
     
     //renvoie un tableau d'erreur(s) 
     //le tableau est vide s'il n'y a pas d'erreur.
