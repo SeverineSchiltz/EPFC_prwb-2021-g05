@@ -5,15 +5,15 @@ require_once "Board.php";
 
 class Card extends Model {
 
-    public $card_id;
-    public $column;
-    public $position;
-    public $author;
-    public $title;
-    public $body;
-    public $created_at;
-    public $last_modified;
-    public $cards;
+    private $card_id;
+    private $column;
+    private $position;
+    private $author;
+    private $title;
+    private $body;
+    private $created_at;
+    private $last_modified;
+    private $cards;
 
     public function __construct($card_id, $column, $position, $author, $title, $body, $created_at, $last_modified = NULL) {
         $this->card_id = $card_id;
@@ -31,6 +31,18 @@ class Card extends Model {
     public function delete() {
         self::execute('DELETE FROM card WHERE ID = :id', array('id' => $this->card_id));
     }
+
+    public function get_card_id() {
+     return $this->card_id;
+    }  
+    
+    public function get_title() {
+        return $this->title;
+    } 
+
+    public function get_position() {
+        return $this->position;
+    } 
 
     public function get_last_position() {
         $query = self::execute("select Position from card where `Column` = :id order by Position DESC limit 1", array("id" => $this->column->column_id)); 

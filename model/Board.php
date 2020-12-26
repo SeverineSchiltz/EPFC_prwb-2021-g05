@@ -42,7 +42,7 @@ class Board extends Model {
     }
 
     public static function get_boards($user) {
-        $query = self::execute("select b.*, u.Mail from board b join user u on b.Owner = u.ID where u.Mail = :mail order by b.ModifiedAt, b.CreatedAt DESC", array("mail" => $user->mail));
+        $query = self::execute("select b.*, u.Mail from board b join user u on b.Owner = u.ID where u.Mail = :mail order by b.ModifiedAt, b.CreatedAt DESC", array("mail" => $user->get_mail()));
         $data = $query->fetchAll();
         $boards = [];
         foreach ($data as $row) {
@@ -53,7 +53,7 @@ class Board extends Model {
     }
 
     public static function get_other_boards($user) {
-        $query = self::execute("select b.*, u.Mail from board b join user u on b.Owner = u.ID where u.Mail <> :mail order by b.ModifiedAt, b.CreatedAt DESC", array("mail" => $user->mail));
+        $query = self::execute("select b.*, u.Mail from board b join user u on b.Owner = u.ID where u.Mail <> :mail order by b.ModifiedAt, b.CreatedAt DESC", array("mail" => $user->get_mail()));
         $data = $query->fetchAll();
         $boards = [];
         foreach ($data as $row) {

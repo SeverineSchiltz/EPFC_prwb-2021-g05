@@ -24,7 +24,7 @@
                     <i class="fa fa-edit"></i> 
                     <a href=<?= "board/delete/".$board->board_id ?> class="invisible-link"><i class="fa fa-trash"></i></a>
                 </h2>
-                Created <?= $board->get_duration_since_creation() ?> ago by <a href="board/index"><?= $board->author->full_name ?></a>. <?= $board->get_last_modification()?"Modified ".$board->get_duration_since_last_edit()." ago.":"Never modified." ?>
+                Created <?= $board->get_duration_since_creation() ?> ago by <a href="board/index"><?= $board->author->get_full_name() ?></a>. <?= $board->get_last_modification()?"Modified ".$board->get_duration_since_last_edit()." ago.":"Never modified." ?>
             </div>
             <div class="columns">
                 <?php foreach($board->get_columns() as $column): ?>
@@ -57,20 +57,20 @@
                         <?php foreach($column->get_cards() as $card): ?>
                             <div class="card">
                                 <div class="card-title">
-                                <a href=<?= "card/index/".$card->card_id ?>><?=$card->title?></a>
+                                <a href=<?= "card/index/".$card->get_card_id() ?>><?=$card->get_title()?></a>
                                 </div>
                                 <div class="card-buttons">
                                     <form  action="card/move/" method="post">
-                                        <a href=<?= "card/view/".$card->card_id ?> class="invisible-link"><i class="fa fa-eye"></i></a> 
-                                        <a href=<?= "card/edit/".$card->card_id ?> class="invisible-link"><i class="fa fa-edit"></i></a> 
-                                        <a href=<?= "card/delete_confirm/".$card->card_id ?> class="invisible-link"><i class="fa fa-trash"></i></a> 
-                                        <input type="hidden" name="card_id" value=<?= $card->card_id ?>>
-                                        <?php if($card->position != $card->get_first_position()): ?>
+                                        <a href=<?= "card/view/".$card->get_card_id() ?> class="invisible-link"><i class="fa fa-eye"></i></a> 
+                                        <a href=<?= "card/edit/".$card->get_card_id() ?> class="invisible-link"><i class="fa fa-edit"></i></a> 
+                                        <a href=<?= "card/delete_confirm/".$card->get_card_id() ?> class="invisible-link"><i class="fa fa-trash"></i></a> 
+                                        <input type="hidden" name="card_id" value=<?= $card->get_card_id() ?>>
+                                        <?php if($card->get_position() != $card->get_first_position()): ?>
                                             <button type="submit" class="invisible-btn-card" name="direction" value="up">
                                                 <i class="fa fa-arrow-circle-up"></i>
                                             </button>
                                         <?php endif; ?>
-                                        <?php if($card->position != $card->get_last_position()): ?>
+                                        <?php if($card->get_position() != $card->get_last_position()): ?>
                                             <button type="submit" class="invisible-btn-card" name="direction" value="down">
                                                 <i class="fa fa-arrow-circle-down"></i>
                                             </button>

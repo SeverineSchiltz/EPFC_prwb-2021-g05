@@ -4,14 +4,22 @@ require_once "framework/Model.php";
 
 class User extends Model {
 
-    public $mail;
-    public $hashed_password;
-    public $full_name;
+    private $mail;
+    private $hashed_password;
+    private $full_name;
 
     public function __construct($mail, $hashed_password, $full_name) {
         $this->mail = $mail;
         $this->hashed_password = $hashed_password;
         $this->full_name = $full_name;
+    }
+
+    public function get_full_name(){
+        return $this->full_name;
+    }
+
+    public function get_mail(){
+        return $this->mail;
     }
 
     public function update() {

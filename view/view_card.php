@@ -1,5 +1,5 @@
 <?php
-    $menu_title = 'Card "'.$card->title.'"';
+    $menu_title = 'Card "'.$card->get_title().'"';
     $menu_subtitle = "Boards";
 ?>
 <!DOCTYPE html>
@@ -21,8 +21,8 @@
             <div class="card-header">
                 <h2>
                     <?= $menu_title?> 
-                    <a href=<?= "card/edit/".$card->card_id ?> class="invisible-link"><i class="fa fa-edit"></i></a>
-                    <a href=<?= "card/delete_confirm/".$card->card_id ?> class="invisible-link"><i class="fa fa-trash"></i></a>
+                    <a href=<?= "card/edit/".$card->get_card_id() ?> class="invisible-link"><i class="fa fa-edit"></i></a>
+                    <a href=<?= "card/delete_confirm/".$card->get_card_id() ?> class="invisible-link"><i class="fa fa-trash"></i></a>
                 </h2>
                 <h4>Created by <span><?= $card->get_author_name() ?></span></h4>
             </div>

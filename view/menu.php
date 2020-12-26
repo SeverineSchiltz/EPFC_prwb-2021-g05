@@ -1,13 +1,13 @@
 <div class="menu">
     <div class="title">Trello!</div>
     <div class="spacer"></div>
-    <?php if (isset($user) && $user->mail): ?>
+    <?php if (isset($user) && $user->get_mail()): ?>
         <div class="page-title"><?php echo $menu_title ?></div>
         <div class="right-menu">
             <div class="page-subtitle"><?php echo $menu_subtitle ?></div>
             <a href="board/index">
                 <i class="fa fa-user"></i>
-                <span class="username"><?php echo $user->full_name ?></span>
+                <span class="username"><?php echo $user->get_full_name() ?></span>
             </a>            
             <a class="signout btn" href="main/logout">
                 <i class="fa fa-sign-out"></i>

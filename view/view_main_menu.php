@@ -23,7 +23,7 @@
             <div class="boards">
                 <!-- your boards -->
                 <?php foreach($personal_boards as $board): ?>
-                    <form class='form-my-boards' action=<?php echo "board/board/".$board->board_id ?> method='post'>
+                    <form class='form-my-boards' action=<?php echo "board/board/".$board->board_id?> method='get'>
                         <button type="submit" class="btn btboardsMe">
                             <span class="board-title"><?= $board->title?> (<?= $board->get_nb_columns()?> columns)</span>
                         </button>
@@ -53,11 +53,11 @@
             <div class="boards">          
             <!-- others' boards -->
                 <?php foreach($other_boards as $board): ?>
-                    <form class='link' action=<?php echo "board/board/".$board->board_id ?> method='post'>
+                    <form class='link' action=<?php echo "board/board/".$board->board_id ?> method='get'>
                         <button type="submit" class="btn btboardsOther">
                             <span class="board-title"><?= $board->title?> (<?= $board->get_nb_columns()?> columns)</span>
                             <br/>
-                            <span class="author-name">by <?=$board->author->full_name?></span>
+                            <span class="author-name">by <?=$board->author->get_full_name()?></span>
                         </button>
                     </form>
                 <?php endforeach; ?> 
