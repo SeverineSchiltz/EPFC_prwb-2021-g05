@@ -30,3 +30,12 @@
   .buttons{
     margin:15px 0px;
   }
+
+  .errors{
+    color: red;
+    font-weight: bold;
+  }
+
+  .errors p{
+    margin : 0px;
+  }

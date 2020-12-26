@@ -6,7 +6,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title><?= $menu_title?></title>
+        <title>Edit a card</title>
         <base href="<?= $web_root ?>"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
@@ -23,19 +23,30 @@
                 <h4>Created by <?= $card->get_author_name() ?> <?= $card->get_duration_since_creation() ?> <?= $card->get_duration_since_last_edit() ?></h4>
             </div>
             <div class="card-body">
-                <form>
+                <form action=<?= "card/save/"?> method="post">
+                    <input type="hidden" class="form-control" value="<?= $card->get_card_id()?>" name="card_id">
                     <h3>Title</h3>
-                    <input class="form-control" value="<?= $card->get_title()?>"></input>
+                    <input type="text" class="form-control" value="<?= $card->get_title()?>" name="title">
+                    <?php if (count($errors) != 0): ?>
+                        <div class='errors'>
+                            <p>Please correct the following error(s) :</p>
+                            <ul>
+                                <?php foreach ($errors as $error): ?>
+                                    <li><?= $error ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                    <?php endif; ?>
                     <h3>Body</h3>
-                    <textarea class="form-control"><?= $card->get_body()?></textarea>
+                    <textarea class="form-control" name="body"><?= $card->get_body()?></textarea>
                     <h3>Board</h3>
-                    <input readonly class="form-control" value="<?= $card->get_board_title()?>"></input>
+                    <input readonly type="text" class="form-control" value="<?= $card->get_board_title()?>">
                     <h3>Column</h3>
-                    <input readonly class="form-control" value="<?= $card->get_column_title()?>"></input>
+                    <input readonly type="text" class="form-control" value="<?= $card->get_column_title()?>">
                     <div class="buttons">
                         <a href=<?= "card/view/".$card->get_card_id()?> class="btn btn-primary cancel">Cancel</a>
                         <input type="submit" value="Edit this card" class="btn btn-primary submit">   
-                    </div>   
+                    </div>  
                 </form>
             </div>
         </div>

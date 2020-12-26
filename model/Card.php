@@ -98,17 +98,6 @@ class Card extends Model {
         return $this->column->get_board_title();
     }
 
-    public function get_board() {
-        $query = self::execute("SELECT * FROM user u INNER JOIN card c ON c.Author = u.ID where c.ID = :id", array("id" => $this->card_id));
-        $data = $query->fetch(); 
-        $cards = [];
-        if ($query->rowCount() == 0) {
-            return false;
-        } else {
-            return $data['FullName'];
-        }
-    }
-
     public function get_duration_since_creation() {
         return $this->get_duration_since_date($this->created_at);
     }
@@ -163,5 +152,51 @@ class Card extends Model {
         return $text_duration;
     }
 
+    public function update_content() {
+        $errors = $this->validate_title();
+        if(empty($errors)){
+            self::execute('UPDATE card SET Title = :title, Body = :body, ModifiedAt = current_timestamp() WHERE ID = :card_id', array(
+                'card_id' => $this->card_id,
+                'title' => $this->title,
+                'body' => $this->body
+            ));
+            return true;
+        }
+        return false;
+    }
+
+    public function validate_title(){
+        $errors = array();
+        if(!(isset($this->title) && is_string($this->title) && strlen($this->title) > 2)){
+            $errors[] = "Title length must be at least 3 characters";
+        }
+        if(!self::validate_unicity_in_board()){
+            $errors[] = "The title you write already exists in this board. Chose another one.";
+        }
+        return $errors;
+    }
+
+    public function validate_unicity_in_board() {
+        $query = self::execute("SELECT ca.ID FROM card ca
+                                INNER JOIN `column` co ON ca.Column = co.ID
+                                WHERE ca.ID <> :card_id AND ca.Title = :card_title AND 
+                                co.Board IN (SELECT DISTINCT co.board FROM card ca 
+                                            INNER JOIN `column` co ON ca.Column = co.ID WHERE ca.ID = :card_id)", 
+                        array("card_id"=>$this->card_id, "card_title"=>$this->title));
+        $data = $query->fetch();
+        if ($query->rowCount() == 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function set_title($new_title) {
+        $this->title = $new_title;
+    } 
+
+    public function set_body($new_body) {
+        $this->body = $new_body;
+    } 
 
 }
