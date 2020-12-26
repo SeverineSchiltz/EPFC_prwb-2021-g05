@@ -11,17 +11,34 @@ class ControllerCard extends Controller {
         $this->view();
     }
 
-    public function view() {
-        $user = $this->get_user_or_redirect();
+    public static function get_card_if_exist() {
         $card_id = "";
         if (isset($_GET["param1"]) && $_GET["param1"] != "" && is_numeric($_GET["param1"])) {
             $card_id = $_GET["param1"];
             $card = Card::get_card($card_id);
             if($card){
-                (new View("card"))->show(array("card" => $card, "user" => $user));
-            }else{
-                $this->redirect("board","index");
+                return $card;
             }
+        }
+        return false;
+    }
+
+    public function view() {
+        $user = $this->get_user_or_redirect();
+        $card = $this::get_card_if_exist();
+        if($card){
+            (new View("card"))->show(array("card" => $card, "user" => $user));
+        }else{
+            $this->redirect("board","index");
+        }
+    }
+
+
+    public function edit() {
+        $user = $this->get_user_or_redirect();
+        $card = $this::get_card_if_exist();
+        if($card){
+            (new View("card_edit"))->show(array("card" => $card, "user" => $user));
         }else{
             $this->redirect("board","index");
         }
