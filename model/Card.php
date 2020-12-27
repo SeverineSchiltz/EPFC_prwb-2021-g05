@@ -88,6 +88,10 @@ class Card extends Model {
         return $this->column->get_title();
     }
 
+    public function get_column_id() {
+        return $this->column->get_column_id();
+    }
+
     public function get_board_title() {
         return $this->column->get_board_title();
     }
@@ -228,6 +232,46 @@ class Card extends Model {
             return $this;
         }
         return false;
+    }
+
+    public function change_position($dif){
+        $cards = self::get_cards($this->column);
+        $i =0;
+        $find = false;
+        $num = -1;
+        while($i< count($cards) && !$find) {
+            if($cards[$i]->card_id === $this->card_id){
+                $num = $i;
+                $find = true;
+            }
+            ++$i;
+        }
+        $card_to_exchange = $cards[$num-$dif];
+        $pos_temp = $this->position;
+        $this->position = $card_to_exchange->position;
+        $card_to_exchange->position = $pos_temp;
+        self::update_position($this);
+        self::update_position($card_to_exchange);
+    }
+
+    public static function update_position($card) {
+        if(empty($errors)){
+            self::execute('UPDATE card SET Position = :position WHERE ID = :card_id', array(
+                'card_id' => $card->card_id,
+                'position' => $card->position,
+            ));
+            return true;
+        }
+        return false;
+    }
+
+
+
+
+    public function change_column($pos){
+        //$new_column = Column::get_column($this->get_column_id() + $pos);
+        //$new_position = self::get_last_card_position_in_column($new_column) + 1;
+        //$this->
     }
 
 }

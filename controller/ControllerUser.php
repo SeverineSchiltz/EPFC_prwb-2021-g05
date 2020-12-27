@@ -47,8 +47,8 @@ class ControllerUser extends Controller {
             $errors = $user->validate(); //valide le mail et le full name
             $errors = array_merge($errors, User::validate_passwords($password, $password_confirm));
             if (count($errors) == 0) { 
-                $user->update(); //sauve l'utilisateur
-                $this->log_user($user);
+                $user->update(); 
+                $this->log_user(User::get_user_by_mail($mail)); //va rechercher l'utilisateur avec l'id
             }
         }
         (new View("signup"))->show(array("mail" => $mail, "name" => $name, "password" => $password, 

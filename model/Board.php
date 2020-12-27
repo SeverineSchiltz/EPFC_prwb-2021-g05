@@ -31,7 +31,7 @@ class Board extends Model {
     //le tableau est vide s'il n'y a pas d'erreur.
     public function validate(){
         $errors = array();
-        if(!(isset($this->author) && is_a($this->author,"User") && User::get_user_by_mail($this->author->mail))){
+        if(!(isset($this->author) && is_a($this->author,"User") && User::get_user_by_mail($this->author->get_mail()))){
             $errors[] = "Incorrect author";
         }
         if(!(isset($this->title) && is_string($this->title) && strlen($this->title) > 0)){
@@ -102,7 +102,7 @@ class Board extends Model {
             $errors = $this->validate();
             if(empty($errors)){
                 self::execute('INSERT INTO board (Owner, Title) VALUES ((select ID from user where Mail = :mail),:title)', array(
-                    'mail' => $this->author->mail,
+                    'mail' => $this->author->get_mail(),
                     'title' => $this->title
                 ));
                 $board = self::get_board(self::lastInsertId());

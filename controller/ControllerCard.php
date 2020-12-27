@@ -67,8 +67,24 @@ class ControllerCard extends Controller {
     
             
     public function move() {
-        $test = $_POST["direction"];
-        $id = $_POST["card_id"];
+        $user = $this->get_user_or_redirect();
+        $card_id = "";
+        $errors = [];
+        if(isset($_POST["card_id"]) && isset($_POST["direction"])){
+            $card_id = $_POST["card_id"];
+            $card = Card::get_card($card_id);
+            $direction = $_POST["direction"];
+            if($direction === "up"){
+                $card->change_position(1);
+            }else if($direction === "down"){
+                $card->change_position(-1);
+            }else if($direction === "left"){
+
+            }else if($direction === "right"){
+
+            }
+            $this->redirect("board","board", $card->get_board_id());
+        }
     }
         
     public function add() {
