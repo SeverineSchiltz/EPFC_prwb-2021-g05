@@ -89,9 +89,9 @@
                                 </div>
                             </div>
                         <?php endforeach; ?>     
-                        <form action=<?= "card/add/".$column->column_id ?> id=<?= "add-card".$column->column_id ?> class="input-group add-card">
+                        <form action=<?= "card/add/" ?> class="input-group add-card" method="post">
                             <input name="title" type="text" placeholder="Add a card" class="form-control">
-                            <button class="input-group-text" type="submit" form=<?= "add-card".$column->column_id ?>>    
+                            <button class="input-group-text" type="submit" name="column_id" value="<?=$column->column_id?>">    
                                 <i class="fa fa-plus"></i>
                             </button>
                         </form>  

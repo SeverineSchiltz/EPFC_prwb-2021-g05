@@ -22,6 +22,10 @@ class Board extends Model {
     public function get_title(){
         return $this->title;
     }
+
+    public function get_board_id(){
+        return $this->board_id;
+    }
     
     //renvoie un tableau d'erreur(s) 
     //le tableau est vide s'il n'y a pas d'erreur.

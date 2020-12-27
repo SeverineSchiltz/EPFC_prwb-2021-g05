@@ -26,6 +26,14 @@ class Column extends Model {
         return $this->title;
     }
 
+    public function get_column_id(){
+        return $this->column_id;
+    }
+
+    public function get_board_id(){
+        return $this->board->get_board_id();
+    }
+
     public static function get_columns($board) {
         $query = self::execute("select * from `column` where Board = :board_id order by Position ASC", array("board_id" => $board->board_id));
         $data = $query->fetchAll();
@@ -226,4 +234,5 @@ class Column extends Model {
     public function get_board_title() {
         return $this->board->get_title();
     }
+
 }

@@ -98,6 +98,10 @@ class Card extends Model {
         return $this->column->get_board_title();
     }
 
+    public function get_board_id() {
+        return $this->column->get_board_id();
+    }
+
     public function get_duration_since_creation() {
         return $this->get_duration_since_date($this->created_at);
     }
@@ -165,6 +169,21 @@ class Card extends Model {
         return false;
     }
 
+    public function insert_new_card() {
+        $errors = $this->validate_title();
+        if(empty($errors)){
+            self::execute('INSERT INTO card (Title, Body, Position, CreatedAt, Author, `Column`) VALUES (:title, :body, :position, current_timestamp(), :author, :column)', array(
+                'title' => $this->title,
+                'body' => $this->body,
+                'position' => $this->position,
+                'author' => $this->author->get_user_id(),
+                'column' => $this->column->get_column_id()
+            ));
+            return true;
+        }
+        return false;
+    }
+
     public function validate_title(){
         $errors = array();
         if(!(isset($this->title) && is_string($this->title) && strlen($this->title) > 2)){
@@ -180,9 +199,8 @@ class Card extends Model {
         $query = self::execute("SELECT ca.ID FROM card ca
                                 INNER JOIN `column` co ON ca.Column = co.ID
                                 WHERE ca.ID <> :card_id AND ca.Title = :card_title AND 
-                                co.Board IN (SELECT DISTINCT co.board FROM card ca 
-                                            INNER JOIN `column` co ON ca.Column = co.ID WHERE ca.ID = :card_id)", 
-                        array("card_id"=>$this->card_id, "card_title"=>$this->title));
+                                co.Board = :board_id", 
+                        array("card_id"=>($this->card_id === null?"0":$this->card_id), "card_title"=>$this->title, "board_id"=>$this->get_board_id()));
         $data = $query->fetch();
         if ($query->rowCount() == 0) {
             return true;
@@ -198,5 +216,16 @@ class Card extends Model {
     public function set_body($new_body) {
         $this->body = $new_body;
     } 
+
+    public static function get_last_card_position_in_column($column_id) {
+        $query = self::execute("SELECT MAX(Position) pos FROM card ca WHERE ca.Column = :column_id", 
+        array("column_id"=>$column_id));
+        $data = $query->fetch();
+        if ($query->rowCount() == 0) {
+            return false;
+        } else {
+            return $data['pos'];
+        }
+    }
 
 }
