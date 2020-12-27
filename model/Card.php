@@ -26,12 +26,6 @@ class Card extends Model {
         $this->created_at = $created_at;
         $this->last_modified = $last_modified;
     }
-   
-    //supprimer la si l'initiateur en a le droit
-    //renvoie la carte si ok. false sinon.
-    public function delete() {
-        self::execute('DELETE FROM card WHERE ID = :id', array('id' => $this->card_id));
-    }
 
     public function get_card_id() {
      return $this->card_id;
@@ -226,6 +220,14 @@ class Card extends Model {
         } else {
             return $data['pos'];
         }
+    }
+
+    public function delete() {
+        if($this->card_id !== NULL) {
+            self::execute('DELETE FROM comment WHERE card = :card_id; DELETE FROM card WHERE ID = :card_id;', array('card_id' => $this->card_id));
+            return $this;
+        }
+        return false;
     }
 
 }

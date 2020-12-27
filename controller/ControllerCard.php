@@ -92,5 +92,26 @@ class ControllerCard extends Controller {
         }
     }
 
+    public function delete_confirm() {
+        $user = $this->get_user_or_redirect();
+        $card = $this::get_card_if_exist();
+        if($card){
+            (new View("card_delete"))->show(array("card" => $card, "user" => $user));
+        }else{
+            $this->redirect("board","index");
+        }
+    }
+
+    public function delete() {
+        $user = $this->get_user_or_redirect();
+        if(isset($_POST["card_id"])){
+            $card = Card::get_card($_POST["card_id"]);
+            $card->delete(); 
+            $this->redirect("board","board", $card->get_board_id());
+        }else{
+            $this->redirect("board","index");
+        }
+    }
+
 }
 
