@@ -79,9 +79,9 @@ class ControllerCard extends Controller {
             }else if($direction === "down"){
                 $card->change_position(-1);
             }else if($direction === "left"){
-
+                $card->change_column(1);
             }else if($direction === "right"){
-
+                $card->change_column(-1);
             }
             $this->redirect("board","board", $card->get_board_id());
         }

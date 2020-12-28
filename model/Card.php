@@ -147,7 +147,7 @@ class Card extends Model {
             $nb += 20;
         }
         if($nb ===0)
-            $text_duration .= "less than a minute";
+            $text_duration .= "less than a minute.";
         else
             $text_duration .= " ago.";
 
@@ -157,14 +157,20 @@ class Card extends Model {
     public function update_content() {
         $errors = $this->validate_title();
         if(empty($errors)){
-            self::execute('UPDATE card SET Title = :title, Body = :body, ModifiedAt = current_timestamp() WHERE ID = :card_id', array(
-                'card_id' => $this->card_id,
-                'title' => $this->title,
-                'body' => $this->body
-            ));
+            self::update($this);
             return true;
         }
         return false;
+    }
+
+    public static function update($card) {
+        self::execute('UPDATE card SET Title = :title, Body = :body, Position = :position,  `Column`= :column, ModifiedAt = current_timestamp() WHERE ID = :card_id', array(
+            'card_id' => $card->card_id,
+            'title' => $card->title,
+            'body' => $card->body,
+            'position' => $card->position,
+            'column' => $card->get_column_id()
+        ));
     }
 
     public function insert_new_card() {
@@ -175,7 +181,7 @@ class Card extends Model {
                 'body' => $this->body,
                 'position' => $this->position,
                 'author' => $this->author->get_user_id(),
-                'column' => $this->column->get_column_id()
+                'column' => $this->get_column_id()
             ));
             return true;
         }
@@ -250,28 +256,28 @@ class Card extends Model {
         $pos_temp = $this->position;
         $this->position = $card_to_exchange->position;
         $card_to_exchange->position = $pos_temp;
-        self::update_position($this);
-        self::update_position($card_to_exchange);
+        self::update($this);
+        self::update($card_to_exchange);
     }
 
-    public static function update_position($card) {
-        if(empty($errors)){
-            self::execute('UPDATE card SET Position = :position WHERE ID = :card_id', array(
-                'card_id' => $card->card_id,
-                'position' => $card->position,
-            ));
-            return true;
+    public function change_column($dif){
+        $this_board = Board::get_board($this->get_board_id());
+        $columns = Column::get_columns($this_board);
+        $i =0;
+        $find = false;
+        $num = -1;
+        while($i< count($columns) && !$find) {
+            if($columns[$i]->column_id === $this->get_column_id()){
+                $num = $i;
+                $find = true;
+            }
+            ++$i;
         }
-        return false;
-    }
-
-
-
-
-    public function change_column($pos){
-        //$new_column = Column::get_column($this->get_column_id() + $pos);
-        //$new_position = self::get_last_card_position_in_column($new_column) + 1;
-        //$this->
+        $column_to_exchange = $columns[$num-$dif];
+        $new_position = self::get_last_card_position_in_column($column_to_exchange->get_column_id()) +1;
+        $this->column = $column_to_exchange;
+        $this->position = $new_position;
+        self::update($this);
     }
 
 }
