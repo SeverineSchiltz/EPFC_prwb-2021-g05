@@ -21,7 +21,7 @@
             <div class="header">
                 <h2>
                     <?= $board->get_menu_title() ?> 
-                    <i class="fa fa-edit"></i> 
+                    <a href=<?= "board/edit/".$board->board_id ?> class="invisible-link"><i class="fa fa-edit"></i></a>
                     <a href=<?= "board/delete/".$board->board_id ?> class="invisible-link"><i class="fa fa-trash"></i></a>
                 </h2>
                 Created <?= $board->get_duration_since_creation() ?> ago by <a href="board/index"><?= $board->author->get_full_name() ?></a>. <?= $board->get_last_modification()?"Modified ".$board->get_duration_since_last_edit()." ago.":"Never modified." ?>

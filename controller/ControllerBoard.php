@@ -110,4 +110,43 @@ class ControllerBoard extends Controller {
             }
             (new View("main_menu"))->show(array("user" => $user, "new_board_name" => $new_board_name, "errors" => $errors, "personal_boards" => Board::get_boards($user), "other_boards" => Board::get_other_boards($user)));
         }
+
+        
+    public static function get_board_if_exist() {
+        $board_id = "";
+        if (isset($_GET["param1"]) && $_GET["param1"] != "" && is_numeric($_GET["param1"])) {
+            $board_id = $_GET["param1"];
+            $board = Board::get_board($board_id);
+            if($board){
+                return $board;
+            }
+        }
+        return false;
+    }
+
+        public function edit() {
+            $user = $this->get_user_or_redirect();
+            $board = $this::get_board_if_exist();
+            $errors = [];
+            if($board){
+                (new View("board_edit"))->show(array("board" => $board, "user" => $user, "errors" => $errors));
+            }else{
+                $this->redirect("board","index");
+            }
+        }
+
+        public function save() {
+            $user = $this->get_user_or_redirect();
+            $errors = [];
+            if (isset($_POST['board_id']) && isset($_POST['title'])) {
+                $board = Board::get_board($_POST['board_id']);
+                $board->set_title($_POST["title"]);
+                $errors = $board->validate_board_name();
+                if (count($errors) == 0) { 
+                    $board->update(); 
+                    $this->redirect("board", "board", $board->get_board_id());
+                }
+                (new View("board_edit"))->show(array("board" => $board, "user" => $user, "errors" => $errors));
+            }
+        }
 }

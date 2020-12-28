@@ -63,3 +63,12 @@ a {
     background-color: #157ffb;
     color: white;
 }
+
+.errors{
+    color: red;
+    font-weight: bold;
+  }
+
+  .errors p{
+    margin : 0px;
+  }

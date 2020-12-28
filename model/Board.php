@@ -45,7 +45,7 @@ class Board extends Model {
         if(!(isset($this->title) && is_string($this->title) && strlen($this->title) > 2)){
             $errors[] = "Title length must be at least 3 characters";
         }
-        $errors = array_merge($errors, Board::validate_unicity($this->title));
+        $errors = array_merge($errors, $this->validate_unicity());
         return $errors;
     }
 
@@ -128,10 +128,14 @@ class Board extends Model {
         }
     }
 
-    public static function validate_unicity($title){
+    public function set_title($new_title) {
+        $this->title = $new_title;
+    } 
+
+    public function validate_unicity(){
         $errors = [];
-        $board = self::get_board_by_title($title);
-        if ($board) {
+        $board = self::get_board_by_title($this->title);
+        if ($board && $board->get_board_id() !== $this->get_board_id()) {
             $errors[] = "This title already exists. Chose another one.";
         } 
         return $errors;
@@ -208,4 +212,9 @@ class Board extends Model {
         else
             return " less than a minute";
     }
+
+    public function get_author_name() {
+        return $this->author->get_full_name();
+    }
+
  }
