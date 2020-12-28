@@ -20,7 +20,7 @@
         <div class="content">
             <div class="card-header">
                 <h2>Edit a board</h2>
-                <h4>Created by <?= $board->get_author_name() ?> <?= $board->get_duration_since_creation() ?> <?= $board->get_duration_since_last_edit() ?></h4>
+                <h4>Created by <?= $board->get_author_name() ?> <?= $board->get_duration_since_creation() ?> ago. <?= $board->get_last_modification()?"Modified ".$board->get_duration_since_last_edit()." ago.":"Never modified." ?></h4>
             </div>
             <div class="card-body">
                 <form action=<?= "board/save/"?> method="post">

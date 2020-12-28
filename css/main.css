@@ -53,6 +53,8 @@ a {
 }
 
 .btboardsMe{
+    margin: 0.8em 0.25em;
+    padding: 0.5em;
     background-color: #157ffb;
     border: 0px;
 }

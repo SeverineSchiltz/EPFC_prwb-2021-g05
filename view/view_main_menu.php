@@ -23,11 +23,9 @@
             <div class="boards">
                 <!-- your boards -->
                 <?php foreach($personal_boards as $board): ?>
-                    <form class='form-my-boards' action=<?php echo "board/board/".$board->board_id?> method='get'>
-                        <button type="submit" class="btn btboardsMe">
-                            <span class="board-title"><?= $board->title?> (<?= $board->get_nb_columns()?> columns)</span>
-                        </button>
-                    </form>
+                    <a href=<?= "board/board/".$board->get_board_id() ?> class="btn btboardsMe">
+                        <span class="board-title"><?= $board->get_title()?> (<?= $board->get_nb_columns()?> columns)</span>
+                    </a>
                 <?php endforeach; ?> 
                     
                 <!-- add board form -->
@@ -53,13 +51,11 @@
             <div class="boards">          
             <!-- others' boards -->
                 <?php foreach($other_boards as $board): ?>
-                    <form class='link' action=<?php echo "board/board/".$board->board_id ?> method='get'>
-                        <button type="submit" class="btn btboardsOther">
-                            <span class="board-title"><?= $board->title?> (<?= $board->get_nb_columns()?> columns)</span>
-                            <br/>
-                            <span class="author-name">by <?=$board->author->get_full_name()?></span>
-                        </button>
-                    </form>
+                    <a href=<?= "board/board/".$board->get_board_id() ?> class="btn btboardsOther">
+                        <span class="board-title"><?= $board->title?> (<?= $board->get_nb_columns()?> columns)</span>
+                        <br/>
+                        <span class="author-name">by <?=$board->author->get_full_name()?></span>
+                    </a>
                 <?php endforeach; ?> 
             </div>    
         </div>
