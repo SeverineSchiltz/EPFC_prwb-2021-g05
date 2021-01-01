@@ -37,10 +37,10 @@ class ControllerColumn extends Controller {
             $column = Column::get_column($_GET["param1"]);
 
             if(isset($_POST['column-title'])) {
-                $column->title = $_POST['column-title'];
+                $column->set_title($_POST['column-title']);
                 $errors = $column->update();
                 if(!is_array($errors) || empty($errors))
-                    $this->redirect("board", "board", $column->board->board_id);
+                    $this->redirect("board", "board", $column->get_board_id());
                 else                    
                     (new View("column_edit"))->show(array("user" => $user, "column" => $column, "errors" => $errors));
             } else {
@@ -95,22 +95,26 @@ class ControllerColumn extends Controller {
 
             $column = Column::get_column($_GET["param1"]);
 
-            //on vérifie si la colonne a des cartes associées
-            //si oui, demande de confirmation
-            if($column->has_cards()) {
-                if(!(isset($_POST['confirmation']) && $_POST['confirmation'])) {
-                    $this->redirect("column", "delete_confirm", $column->column_id);
-                } else {
-                    $column = $this->delete_column();
-                    if ($column) {
-                        $this->redirect("board", "board", $column->board->board_id);
+            if($column) {
+                //on vérifie si la colonne a des cartes associées
+                //si oui, demande de confirmation
+                if($column->has_cards()) {
+                    if(!(isset($_POST['confirmation']) && $_POST['confirmation'])) {
+                        $this->redirect("column", "delete_confirm", $column->get_column_id());
                     } else {
-                        throw new Exception("Wrong/missing ID or action not permitted");
+                        $column = $this->delete_column();
+                        if ($column) {
+                            $this->redirect("board", "board", $column->get_board_id());
+                        } else {
+                            throw new Exception("Wrong/missing ID or action not permitted");
+                        }
                     }
+                } else {
+                    $column->delete();
+                    $this->redirect("board", "board", $column->get_board_id());
                 }
-            } else {
-                $column->delete();
-                $this->redirect("board", "board", $column->board->board_id);
+            } else {    
+                $this->redirect("board", "index");
             }
         } else {    
             $this->redirect("board", "index");

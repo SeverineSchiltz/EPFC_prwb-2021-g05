@@ -21,34 +21,34 @@
             <div class="header">
                 <h2>
                     <?= $board->get_menu_title() ?> 
-                    <a href=<?= "board/edit/".$board->board_id ?> class="invisible-link"><i class="fa fa-edit"></i></a>
-                    <a href=<?= "board/delete/".$board->board_id ?> class="invisible-link"><i class="fa fa-trash"></i></a>
+                    <a href=<?= "board/edit/".$board->get_board_id() ?> class="invisible-link"><i class="fa fa-edit"></i></a>
+                    <a href=<?= "board/delete/".$board->get_board_id() ?> class="invisible-link"><i class="fa fa-trash"></i></a>
                 </h2>
-                Created <?= $board->get_duration_since_creation() ?> ago by <a href="board/index"><?= $board->author->get_full_name() ?></a>. <?= $board->get_last_modification()?"Modified ".$board->get_duration_since_last_edit()." ago.":"Never modified." ?>
+                Created <?= $board->get_duration_since_creation() ?> ago by <a href="board/index"><?= $board->get_author_name() ?></a>. <?= $board->get_last_modification()?"Modified ".$board->get_duration_since_last_edit()." ago.":"Never modified." ?>
             </div>
             <div class="columns">
                 <?php foreach($board->get_columns() as $column): ?>
                     <div class="column">
                         <div class="column-title">
-                            <?= $column->title?> 
-                            <a href=<?= "column/edit/".$column->column_id ?> class="invisible-link"><i class="fa fa-edit"></i></a> 
-                            <a href=<?= "column/delete/".$column->column_id ?> class="invisible-link"><i class="fa fa-trash"></i></a>
-                            <?php if($column->position != $column->get_first_position()): ?>
-                                <form  action="column/move" method="post" id=<?= "move-left".$column->column_id ?>>
+                            <?= $column->get_title()?> 
+                            <a href=<?= "column/edit/".$column->get_column_id() ?> class="invisible-link"><i class="fa fa-edit"></i></a> 
+                            <a href=<?= "column/delete/".$column->get_column_id() ?> class="invisible-link"><i class="fa fa-trash"></i></a>
+                            <?php if($column->get_position() != $column->get_first_position()): ?>
+                                <form  action="column/move" method="post" id=<?= "move-left".$column->get_column_id() ?>>
                                     <input type="hidden" name="direction" value="left">
-                                    <input type="hidden" name="board_id" value=<?= $board->board_id ?>>
-                                    <input type="hidden" name="column_id" value=<?= $column->column_id ?>>
-                                    <button type="submit" class="invisible-btn" form=<?= "move-left".$column->column_id ?>>
+                                    <input type="hidden" name="board_id" value=<?= $board->get_board_id() ?>>
+                                    <input type="hidden" name="column_id" value=<?= $column->get_column_id() ?>>
+                                    <button type="submit" class="invisible-btn" form=<?= "move-left".$column->get_column_id() ?>>
                                         <i class="fa fa-arrow-circle-left"></i>
                                     </button>
                                 </form>
                             <?php endif; ?>                            
-                            <?php if($column->position != $column->get_last_position()): ?>
-                                <form  action="column/move" method="post" id=<?= "move-right".$column->column_id ?>>
+                            <?php if($column->get_position() != $column->get_last_position()): ?>
+                                <form  action="column/move" method="post" id=<?= "move-right".$column->get_column_id() ?>>
                                     <input type="hidden" name="direction" value="right">
-                                    <input type="hidden" name="board_id" value=<?= $board->board_id ?>>
-                                    <input type="hidden" name="column_id" value=<?= $column->column_id ?>>
-                                    <button type="submit" class="invisible-btn" form=<?= "move-right".$column->column_id ?>>
+                                    <input type="hidden" name="board_id" value=<?= $board->get_board_id() ?>>
+                                    <input type="hidden" name="column_id" value=<?= $column->get_column_id() ?>>
+                                    <button type="submit" class="invisible-btn" form=<?= "move-right".$column->get_column_id() ?>>
                                         <i class="fa fa-arrow-circle-right"></i>
                                     </button>
                                 </form>
@@ -75,12 +75,12 @@
                                                 <i class="fa fa-arrow-circle-down"></i>
                                             </button>
                                         <?php endif; ?>
-                                        <?php if($column->position != $column->get_first_position()): ?>
+                                        <?php if($column->get_position() != $column->get_first_position()): ?>
                                             <button type="submit" class="invisible-btn-card" name="direction" value="left">
                                                 <i class="fa fa-arrow-circle-left"></i>
                                             </button>
                                         <?php endif; ?>
-                                        <?php if($column->position != $column->get_last_position()): ?>
+                                        <?php if($column->get_position() != $column->get_last_position()): ?>
                                             <button type="submit" class="invisible-btn-card" name="direction" value="right" >
                                                 <i class="fa fa-arrow-circle-right"></i>
                                             </button>
@@ -91,14 +91,14 @@
                         <?php endforeach; ?>     
                         <form action=<?= "card/add/" ?> class="input-group add-card" method="post">
                             <input name="title" type="text" placeholder="Add a card" class="form-control">
-                            <button class="input-group-text" type="submit" name="column_id" value="<?=$column->column_id?>">    
+                            <button class="input-group-text" type="submit" name="column_id" value="<?=$column->get_column_id()?>">    
                                 <i class="fa fa-plus"></i>
                             </button>
                         </form>  
                     </div>
                 <?php endforeach; ?> 
                 <div class="column">
-                    <form action=<?= "column/index/".$board->board_id ?> id="add-column" class="input-group add-column" method="post">
+                    <form action=<?= "column/index/".$board->get_board_id() ?> id="add-column" class="input-group add-column" method="post">
                         <input name="title" type="text" placeholder="Add a column" class="form-control">
                         <button class="input-group-text" type="submit" form="add-column">    
                             <i class="fa fa-plus"></i>

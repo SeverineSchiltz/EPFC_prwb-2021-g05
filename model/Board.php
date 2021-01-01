@@ -5,11 +5,11 @@ require_once "User.php";
 
 class Board extends Model {
 
-    public $board_id;
-    public $author;
-    public $title;
-    public $created_at;
-    public $last_modified;
+    private $board_id;
+    private $author;
+    private $title;
+    private $created_at;
+    private $last_modified;
 
     public function __construct($board_id, $author, $title, $created_at, $last_modified = NULL) {
         $this->board_id = $board_id;
@@ -25,6 +25,18 @@ class Board extends Model {
 
     public function get_board_id(){
         return $this->board_id;
+    }
+
+    public function set_board_id($id){
+        $this->board_id = $id;
+    }
+
+    public function get_author_name() {
+        return $this->author->get_full_name();
+    }
+
+    public function get_author() {
+        return $this->author;
     }
     
     //renvoie un tableau d'erreur(s) 
@@ -106,7 +118,7 @@ class Board extends Model {
                     'title' => $this->title
                 ));
                 $board = self::get_board(self::lastInsertId());
-                $this->board_id = $board->board_id;
+                $this->board_id = $board->get_board_id();
                 $this->created_at = $board->created_at;
                 return $this;
             } else {
@@ -136,7 +148,7 @@ class Board extends Model {
         $errors = [];
         $board = self::get_board_by_title($this->title);
         if ($board && $board->get_board_id() !== $this->get_board_id()) {
-            $errors[] = "This title already exists. Chose another one.";
+            $errors[] = "The title of the board must be unique";
         } 
         return $errors;
     }
@@ -211,10 +223,6 @@ class Board extends Model {
             return $interval->i.($interval->i>1?" minutes":" minute");
         else
             return " less than a minute";
-    }
-
-    public function get_author_name() {
-        return $this->author->get_full_name();
     }
 
  }

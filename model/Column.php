@@ -6,12 +6,12 @@ require_once "Card.php";
 
 class Column extends Model {
 
-    public $column_id;
-    public $board;
-    public $position;
-    public $title;
-    public $created_at;
-    public $last_modified;
+    private $column_id;
+    private $board;
+    private $position;
+    private $title;
+    private $created_at;
+    private $last_modified;
 
     public function __construct($board, $position, $title, $created_at = NULL, $column_id = NULL, $last_modified = NULL) {
         $this->board = $board;
@@ -30,12 +30,28 @@ class Column extends Model {
         return $this->column_id;
     }
 
+    public function get_position(){
+        return $this->position;
+    }
+
     public function get_board_id(){
         return $this->board->get_board_id();
     }
+
+    public function get_board_title(){
+        return $this->board->get_title();
+    }
+
+    public function set_position($position) {
+        $this->position = $position;
+    }
+
+    public function set_title($title) {
+        $this->title = $title;
+    }
     
     public static function get_columns($board) {
-        $query = self::execute("select * from `column` where Board = :board_id order by Position ASC", array("board_id" => $board->board_id));
+        $query = self::execute("select * from `column` where Board = :board_id order by Position ASC", array("board_id" => $board->get_board_id()));
         $data = $query->fetchAll();
         $columns = [];
         foreach ($data as $row) {
@@ -55,7 +71,7 @@ class Column extends Model {
     }
 
     public static function get_column_board_position($board, $position) {
-        $query = self::execute("select * from `column` where Board = :board and Position = :position", array("board" => $board->board_id, "position" => $position));
+        $query = self::execute("select * from `column` where Board = :board and Position = :position", array("board" => $board->get_board_id(), "position" => $position));
         if ($query->rowCount() == 0) {
             return false;
         } else {
@@ -91,13 +107,13 @@ class Column extends Model {
     }
 
     public function get_last_position() {
-        $query = self::execute("select Position from `column` where Board = :id order by Position DESC limit 1", array("id" => $this->board->board_id)); 
+        $query = self::execute("select Position from `column` where Board = :id order by Position DESC limit 1", array("id" => $this->board->get_board_id())); 
         $row = $query->fetch();
         return $row['Position'];
     }
 
     public function get_first_position() {
-        $query = self::execute("select Position from `column` where Board = :id order by Position ASC limit 1", array("id" => $this->board->board_id)); 
+        $query = self::execute("select Position from `column` where Board = :id order by Position ASC limit 1", array("id" => $this->board->get_board_id())); 
         $row = $query->fetch();
         return $row['Position'];
     }
@@ -113,11 +129,14 @@ class Column extends Model {
     //le tableau est vide s'il n'y a pas d'erreur.
     public function validate(){
         $errors = array();
-        if(!(isset($this->board) && is_a($this->board,"Board") && Board::get_board($this->board->board_id))){
+        if(!(isset($this->board) && is_a($this->board,"Board") && Board::get_board($this->board->get_board_id()))){
             $errors[] = "Incorrect board";
         }
         if(!(isset($this->title) && is_string($this->title) && strlen($this->title) >= 3)){
             $errors[] = "Title must be at least 3 characters long";
+        }
+        if(!(isset($this->title) && is_string($this->title) && $this->is_unique_title($this->title, $this->board))){
+            $errors[] = "Title must be unique";
         }
         if(!(isset($this->position) && is_numeric($this->position))){
             $errors[] = "Position must be numeric";
@@ -136,8 +155,8 @@ class Column extends Model {
             return $errors;
         }
         if($other_column) {
-            $temp = $other_column->position;
-            $other_column->position = $this->position;
+            $temp = $other_column->get_position();
+            $other_column->set_position($this->position);
             $this->position = $temp;
             $other_column->update();
             $this->update();
@@ -147,8 +166,26 @@ class Column extends Model {
         }
     }
 
+    private function is_unique_title($title, $board){
+        $column = self::get_column_by_title_board($title, $board);
+        if ($column && $column->get_column_id() !== $this->get_column_id())
+            return false;
+        else
+            return true;
+    }
+
+    public static function get_column_by_title_board($title, $board) {
+        $query = self::execute("SELECT * FROM `column` where Title = :title and Board = :board_id", array("title"=>$title, "board_id"=>$board->get_board_id()));
+        $row = $query->fetch(); // un seul résultat au maximum
+        if ($query->rowCount() == 0) {
+            return false;
+        } else {
+            return new Column(Board::get_board($row['Board']), $row['Position'], $row['Title'], $row['CreatedAt'], $row['ID'], $row['ModifiedAt']);
+        }
+    }
+
     private function get_column_left($board, $position) {
-        $query = self::execute("select * from `column` where Board = :board_id and Position < :position order by Position DESC limit 1", array("board_id" => $board->board_id, "position" => $position));
+        $query = self::execute("select * from `column` where Board = :board_id and Position < :position order by Position DESC limit 1", array("board_id" => $board->get_board_id(), "position" => $position));
         if ($query->rowCount() == 0) {
             return false;
         } else {
@@ -158,7 +195,7 @@ class Column extends Model {
     }
 
     private function get_column_right($board, $position) {
-        $query = self::execute("select * from `column` where Board = :board_id and Position > :position order by Position ASC limit 1", array("board_id" => $board->board_id, "position" => $position));
+        $query = self::execute("select * from `column` where Board = :board_id and Position > :position order by Position ASC limit 1", array("board_id" => $board->get_board_id(), "position" => $position));
         if ($query->rowCount() == 0) {
             return false;
         } else {
@@ -172,12 +209,12 @@ class Column extends Model {
             $errors = $this->validate();
             if(empty($errors)){
                 self::execute('INSERT INTO `column` (Board, Position, Title) VALUES (:board,:position,:title)', array(
-                    'board' => $this->board->board_id,
+                    'board' => $this->board->get_board_id(),
                     'position' => $this->position,
                     'title' => $this->title
                 ));
                 $column = self::get_column(self::lastInsertId());
-                $this->column_id = $column->column_id;
+                $this->column_id = $column->get_column_id();
                 $this->created_at = $column->created_at;
                 return $this;
             } else {
@@ -230,9 +267,4 @@ class Column extends Model {
         else
             return " less than a minute";
     }
-
-    public function get_board_title() {
-        return $this->board->get_title();
-    }
-
 }

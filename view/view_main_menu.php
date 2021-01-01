@@ -52,9 +52,9 @@
             <!-- others' boards -->
                 <?php foreach($other_boards as $board): ?>
                     <a href=<?= "board/board/".$board->get_board_id() ?> class="btn btboardsOther">
-                        <span class="board-title"><?= $board->title?> (<?= $board->get_nb_columns()?> columns)</span>
+                        <span class="board-title"><?= $board->get_title()?> (<?= $board->get_nb_columns()?> columns)</span>
                         <br/>
-                        <span class="author-name">by <?=$board->author->get_full_name()?></span>
+                        <span class="author-name">by <?=$board->get_author_name()?></span>
                     </a>
                 <?php endforeach; ?> 
             </div>    

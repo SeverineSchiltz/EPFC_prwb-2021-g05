@@ -44,19 +44,19 @@ class Card extends Model {
     } 
 
     public function get_last_position() {
-        $query = self::execute("select Position from card where `Column` = :id order by Position DESC limit 1", array("id" => $this->column->column_id)); 
+        $query = self::execute("select Position from card where `Column` = :id order by Position DESC limit 1", array("id" => $this->column->get_column_id())); 
         $row = $query->fetch();
         return $row['Position'];
     }   
 
     public function get_first_position() {
-        $query = self::execute("select Position from card where `Column` = :id order by Position ASC limit 1", array("id" => $this->column->column_id)); 
+        $query = self::execute("select Position from card where `Column` = :id order by Position ASC limit 1", array("id" => $this->column->get_column_id())); 
         $row = $query->fetch();
         return $row['Position'];
     }     
 
     public static function get_cards($column) {
-        $query = self::execute("select * from card where `Column` = :id order by Position ASC", array("id" => $column->column_id));
+        $query = self::execute("select * from card where `Column` = :id order by Position ASC", array("id" => $column->get_column_id()));
         $data = $query->fetchAll();
         $cards = [];
         foreach ($data as $row) {
@@ -193,8 +193,8 @@ class Card extends Model {
         if(!(isset($this->title) && is_string($this->title) && strlen($this->title) > 2)){
             $errors[] = "Title length must be at least 3 characters";
         }
-        if(!self::validate_unicity_in_board()){
-            $errors[] = "The title you write already exists in this board. Chose another one.";
+        if(!$this->validate_unicity_in_board()){
+            $errors[] = "Title must be unique on this board.";
         }
         return $errors;
     }

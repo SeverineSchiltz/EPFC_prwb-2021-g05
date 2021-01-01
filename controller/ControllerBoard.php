@@ -41,13 +41,13 @@ class ControllerBoard extends Controller {
 
             $board = Board::get_board($_GET["param1"]);
 
-            if($user != $board->author) {
+            if($user != $board->get_author()) {
                 $errors[] = "You cannot delete someone else's board";
                 $_SESSION['errors'] = $errors;
-                $this->redirect("board", "board", $board->board_id);
+                $this->redirect("board", "board", $board->get_board_id());
             } else if($board->has_columns()) {
                 if(!(isset($_POST['confirmation']) && $_POST['confirmation'])) {
-                    $this->redirect("board", "delete_confirm", $board->board_id);
+                    $this->redirect("board", "delete_confirm", $board->get_board_id());
                 }
                 else {
                     $board = $this->delete_board();
@@ -59,7 +59,7 @@ class ControllerBoard extends Controller {
                     }
                 } 
             } else {   
-                $_POST['board_id'] = $board->board_id;
+                $board->set_board_id($_POST['board_id']);
                 $board = $this->delete_board();
     
                 if ($board) {

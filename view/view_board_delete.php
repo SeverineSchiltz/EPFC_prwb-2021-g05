@@ -27,10 +27,10 @@
                     <span>Do you really want to delete this board?</span>
                     <span>This process cannot be undone.</span>
                     <div class="buttons">
-                        <a href=<?= "board/board/".$board->board_id ?> class="btn btn-secondary">Cancel</a>
-                        <form action=<?= "board/delete/".$board->board_id ?> method="post">
+                        <a href=<?= "board/board/".$board->get_board_id() ?> class="btn btn-secondary">Cancel</a>
+                        <form action=<?= "board/delete/".$board->get_board_id() ?> method="post">
                             <input type="hidden" name="confirmation" value="true">
-                            <input type="hidden" name="board_id" value=<?= $board->board_id ?>>
+                            <input type="hidden" name="board_id" value=<?= $board->get_board_id() ?>>
                             <input type="submit" value="Delete" class="btn btn-danger submit">
                         </form>
                     </div>
