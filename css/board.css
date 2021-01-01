@@ -90,3 +90,12 @@ a {
 .invisible-btn-card:hover {
   color: rgb(59, 59, 59);
 }
+
+.errors{
+  color: red;
+  font-weight: bold;
+}
+
+.errors p{
+  margin : 0px;
+}
