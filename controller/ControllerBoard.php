@@ -45,12 +45,12 @@ class ControllerBoard extends Controller {
                 $errors[] = "You cannot delete someone else's board";
                 $_SESSION['errors'] = $errors;
                 $this->redirect("board", "board", $board->get_board_id());
-            } else if($board->has_columns()) {
+            } else if($board->has_columns()) { // s'il y a des colonnes il faut confirmation
                 if(!(isset($_POST['confirmation']) && $_POST['confirmation'])) {
-                    $this->redirect("board", "delete_confirm", $board->get_board_id());
+                    $this->redirect("board", "delete_confirm", $board->get_board_id()); // pas de confirmation -> redirection
                 }
                 else {
-                    $board = $this->delete_board();
+                    $board = $this->delete_board(); // confirmation -> on delete
     
                     if ($board) {
                         $this->redirect("board", "index");
@@ -59,7 +59,7 @@ class ControllerBoard extends Controller {
                     }
                 } 
             } else {   
-                $board->set_board_id($_POST['board_id']);
+                $_POST['board_id'] = $board->get_board_id();
                 $board = $this->delete_board();
     
                 if ($board) {

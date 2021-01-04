@@ -103,7 +103,7 @@ class Board extends Model {
         if ($this->author == $initiator) {
             foreach($this->get_columns() as $column)
                 $column->delete();
-            self::execute('DELETE FROM board WHERE ID = :id', array('id' => $this->board_id));
+            self::execute('DELETE FROM board WHERE ID = :id', array('id' => $this->get_board_id()));
             return true;
         }
         return false;
