@@ -13,67 +13,109 @@
     </head>
     <body>
         <?php
-            ob_start();
+            $menu_title = $board->get_menu_title();
+            $menu_subtitle = "Boards";
             include("menu.php");
-            $buffer=ob_get_contents();
-            ob_end_clean();
-
-            $buffer=str_replace("%TITLE%",$board->get_title(),$buffer);
-            $buffer=str_replace("%SUBTITLE%","Boards",$buffer);
-            echo $buffer;
         ?>
         <div class="content">
             <div class="header">
                 <h2>
-                    <?php echo $board->get_title() ?> 
-                    <i class="fa fa-edit"></i> 
-                    <i class="fa fa-trash"></i>
+                    <?= $board->get_menu_title() ?> 
+                    <a href=<?= "board/edit/".$board->get_board_id() ?> class="invisible-link"><i class="fa fa-edit"></i></a>
+                    <a href=<?= "board/delete/".$board->get_board_id() ?> class="invisible-link"><i class="fa fa-trash"></i></a>
                 </h2>
-                Created <?= $board->get_duration_since_creation() ?> ago by <a href="board/index"><?= $user->full_name ?></a>. <?= $board->last_modified?$board->get_duration_since_last_edit:"Never modified." ?>
+                Created <?= $board->get_duration_since_creation() ?> ago by <a href="board/index"><?= $board->get_author_name() ?></a>. <?= $board->get_last_modification()?"Modified ".$board->get_duration_since_last_edit()." ago.":"Never modified." ?>
             </div>
             <div class="columns">
-                <?php foreach($columns as $column): ?>
+                <?php foreach($board->get_columns() as $column): ?>
                     <div class="column">
                         <div class="column-title">
-                            <?= $column->title?> 
-                            <i class="fa fa-edit"></i> 
-                            <i class="fa fa-trash"></i> 
-                            <?php if($column->position != 0) echo "<i class=\"fa fa-arrow-circle-left\"></i>" ?>
-                            <?php if($column->position != $column->get_last_position()) echo "<i class=\"fa fa-arrow-circle-right\"></i>" ?>
+                            <?= $column->get_title()?> 
+                            <a href=<?= "column/edit/".$column->get_column_id() ?> class="invisible-link"><i class="fa fa-edit"></i></a> 
+                            <a href=<?= "column/delete/".$column->get_column_id() ?> class="invisible-link"><i class="fa fa-trash"></i></a>
+                            <?php if($column->get_position() != $column->get_first_position()): ?>
+                                <form  action="column/move" method="post" id=<?= "move-left".$column->get_column_id() ?>>
+                                    <input type="hidden" name="direction" value="left">
+                                    <input type="hidden" name="board_id" value=<?= $board->get_board_id() ?>>
+                                    <input type="hidden" name="column_id" value=<?= $column->get_column_id() ?>>
+                                    <button type="submit" class="invisible-btn" form=<?= "move-left".$column->get_column_id() ?>>
+                                        <i class="fa fa-arrow-circle-left"></i>
+                                    </button>
+                                </form>
+                            <?php endif; ?>                            
+                            <?php if($column->get_position() != $column->get_last_position()): ?>
+                                <form  action="column/move" method="post" id=<?= "move-right".$column->get_column_id() ?>>
+                                    <input type="hidden" name="direction" value="right">
+                                    <input type="hidden" name="board_id" value=<?= $board->get_board_id() ?>>
+                                    <input type="hidden" name="column_id" value=<?= $column->get_column_id() ?>>
+                                    <button type="submit" class="invisible-btn" form=<?= "move-right".$column->get_column_id() ?>>
+                                        <i class="fa fa-arrow-circle-right"></i>
+                                    </button>
+                                </form>
+                            <?php endif; ?>
                         </div>                        
                         <?php foreach($column->get_cards() as $card): ?>
                             <div class="card">
                                 <div class="card-title">
-                                <a href=<?php echo "card/view/".$card->card_id ?>><?=$card->title?></a>
+                                <a href=<?= "card/index/".$card->get_card_id() ?>><?=$card->get_title()?></a>
                                 </div>
                                 <div class="card-buttons">
-                                    <i class="fa fa-eye"></i> 
-                                    <i class="fa fa-edit"></i> 
-                                    <i class="fa fa-trash"></i> 
-                                    <?php if($card->position != 0) echo "<i class=\"fa fa-arrow-circle-up\"></i>" ?>
-                                    <?php if($card->position != $card->get_last_position()) echo "<i class=\"fa fa-arrow-circle-down\"></i>" ?>                                   
-                                    <?php if($column->position != 0) echo "<i class=\"fa fa-arrow-circle-left\"></i>" ?>
-                                    <?php if($column->position != $column->get_last_position()) echo "<i class=\"fa fa-arrow-circle-right\"></i>" ?>
+                                    <form  action="card/move/" method="post">
+                                        <a href=<?= "card/view/".$card->get_card_id() ?> class="invisible-link"><i class="fa fa-eye"></i></a> 
+                                        <a href=<?= "card/edit/".$card->get_card_id() ?> class="invisible-link"><i class="fa fa-edit"></i></a> 
+                                        <a href=<?= "card/delete_confirm/".$card->get_card_id() ?> class="invisible-link"><i class="fa fa-trash"></i></a> 
+                                        <input type="hidden" name="card_id" value=<?= $card->get_card_id() ?>>
+                                        <?php if($card->get_position() != $card->get_first_position()): ?>
+                                            <button type="submit" class="invisible-btn-card" name="direction" value="up">
+                                                <i class="fa fa-arrow-circle-up"></i>
+                                            </button>
+                                        <?php endif; ?>
+                                        <?php if($card->get_position() != $card->get_last_position()): ?>
+                                            <button type="submit" class="invisible-btn-card" name="direction" value="down">
+                                                <i class="fa fa-arrow-circle-down"></i>
+                                            </button>
+                                        <?php endif; ?>
+                                        <?php if($column->get_position() != $column->get_first_position()): ?>
+                                            <button type="submit" class="invisible-btn-card" name="direction" value="left">
+                                                <i class="fa fa-arrow-circle-left"></i>
+                                            </button>
+                                        <?php endif; ?>
+                                        <?php if($column->get_position() != $column->get_last_position()): ?>
+                                            <button type="submit" class="invisible-btn-card" name="direction" value="right" >
+                                                <i class="fa fa-arrow-circle-right"></i>
+                                            </button>
+                                        <?php endif; ?>
+                                    </form>
                                 </div>
                             </div>
                         <?php endforeach; ?>     
-                        <form action=<?php echo "card/add/".$column->position ?> id=<?php echo "add-card".$column->position ?> class="input-group add-card">
-                            <input id="add-card" name="title" type="add-card" placeholder="Add a card" class="form-control">
-                            <button class="input-group-text" type="submit" form=<?php echo "add-card".$column->position ?>>    
+                        <form action=<?= "card/add/" ?> class="input-group add-card" method="post">
+                            <input name="title" type="text" placeholder="Add a card" class="form-control">
+                            <button class="input-group-text" type="submit" name="column_id" value="<?=$column->get_column_id()?>">    
                                 <i class="fa fa-plus"></i>
                             </button>
                         </form>  
                     </div>
                 <?php endforeach; ?> 
                 <div class="column">
-                    <form action="column/add" id="add-column" class="input-group add-column">
-                        <input id="add-column" name="title" type="add-column" placeholder="Add a column" class="form-control">
+                    <form action=<?= "column/index/".$board->get_board_id() ?> id="add-column" class="input-group add-column" method="post">
+                        <input name="title" type="text" placeholder="Add a column" class="form-control">
                         <button class="input-group-text" type="submit" form="add-column">    
                             <i class="fa fa-plus"></i>
                         </button>
                     </form>  
                 </div>
             </div>
+            <?php if (count($errors) != 0): ?>
+                <div class='errors'>
+                    <p>The following error(s) occured :</p>
+                    <ul>
+                        <?php foreach ($errors as $error): ?>
+                            <li><?= $error ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            <?php endif; ?>
         </div>
     </body>
 </html>

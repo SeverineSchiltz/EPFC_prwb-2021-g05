@@ -56,7 +56,7 @@ abstract class Controller
         die();
     }
 
-    //indique si un l'utilisateur est connecté
+    //indique si l'utilisateur est connecté
     public function user_logged()
     {
         if (!isset($_SESSION['user'])) {
@@ -66,7 +66,7 @@ abstract class Controller
         }
     }
 
-    //renvoie l'utilisateur connecté ou false personne n'est connecté
+    //renvoie l'utilisateur connecté ou false si personne n'est connecté
     public function get_user_or_false()
     {
         if (!$this->user_logged()) {
@@ -88,7 +88,7 @@ abstract class Controller
         }
     }
 
-    //tout controlleur doit posséder une méthode index, c'est son action
+    //tout contrôleur doit posséder une méthode index, c'est son action
     //par défaut
     public abstract function index();
 }

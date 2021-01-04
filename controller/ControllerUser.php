@@ -32,26 +32,26 @@ class ControllerUser extends Controller {
     //gestion de l'inscription d'un utilisateur
     public function signup() {
         $mail = '';
+        $name = '';
         $password = '';
         $password_confirm = '';
         $errors = [];
 
-        if (isset($_POST['mail']) && isset($_POST['password']) && isset($_POST['password_confirm'])) {
+        if (isset($_POST['mail']) && isset($_POST['name']) && isset($_POST['password']) && isset($_POST['password_confirm'])) {
             $mail = trim($_POST['mail']);
+            $name = trim($_POST['name']);
             $password = $_POST['password'];
             $password_confirm = $_POST['password_confirm'];
 
-            $user = new User($mail, Tools::my_hash($password));
-            $errors = User::validate_unicity($mail);
-            $errors = array_merge($errors, $user->validate());
+            $user = new User($mail, Tools::my_hash($password), $name);
+            $errors = $user->validate(); //valide le mail et le full name
             $errors = array_merge($errors, User::validate_passwords($password, $password_confirm));
-
             if (count($errors) == 0) { 
-                $user->update(); //sauve l'utilisateur
-                $this->log_user($user);
+                $user->update(); 
+                $this->log_user(User::get_user_by_mail($mail)); //va rechercher l'utilisateur avec l'id
             }
         }
-        (new View("signup"))->show(array("mail" => $mail, "password" => $password, 
+        (new View("signup"))->show(array("mail" => $mail, "name" => $name, "password" => $password, 
                                          "password_confirm" => $password_confirm, "errors" => $errors));
     }
 }

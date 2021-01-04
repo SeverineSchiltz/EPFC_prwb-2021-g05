@@ -13,30 +13,29 @@
     </head>
     <body>
         <?php
-            ob_start();
+            $menu_title = "Boards";
+            $menu_subtitle = "";
             include("menu.php");
-            $buffer=ob_get_contents();
-            ob_end_clean();
-
-            $buffer=str_replace("%TITLE%","Boards",$buffer);
-            $buffer=str_replace("%SUBTITLE%","",$buffer);
-            echo $buffer;
         ?>
         <div class="content">
             <h2>Your boards</h2>
 
-            <!-- your boards -->
-
-            <?php foreach($personal_boards as $board): ?>
-                <a href=<?php echo "board/board/".$board->board_id ?>><?= $board->title?> (<?= $board->get_nb_columns()?> columns)</a>
-             <?php endforeach; ?> 
-                
-            <!-- add board form -->
-                
-            <form id="board_form" action="boards.php?param1=<?= $recipient->mail ?>" method="post">
-                <input id="private" name="private" type="text" placeholder="Add a board"><input id="post" type="submit" value="Post">
-            </form>
-            
+            <div class="boards">
+                <!-- your boards -->
+                <?php foreach($personal_boards as $board): ?>
+                    <a href=<?= "board/board/".$board->get_board_id() ?> class="btn btboardsMe">
+                        <span class="board-title"><?= $board->get_title()?> (<?= $board->get_nb_columns()?> columns)</span>
+                    </a>
+                <?php endforeach; ?> 
+                    
+                <!-- add board form -->
+                <form id="form-add-board" action="board/add" method="post" class="input-group form-my-boards">
+                    <input id="input-board-name" name="new_board_name" type="text" placeholder="Add a board" class="form-control" value="<?= $new_board_name?>">
+                    <button class="input-group-text btt-add-board" type="submit"> 
+                        <i class="fa fa-plus"></i>
+                    </button>
+                </form>
+            </div>
             <?php if (count($errors) != 0): ?>
                 <div class='errors'>
                     <p>Please correct the following error(s) :</p>
@@ -49,11 +48,16 @@
             <?php endif; ?>
 
             <h2>Others' boards</h2>
-
+            <div class="boards">          
             <!-- others' boards -->
-            <?php foreach($other_boards as $board): ?>
-                <a href=<?php echo "board/board/".$board->board_id ?>><?= $board->title?> (<?= $board->get_nb_columns()?> columns)</a>
-            <?php endforeach; ?> 
+                <?php foreach($other_boards as $board): ?>
+                    <a href=<?= "board/board/".$board->get_board_id() ?> class="btn btboardsOther">
+                        <span class="board-title"><?= $board->get_title()?> (<?= $board->get_nb_columns()?> columns)</span>
+                        <br/>
+                        <span class="author-name">by <?=$board->get_author_name()?></span>
+                    </a>
+                <?php endforeach; ?> 
+            </div>    
         </div>
     </body>
 </html>

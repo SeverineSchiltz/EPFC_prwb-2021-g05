@@ -1,0 +1,41 @@
+.content {
+    padding: 1.25em 1.5em;
+    margin-top: 60px;
+    flex-grow: 1;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  .card-header{
+    background-color: white;
+    border: none;
+  }
+
+  textarea{
+    height:300px;
+  }
+
+  h3{
+    margin:10px 0px;
+    font-size: medium;
+  }
+
+  h4{
+    font-size: medium;
+    color: rgb(145, 151, 157);
+  }
+
+  .buttons{
+    margin:15px 0px;
+  }
+
+  .errors{
+    color: red;
+    font-weight: bold;
+  }
+
+  .errors p{
+    margin : 0px;
+  }

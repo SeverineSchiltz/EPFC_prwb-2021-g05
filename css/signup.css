@@ -1,0 +1,45 @@
+.content {
+    margin-top: 60px;
+    padding: 1.25em 1.5em;
+  }
+  
+  .form {
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+      border: solid lightgray 1px;
+      border-radius: 0.3em;
+      padding: 1em;
+  }
+  
+  .form-group > * {
+      margin: 1em 0;
+  }
+  
+  .input-group-text {
+      height: 100%;
+      font-size: large;
+      color: #495057;
+  }
+  
+  .mail {
+    margin-top: 0;
+  }
+  
+  .submit {
+    margin-top: 0;
+    background: #157ffb;
+    width: 100%;
+  }
+  
+  .signup {
+    opacity: 1; 
+  }
+  
+  .signin {
+    opacity: 0.4;
+  }
+  
+  .right-menu {
+    opacity: 1;
+  }

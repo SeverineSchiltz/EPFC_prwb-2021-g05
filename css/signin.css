@@ -31,3 +31,15 @@
   background: #157ffb;
   width: 100%;
 }
+
+.signup {
+  opacity: 0.4;
+}
+
+.signin {
+  opacity: 1;
+}
+
+.right-menu {
+  opacity: 1;
+}

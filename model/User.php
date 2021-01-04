@@ -4,14 +4,28 @@ require_once "framework/Model.php";
 
 class User extends Model {
 
-    public $mail;
-    public $hashed_password;
-    public $full_name;
+    private $user_id;
+    private $mail;
+    private $hashed_password;
+    private $full_name;
 
-    public function __construct($mail, $hashed_password, $full_name) {
+    public function __construct($mail, $hashed_password, $full_name, $id = null) {
         $this->mail = $mail;
         $this->hashed_password = $hashed_password;
         $this->full_name = $full_name;
+        $this->user_id = $id;
+    }
+
+    public function get_full_name(){
+        return $this->full_name;
+    }
+
+    public function get_mail(){
+        return $this->mail;
+    }
+
+    public function get_user_id(){
+        return $this->user_id;
     }
 
     public function update() {
@@ -19,8 +33,8 @@ class User extends Model {
             self::execute("UPDATE User SET password=:password WHERE mail=:mail ", 
                           array("mail"=>$this->mail, "password"=>$this->hashed_password));
         else
-            self::execute("INSERT INTO User(mail,password) VALUES(:mail,:password)", 
-                          array("mail"=>$this->mail, "password"=>$this->hashed_password));
+            self::execute("INSERT INTO User(Mail, FullName, Password) VALUES(:mail,:full_name,:password)", 
+                          array("mail"=>$this->mail, "full_name"=>$this->full_name, "password"=>$this->hashed_password));
         return $this;
     }
 
@@ -30,7 +44,17 @@ class User extends Model {
         if ($query->rowCount() == 0) {
             return false;
         } else {
-            return new User($data["Mail"], $data["Password"], $data["FullName"]);
+            return new User($data["Mail"], $data["Password"], $data["FullName"], $data["ID"]);
+        }
+    }
+
+    public static function get_user_by_id($id) {
+        $query = self::execute("SELECT * FROM User where ID = :id", array("id"=>$id));
+        $data = $query->fetch(); // un seul résultat au maximum
+        if ($query->rowCount() == 0) {
+            return false;
+        } else {
+            return new User($data["Mail"], $data["Password"], $data["FullName"], $data["ID"]);
         }
     }
 
@@ -39,32 +63,22 @@ class User extends Model {
         $data = $query->fetchAll();
         $results = [];
         foreach ($data as $row) {
-            $results[] = new User($row["Mail"], $row["Password"]);
+            $results[] = new User($row["Mail"], $row["Password"], $row['FullName'], $data["ID"]);
         }
         return $results;
     }
 
-    //renvoie un tableau d'erreur(s) 
-    //le tableau est vide s'il n'y a pas d'erreur.
-    //ne s'occupe que de la validation "métier" des champs obligatoires (le mail)
-    //les autres champs (mot de passe, description et image) sont gérés par d'autres
-    //méthodes.
     public function validate(){
         $errors = array();
-        if (!(isset($this->mail) && is_string($this->mail) && strlen($this->mail) > 0)) {
-            $errors[] = "mail is required.";
-        } if (!(isset($this->mail) && is_string($this->mail) && strlen($this->mail) >= 3 && strlen($this->mail) <= 16)) {
-            $errors[] = "mail length must be between 3 and 16.";
-        } if (!(isset($this->mail) && is_string($this->mail) && preg_match("/^[a-zA-Z][a-zA-Z0-9]*$/", $this->mail))) {
-            $errors[] = "mail must start by a letter and must contain only letters and numbers.";
-        }
+        $errors = User::validate_full_name($this->full_name);
+        $errors = array_merge($errors, User::validate_email($this->mail));
         return $errors;
     }
     
     private static function validate_password($password){
         $errors = [];
-        if (strlen($password) < 8 || strlen($password) > 16) {
-            $errors[] = "Password length must be between 8 and 16.";
+        if (strlen($password) < 8) {
+            $errors[] = "Password length must be at least 8 characters.";
         } if (!((preg_match("/[A-Z]/", $password)) && preg_match("/\d/", $password) && preg_match("/['\";:,.\/?\\-]/", $password))) {
             $errors[] = "Password must contain one uppercase letter, one number and one punctuation mark.";
         }
@@ -75,6 +89,30 @@ class User extends Model {
         $errors = User::validate_password($password);
         if ($password != $password_confirm) {
             $errors[] = "You have to enter twice the same password.";
+        }
+        return $errors;
+    }
+
+    public static function validate_full_name($full_name){
+        $errors = [];
+        if (!isset($full_name) || !is_string($full_name) || strlen($full_name) < 3) {
+            $errors[] = "Full name length must be at least 3 characters.";
+        }
+        return $errors;
+    }
+
+    public static function validate_email($mail){
+        $errors = [];
+        $user = self::get_user_by_mail($mail);
+        if (!(isset($mail) && is_string($mail) && strlen($mail) > 0)) {
+            $errors[] = "Email is required.";
+        }
+        if ($user) {
+            $errors[] = "This email already exists.";
+        } 
+        $patternEmail = "/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,})$/i";
+        if (!(isset($mail) && is_string($mail) && preg_match($patternEmail, $mail))) {
+            $errors[] = "Email must start by a letter and must contain only letters and numbers.";
         }
         return $errors;
     }

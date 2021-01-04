@@ -33,7 +33,13 @@ a {
 
 .column-title > i {
   position: relative;
-  top: 5px;
+  top: 4px;
+  margin-left: 5px;
+}
+
+.column-title > a {
+  position: relative;
+  top: 2px;
   margin-left: 5px;
 }
 
@@ -55,4 +61,41 @@ a {
 .add-column .input-group-text {
   background-color: #157ffb;
   color: white;
+}
+
+.invisible-btn {
+  border: none;
+}
+
+.invisible-btn:hover {
+  color: rgb(59, 59, 59);
+}
+
+.invisible-link {
+  color: black;
+}
+
+.invisible-link:hover {
+  color: rgb(59, 59, 59);
+}
+
+.invisible-btn-card{
+  color: black;
+  background-color: white;
+  border: none;
+  margin: 0px;
+  padding: 0px;
+}
+
+.invisible-btn-card:hover {
+  color: rgb(59, 59, 59);
+}
+
+.errors{
+  color: red;
+  font-weight: bold;
+}
+
+.errors p{
+  margin : 0px;
 }

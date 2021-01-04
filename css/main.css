@@ -1,3 +1,4 @@
+
 .content {
     padding: 1.25em 1.5em;
     margin-top: 60px;
@@ -6,3 +7,70 @@
 a {
     text-decoration: none;
 }
+
+.btt-add-board{
+    background-color: #157ffb;
+    border-color: #157ffb;
+    color: white;
+    border-radius: 0.2em;
+}
+
+.form-my-boards{
+    margin: 0.25em 0;
+    padding: 0.5em;
+
+}
+
+#form-add-board{
+    width: 300px;
+}
+
+.boards{
+    display: flex;
+    flex-direction: row;
+}
+
+.btboardsOther{
+    margin: 0.25em 0.25em;
+    padding: 0.5em;
+    background-color:rgb(40, 167, 69);
+    border: 0px;
+}
+
+.btboardsOther span{
+    margin: 0px;
+    padding: 0px;
+    background-color:rgb(40, 167, 69);
+    color: white;
+}
+
+.board-title{
+    font-size: medium;
+}
+
+.author-name{
+    font-size: small;
+}
+
+.btboardsMe{
+    margin: 0.8em 0.25em;
+    padding: 0.5em;
+    background-color: #157ffb;
+    border: 0px;
+}
+
+.btboardsMe span{
+    margin: 0px;
+    padding: 0px;
+    background-color: #157ffb;
+    color: white;
+}
+
+.errors{
+    color: red;
+    font-weight: bold;
+  }
+
+  .errors p{
+    margin : 0px;
+  }
