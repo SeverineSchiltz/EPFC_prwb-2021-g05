@@ -90,7 +90,7 @@
                             </div>
                         <?php endforeach; ?>     
                         <form action=<?= "card/add/" ?> class="input-group add-card" method="post">
-                            <input name="title" type="text" placeholder="Add a card" class="form-control">
+                            <input name="title" type="text" placeholder="Add a card" class="form-control" value="<?= isset($new_card) && $new_card->get_column_id() === $column->get_column_id() ? $new_card->get_title() : '' ?>">
                             <button class="input-group-text" type="submit" name="column_id" value="<?=$column->get_column_id()?>">    
                                 <i class="fa fa-plus"></i>
                             </button>

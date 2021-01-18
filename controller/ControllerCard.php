@@ -89,20 +89,22 @@ class ControllerCard extends Controller {
         
     public function add() {
         $user = $this->get_user_or_redirect();
+        $card = null;
         $column_id = "";
         $errors = [];
         if(isset($_POST["column_id"]) && isset($_POST["title"])){
             $column_id = $_POST["column_id"];
+            $new_card_name = $_POST["title"];
             $column = Column::get_column($column_id);
             $board = Board::get_board($column->get_board_id());
             $position = Card::get_last_card_position_in_column($column_id) + 1;
-            $card = new Card(null, $column, $position, $user, $_POST["title"], "", new DateTime("now"));
+            $card = new Card(null, $column, $position, $user, $new_card_name, "", new DateTime("now"));
             $errors = $card->validate_title();
             if (count($errors) == 0) { 
                 $card->insert_new_card(); 
                 $this->redirect("board","board", $board->get_board_id());
             }
-            (new View("board"))->show(array("board" => $board, "user" => $user, "errors" => $errors));
+            (new View("board"))->show(array("board" => $board, "user" => $user, "errors" => $errors, "new_card" => $card));
         }else{
             $this->redirect("board","index");
         }
