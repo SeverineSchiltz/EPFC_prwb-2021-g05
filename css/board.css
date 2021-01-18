@@ -99,3 +99,8 @@ a {
 .errors p{
   margin : 0px;
 }
+
+.card-name{
+  color: red;
+  font-weight: bold;
+}

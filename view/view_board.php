@@ -26,6 +26,16 @@
                 </h2>
                 Created <?= $board->get_duration_since_creation() ?> ago by <a href="board/index"><?= $board->get_author_name() ?></a>. <?= $board->get_last_modification()?"Modified ".$board->get_duration_since_last_edit()." ago.":"Never modified." ?>
             </div>
+            <?php if (count($errors) != 0): ?>
+                <div class='errors'>
+                    <p>The following error(s) occured :</p>
+                    <ul>
+                        <?php foreach ($errors as $error): ?>
+                            <li><?= $error ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            <?php endif; ?>
             <div class="columns">
                 <?php foreach($board->get_columns() as $column): ?>
                     <div class="column">
@@ -90,7 +100,11 @@
                             </div>
                         <?php endforeach; ?>     
                         <form action=<?= "card/add/" ?> class="input-group add-card" method="post">
-                            <input name="title" type="text" placeholder="Add a card" class="form-control" value="<?= isset($new_card) && $new_card->get_column_id() === $column->get_column_id() ? $new_card->get_title() : '' ?>">
+                            <?php if(isset($new_card) && $new_card->get_column_id() === $column->get_column_id()): ?>
+                                <input name="title" type="text" placeholder="Add a card" class="form-control card-name" value="<?= $new_card->get_title()?>">
+                            <?php else: ?>
+                                <input name="title" type="text" placeholder="Add a card" class="form-control">
+                            <?php endif; ?>
                             <button class="input-group-text" type="submit" name="column_id" value="<?=$column->get_column_id()?>">    
                                 <i class="fa fa-plus"></i>
                             </button>
@@ -106,16 +120,6 @@
                     </form>  
                 </div>
             </div>
-            <?php if (count($errors) != 0): ?>
-                <div class='errors'>
-                    <p>The following error(s) occured :</p>
-                    <ul>
-                        <?php foreach ($errors as $error): ?>
-                            <li><?= $error ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                </div>
-            <?php endif; ?>
         </div>
     </body>
 </html>
