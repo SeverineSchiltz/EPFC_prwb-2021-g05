@@ -8,6 +8,7 @@
   font-size: larger;
   font-weight: 600;
   width: 100%;
+  z-index: 100;
 }
 
 .spacer {
