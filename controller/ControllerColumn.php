@@ -21,8 +21,7 @@ class ControllerColumn extends Controller {
             } else {
                 $errors[] = "Title isn't set";
             }    
-            $_SESSION['errors'] = $errors;
-            $this->redirect("board", "board", $_GET["param1"]);
+            (new View("board"))->show(array("board" => $board, "user" => $user, "errors" => $errors));
         } else {
             $this->redirect("board", "index");
         }
@@ -66,8 +65,10 @@ class ControllerColumn extends Controller {
     
             $errors = $column->move($direction);
 
-            $_SESSION['errors'] = $errors;
-            $this->redirect("board", "board", $board_id);
+            if(!is_array($errors) || empty($errors))
+                $this->redirect("board", "board", $board_id);
+            else
+                (new View("board"))->show(array("board" => $board, "user" => $user, "errors" => $errors));
         } else {
             $this->redirect("board", "index");
         }

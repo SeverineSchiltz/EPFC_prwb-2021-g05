@@ -26,10 +26,7 @@ class ControllerBoard extends Controller {
         $user = $this->get_user_or_redirect();
         if (isset($_GET["param1"]) && $_GET["param1"] !== "") {
             $board = board::get_board($_GET["param1"]);
-            if(isset($_SESSION['errors'])) 
-                $errors = $_SESSION['errors'];
             (new View("board"))->show(array("board" => $board, "user" => $user, "errors" => $errors));
-            unset($_SESSION['errors']);
         } 
         else $this->index();
     }
@@ -43,8 +40,7 @@ class ControllerBoard extends Controller {
 
             if($user != $board->get_author()) {
                 $errors[] = "You cannot delete someone else's board";
-                $_SESSION['errors'] = $errors;
-                $this->redirect("board", "board", $board->get_board_id());
+                (new View("board"))->show(array("board" => $board, "user" => $user, "errors" => $errors));
             } else if($board->has_columns()) { // s'il y a des colonnes il faut confirmation
                 if(!(isset($_POST['confirmation']) && $_POST['confirmation'])) {
                     $this->redirect("board", "delete_confirm", $board->get_board_id()); // pas de confirmation -> redirection
