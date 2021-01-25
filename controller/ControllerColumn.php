@@ -20,8 +20,9 @@ class ControllerColumn extends Controller {
                 $errors = $this->add($board, $position);
             } else {
                 $errors[] = "Title isn't set";
-            }    
-            (new View("board"))->show(array("board" => $board, "user" => $user, "errors" => $errors));
+            }
+            $title = isset($_POST['title']) && !empty($errors)?$_POST['title']:'';
+            (new View("board"))->show(array("board" => $board, "user" => $user, "errors" => $errors, "add_column_title" => $title));
         } else {
             $this->redirect("board", "index");
         }
