@@ -43,3 +43,12 @@
   .right-menu {
     opacity: 1;
   }
+
+  .errors{
+    color: red;
+    font-weight: bold;
+  }
+
+  .errors p{
+    margin : 0px;
+  }

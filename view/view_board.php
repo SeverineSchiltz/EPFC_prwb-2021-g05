@@ -113,7 +113,7 @@
                 <?php endforeach; ?> 
                 <div class="column">
                     <form action=<?= "column/index/".$board->get_board_id() ?> id="add-column" class="input-group add-column" method="post">
-                        <input name="title" type="text" placeholder="Add a column" class="form-control">
+                        <input name="title" type="text" placeholder="Add a column" class="form-control" value=<?= isset($add_column_title)?$add_column_title:'' ?>>
                         <button class="input-group-text" type="submit" form="add-column">    
                             <i class="fa fa-plus"></i>
                         </button>
