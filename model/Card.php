@@ -267,7 +267,7 @@ class Card extends Model {
         $find = false;
         $num = -1;
         while($i< count($columns) && !$find) {
-            if($columns[$i]->column_id === $this->get_column_id()){
+            if($columns[$i]->get_column_id() === $this->get_column_id()){
                 $num = $i;
                 $find = true;
             }
