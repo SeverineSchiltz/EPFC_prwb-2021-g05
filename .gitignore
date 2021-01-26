@@ -52,5 +52,5 @@ Thumbs.db
 .vscode/
 
 *.sql
-database/
+database/prwb_2021_g05.sql
 database/prwb_2021_g05_dump.sql
