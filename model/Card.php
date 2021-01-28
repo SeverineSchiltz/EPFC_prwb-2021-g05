@@ -190,8 +190,8 @@ class Card extends Model {
 
     public function validate_title(){
         $errors = array();
-        if(!(isset($this->title) && is_string($this->title) && strlen($this->title) > 2)){
-            $errors[] = "Title card length must be at least 3 characters";
+        if(!(isset($this->title) && is_string($this->title) && strlen($this->title) > 2 && strlen($this->title) < 129)){
+            $errors[] = "Card title length must be between 3 and 128 characters";
         }
         if(!$this->validate_unicity_in_board()){
             $errors[] = "Title card must be unique on this board.";

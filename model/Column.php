@@ -132,8 +132,8 @@ class Column extends Model {
         if(!(isset($this->board) && is_a($this->board,"Board") && Board::get_board($this->board->get_board_id()))){
             $errors[] = "Incorrect board";
         }
-        if(!(isset($this->title) && is_string($this->title) && strlen($this->title) >= 3)){
-            $errors[] = "Title must be at least 3 characters long";
+        if(!(isset($this->title) && is_string($this->title) && strlen($this->title) >= 3 && strlen($this->title) < 129)){
+            $errors[] = "Column title length must be between 3 and 128 characters";
         }
         if(!(isset($this->title) && is_string($this->title) && $this->is_unique_title($this->title, $this->board))){
             $errors[] = "Title must be unique";

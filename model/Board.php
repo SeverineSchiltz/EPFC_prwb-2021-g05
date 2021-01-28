@@ -55,7 +55,7 @@ class Board extends Model {
     public function validate_board_name(){
         $errors = array();
         if(!(isset($this->title) && is_string($this->title) && strlen($this->title) > 2 && strlen($this->title) < 129)){
-            $errors[] = "Title length must be between 3 and 128 characters";
+            $errors[] = "Board title length must be between 3 and 128 characters";
         }
         $errors = array_merge($errors, $this->validate_unicity());
         return $errors;
