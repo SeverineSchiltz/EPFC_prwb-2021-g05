@@ -43,6 +43,10 @@ a {
   margin-left: 5px;
 }
 
+.column-title > span {
+  overflow-wrap: anywhere;
+}
+
 .card {
   margin: 0.25em 0;
   padding: 0.5em;

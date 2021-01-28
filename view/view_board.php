@@ -40,7 +40,7 @@
                 <?php foreach($board->get_columns() as $column): ?>
                     <div class="column">
                         <div class="column-title">
-                            <?= $column->get_title()?> 
+                            <span><?= $column->get_title()?> </span>
                             <a href=<?= "column/edit/".$column->get_column_id() ?> class="invisible-link"><i class="fa fa-edit"></i></a> 
                             <a href=<?= "column/delete/".$column->get_column_id() ?> class="invisible-link"><i class="fa fa-trash"></i></a>
                             <?php if($column->get_position() != $column->get_first_position()): ?>
