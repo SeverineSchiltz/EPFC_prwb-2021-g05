@@ -6,6 +6,7 @@ CREATE PROCEDURE add100BCC()
 BEGIN
     DECLARE counter INT DEFAULT 1;
     DECLARE counterCard INT;
+    INSERT INTO `board` (Title, Owner, CreatedAt) VALUES ('test100CC',1,'2021-01-11 17:48:59');
     WHILE counter <= 100 DO
 		INSERT INTO `board` (Title, Owner, CreatedAt) VALUES (concat('testboard', counter),7,'2021-01-11 17:48:59');
         INSERT INTO `column` (Title, Board, Position, CreatedAt) VALUES (concat('testcolumn', counter),5, counter, '2021-01-11 17:48:59');
