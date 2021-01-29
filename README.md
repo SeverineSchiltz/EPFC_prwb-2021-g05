@@ -2,6 +2,12 @@
 
 ## Notes de livraison itération 1
 
+De nouvelles données se trouvent dans le fichier database/prwb_2021_g05_add_data.sql
+ - Ajout des utilisateurs suivants: `severine@test.be` et `sinouhe@test.be` et ont le mot de passe `Password1,`:
+	- 100 tableaux ont été ajouté pour Sinouhé
+	- 1 tableau (test100CC) a été ajouté pour Boris contenant 100 colonnes et 500 cartes)
+
+
 ## Notes de livraison itération 2
 
 ## Notes de livraison itération 3
