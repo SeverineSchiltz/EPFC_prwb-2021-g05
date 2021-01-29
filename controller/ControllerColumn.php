@@ -83,7 +83,8 @@ class ControllerColumn extends Controller {
             $column = new Column($board, $position, $title);
             $errors = $column->validate();
             if(empty($errors)){
-                $column->update();                
+                $column->update();
+                $this->redirect("board", "board", $column->get_board_id());                
             }
         }
         return $errors;
