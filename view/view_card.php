@@ -25,7 +25,7 @@
                     <a href=<?= "card/delete_confirm/".$card->get_card_id() ?> class="invisible-link"><i class="fa fa-trash"></i></a>
                 </h2>
                 <h4>Created by <span><?= $card->get_author_name() ?></span> <?= $card->get_duration_since_creation() ?> <?= $card->get_duration_since_last_edit() ?></h4>
-                <h4>This card is on the board "<span><a href=<?= "board/board/".$card->get_board_id() ?> ><?= $card->get_board_title() ?></a></span>", column "<span><?= $card->get_column_title() ?></span>" at position <?= $card->get_position() ?></h4>
+                <h4>This card is on the board "<span><a href=<?= "board/board/".$card->get_board_id() ?> ><?= $card->get_board_title() ?></a></span>", column "<span><?= $card->get_column_title() ?></span>" at position <?= $card->get_position() ?>.</h4>
             </div>
             <div class="card-body">
                 <h3>Body</h3>
