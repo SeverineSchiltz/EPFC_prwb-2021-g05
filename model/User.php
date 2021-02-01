@@ -88,7 +88,7 @@ class User extends Model {
     public static function validate_passwords($password, $password_confirm){
         $errors = User::validate_password($password);
         if ($password != $password_confirm) {
-            $errors[] = "You have to enter twice the same password.";
+            $errors[] = "You have to enter the same password twice.";
         }
         return $errors;
     }
@@ -112,7 +112,7 @@ class User extends Model {
         } 
         $patternEmail = "/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,})$/i";
         if (!(isset($mail) && is_string($mail) && preg_match($patternEmail, $mail))) {
-            $errors[] = "Email must start by a letter and must contain only letters and numbers.";
+            $errors[] = "Invalid email.";
         }
         return $errors;
     }
