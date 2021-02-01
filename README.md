@@ -2,10 +2,14 @@
 
 ## Notes de livraison itération 1
 
+Base de données:
 De nouvelles données se trouvent dans le fichier database/prwb_2021_g05_add_data.sql
  - Ajout des utilisateurs suivants: `severine@test.be` et `sinouhe@test.be` et ont le mot de passe `Password1,`:
 	- 100 tableaux ont été ajouté pour Sinouhé
 	- 1 tableau (test100CC) a été ajouté pour Boris contenant 100 colonnes et 500 cartes)
+
+Bugs:
+ - Dans le cas très spécifique où il y a une erreur (par exemple, titre non unique) dans le edit board, nous obtenons une erreur avec l'extension validator W3C de chrome. Pourtant, sur le site officel (https://validator.w3.org/), il n'y a pas d'erreur sur cette page.
 
 
 ## Notes de livraison itération 2
