@@ -240,6 +240,7 @@ class Card extends Model {
     }
 
     public function change_position($dif){
+        $errors = array();
         $cards = self::get_cards($this->column);
         $i =0;
         $find = false;
@@ -251,15 +252,23 @@ class Card extends Model {
             }
             ++$i;
         }
-        $card_to_exchange = $cards[$num-$dif];
-        $pos_temp = $this->position;
-        $this->position = $card_to_exchange->position;
-        $card_to_exchange->position = $pos_temp;
-        self::update($this);
-        self::update($card_to_exchange);
+        $new_pos = $num - $dif;
+        if($new_pos < 0 || $new_pos >= count($cards)){
+            $errors[] = "You cannot move this card there!";
+        }
+        if(empty($errors)){
+            $card_to_exchange = $cards[$new_pos];
+            $pos_temp = $this->position;
+            $this->position = $card_to_exchange->position;
+            $card_to_exchange->position = $pos_temp;
+            self::update($this);
+            self::update($card_to_exchange);
+        }
+        return $errors;
     }
 
     public function change_column($dif){
+        $errors = array();
         $this_board = Board::get_board($this->get_board_id());
         $columns = Column::get_columns($this_board);
         $i =0;
@@ -272,11 +281,18 @@ class Card extends Model {
             }
             ++$i;
         }
-        $column_to_exchange = $columns[$num-$dif];
-        $new_position = self::get_last_card_position_in_column($column_to_exchange->get_column_id()) +1;
-        $this->column = $column_to_exchange;
-        $this->position = $new_position;
-        self::update($this);
+        $new_pos = $num - $dif;
+        if($new_pos < 0 || $new_pos >= count($columns)){
+            $errors[] = "You cannot move this card there!";
+        }
+        if(empty($errors)){
+            $column_to_exchange = $columns[$new_pos];
+            $new_position = self::get_last_card_position_in_column($column_to_exchange->get_column_id()) +1;
+            $this->column = $column_to_exchange;
+            $this->position = $new_position;
+            self::update($this);
+        }
+        return $errors;
     }
 
 }

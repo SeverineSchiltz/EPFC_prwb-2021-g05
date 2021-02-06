@@ -76,17 +76,21 @@ class ControllerCard extends Controller {
             $card = Card::get_card($card_id);
             $direction = $_POST["direction"];
             if($direction === "up"){
-                $card->change_position(1);
+                $errors =$card->change_position(1);
             }else if($direction === "down"){
-                $card->change_position(-1);
+                $errors =$card->change_position(-1);
             }else if($direction === "left"){
-                $card->change_column(1);
+                $errors =$card->change_column(1);
             }else if($direction === "right"){
-                $card->change_column(-1);
+                $errors =$card->change_column(-1);
             }
-            $this->redirect("board","board", $card->get_board_id());
+            if (count($errors) == 0) { 
+                $this->redirect("board","board", $card->get_board_id());
+            }
+            (new View("board"))->show(array("board" => Board::get_board($card->get_board_id()), "user" => $user, "errors" => $errors));
+        }else{
+            $this->redirect("board","index");
         }
-        $this->redirect("board","index");
     }
         
     public function add() {
