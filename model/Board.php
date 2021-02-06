@@ -52,12 +52,13 @@ class Board extends Model {
         return $errors;
     }
 
-    public function validate_board_name(){
+    public function validate_board_name($title){
         $errors = array();
-        if(!(isset($this->title) && is_string($this->title) && strlen($this->title) > 2 && strlen($this->title) < 129)){
+        if(!(isset($title) && is_string($title) && strlen($title) > 2 && strlen($title) < 129)){
             $errors[] = "Board title length must be between 3 and 128 characters";
         }
-        $errors = array_merge($errors, $this->validate_unicity());
+        if($title != $this->title)
+            $errors = array_merge($errors, $this->validate_unicity($title));
         return $errors;
     }
 
@@ -144,10 +145,10 @@ class Board extends Model {
         $this->title = $new_title;
     } 
 
-    public function validate_unicity(){
+    private function validate_unicity($title) {
         $errors = [];
-        $board = self::get_board_by_title($this->title);
-        if ($board && $board->get_board_id() !== $this->get_board_id()) {
+        $board = self::get_board_by_title($title);
+        if ($board) {
             $errors[] = "The title of the board must be unique";
         } 
         return $errors;
