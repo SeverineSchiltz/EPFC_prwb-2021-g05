@@ -102,8 +102,8 @@ class ControllerCard extends Controller {
             $position = Card::get_last_card_position_in_column($column_id) + 1;
             $card = new Card(null, $column, $position, $user, null, "", new DateTime("now"));
             $errors = $card->validate_title($new_card_name);
+            $card->set_title($new_card_name);
             if (count($errors) == 0) { 
-                $card->set_title($new_card_name);
                 $card->insert_new_card(); 
                 $this->redirect("board","board", $board->get_board_id());
             }
