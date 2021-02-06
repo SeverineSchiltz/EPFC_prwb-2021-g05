@@ -125,6 +125,16 @@ class Column extends Model {
         return $last_modified;
     }
 
+    public function validate_column_name($title){
+        $errors = array();
+        if(!(isset($title) && is_string($title) && strlen($title) > 2 && strlen($title) < 129)){
+            $errors[] = "Column title length must be between 3 and 128 characters";
+        }
+        if($title != $this->title && !$this->is_unique_title($title, $this->board))
+            $errors[] = "Title must be unique";
+        return $errors;
+    }
+
     //renvoie un tableau d'erreur(s) 
     //le tableau est vide s'il n'y a pas d'erreur.
     public function validate(){

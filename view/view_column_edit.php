@@ -24,14 +24,15 @@
                 </h2>
                 Created <?= $column->get_duration_since_creation() ?> ago. <?= $column->get_last_modification()?"Modified ".$column->get_duration_since_last_edit()." ago.":"Never modified." ?>
             </div>
-            <form action=<?= "column/edit/".$column->get_column_id() ?> method="post" id="column-edit" class="form">
+            <form action=<?= "column/save/" ?> method="post" id="column-edit" class="form">
+                <input type="hidden" class="form-control" value="<?= $column->get_column_id() ?>" name="column_id">
                 <div class="form-group title-group">
                     <label class="label" for="column-title">Title</label>
-                    <input type="text" name="column-title" id="column-title" value=<?= '"'.$column->get_title().'"' ?> class="form-control">
+                    <input type="text" name="column_title" id="column-title" value="<?= isset($proposed_title) ? $proposed_title : $column->get_title() ?>" class="form-control">
                 </div>
                 <div class="form-group">
                     <label class="label" for="board-title">Board</label>
-                    <input type="text" name="board-title" id="board-title" value=<?= '"'.$column->get_board_title().'"' ?> class="form-control" readonly>
+                    <input type="text" name="board-title" id="board-title" value="<?= $column->get_board_title() ?>" class="form-control" readonly>
                 </div>
                 <div class="buttons">
                     <a href=<?= "board/board/".$column->get_board_id()?> class="btn btn-primary cancel">Cancel</a>

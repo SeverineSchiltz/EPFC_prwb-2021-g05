@@ -33,27 +33,33 @@ class ControllerColumn extends Controller {
         $errors = [];
         $user = $this->get_user_or_redirect();
         if (isset($_GET["param1"]) && $_GET["param1"] !== "") {
-
             $column = Column::get_column($_GET["param1"]);
-
-            if(isset($_POST['column-title'])) {
-                $column->set_title($_POST['column-title']);
-                $errors = $column->update();
-                if(!is_array($errors) || empty($errors))
-                    $this->redirect("board", "board", $column->get_board_id());
-                else                    
-                    (new View("column_edit"))->show(array("user" => $user, "column" => $column, "errors" => $errors));
-            } else {
-                (new View("column_edit"))->show(array("user" => $user, "column" => $column, "errors" => $errors));
-            }
+            (new View("column_edit"))->show(array("user" => $user, "column" => $column, "errors" => $errors));
         } else {    
             $this->redirect("board", "index");
         }
     }
 
+    public function save() {
+        $user = $this->get_user_or_redirect();
+        $errors = [];
+        if(isset($_POST['column_id']) && isset($_POST['column_title'])) {
+            $proposed_title = $_POST["column_title"];
+            $column = Column::get_column($_POST['column_id']);
+            $errors = $column->validate_column_name($proposed_title, $column->get_title());
+            if(!is_array($errors) || empty($errors)) {
+                $column->set_title($_POST['column_title']);
+                $errors = $column->update();
+                $this->redirect("board", "board", $column->get_board_id());
+            }
+            else                    
+                (new View("column_edit"))->show(array("user" => $user, "column" => $column, "errors" => $errors, "proposed_title" => $proposed_title));
+        }
+    }
+
     //bouger la colonne
     public function move() {
-        $this->get_user_or_redirect();
+        $user = $this->get_user_or_redirect();
         if ((isset($_POST["board_id"]) && $_POST["board_id"] !== "") 
             && (isset($_POST["direction"]) && $_POST["direction"] !== "") 
             && (isset($_POST["column_id"]) && $_POST["column_id"] !== "")) 
@@ -68,8 +74,10 @@ class ControllerColumn extends Controller {
 
             if(!is_array($errors) || empty($errors))
                 $this->redirect("board", "board", $board_id);
-            else
+            else {
+                $board = Board::get_board($board_id);
                 (new View("board"))->show(array("board" => $board, "user" => $user, "errors" => $errors));
+            }
         } else {
             $this->redirect("board", "index");
         }
