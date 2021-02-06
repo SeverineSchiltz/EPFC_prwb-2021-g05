@@ -155,7 +155,7 @@ class Card extends Model {
     }
 
     public function update_content() {
-        $errors = $this->validate_title();
+        $errors = $this->validate_title($this->title);
         if(empty($errors)){
             self::update($this);
             return true;
@@ -174,7 +174,7 @@ class Card extends Model {
     }
 
     public function insert_new_card() {
-        $errors = $this->validate_title();
+        $errors = $this->validate_title($this->title);
         if(empty($errors)){
             self::execute('INSERT INTO card (Title, Body, Position, CreatedAt, Author, `Column`) VALUES (:title, :body, :position, current_timestamp(), :author, :column)', array(
                 'title' => $this->title,
@@ -188,24 +188,23 @@ class Card extends Model {
         return false;
     }
 
-    public function validate_title(){
+    public function validate_title($title){
         $errors = array();
-        if(!(isset($this->title) && is_string($this->title) && strlen($this->title) > 2 && strlen($this->title) < 129)){
+        if(!(isset($title) && is_string($title) && strlen($title) > 2 && strlen($title) < 129)){
             $errors[] = "Card title length must be between 3 and 128 characters";
         }
-        if(!$this->validate_unicity_in_board()){
+        if($title != $this->title && !$this->validate_unicity_in_board($title)){
             $errors[] = "Title card must be unique on this board.";
         }
         return $errors;
     }
 
-    public function validate_unicity_in_board() {
+    public function validate_unicity_in_board($title) {
         $query = self::execute("SELECT ca.ID FROM card ca
                                 INNER JOIN `column` co ON ca.Column = co.ID
                                 WHERE ca.ID <> :card_id AND ca.Title = :card_title AND 
                                 co.Board = :board_id", 
-                        array("card_id"=>($this->card_id === null?"0":$this->card_id), "card_title"=>$this->title, "board_id"=>$this->get_board_id()));
-        $data = $query->fetch();
+                        array("card_id"=>($this->card_id === null?"0":$this->card_id), "card_title"=>$title, "board_id"=>$this->get_board_id()));
         if ($query->rowCount() == 0) {
             return true;
         } else {

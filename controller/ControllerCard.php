@@ -47,19 +47,20 @@ class ControllerCard extends Controller {
 
     public function save() {
         $user = $this->get_user_or_redirect();
-        $card_id = "";
         $errors = [];
         if(isset($_POST["card_id"]) && isset($_POST["title"]) && isset($_POST["body"])){
+            $proposed_title = $_POST["title"];
             $card_id = $_POST["card_id"];
             $card = Card::get_card($card_id);
-            $card->set_title($_POST["title"]);
             $card->set_body($_POST["body"]);
-            $errors = $card->validate_title();
+            $card->update_content(); 
+            $errors = $card->validate_title($proposed_title);
             if (count($errors) == 0) { 
+                $card->set_title($_POST["title"]);
                 $card->update_content(); 
                 $this->redirect("card","view", $card_id);
             }
-            (new View("card_edit"))->show(array("card" => $card, "user" => $user, "errors" => $errors));
+            (new View("card_edit"))->show(array("card" => $card, "user" => $user, "errors" => $errors, "proposed_title" => $proposed_title));
         }else{
             $this->redirect("board","index");
         }
@@ -99,9 +100,10 @@ class ControllerCard extends Controller {
             $column = Column::get_column($column_id);
             $board = Board::get_board($column->get_board_id());
             $position = Card::get_last_card_position_in_column($column_id) + 1;
-            $card = new Card(null, $column, $position, $user, $new_card_name, "", new DateTime("now"));
-            $errors = $card->validate_title();
+            $card = new Card(null, $column, $position, $user, null, "", new DateTime("now"));
+            $errors = $card->validate_title($new_card_name);
             if (count($errors) == 0) { 
+                $card->set_title($new_card_name);
                 $card->insert_new_card(); 
                 $this->redirect("board","board", $board->get_board_id());
             }

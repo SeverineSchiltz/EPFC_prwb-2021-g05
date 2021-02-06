@@ -26,7 +26,7 @@
                 <form action=<?= "card/save/"?> method="post">
                     <input type="hidden" class="form-control" value="<?= $card->get_card_id()?>" name="card_id">
                     <h3>Title</h3>
-                    <input type="text" class="form-control" value="<?= $card->get_title()?>" name="title">
+                    <input type="text" class="form-control" value="<?= isset($proposed_title) ? $proposed_title : $card->get_title()?>" name="title">
                     <?php if (count($errors) != 0): ?>
                         <div class='errors'>
                             <p>Please correct the following error(s) :</p>
