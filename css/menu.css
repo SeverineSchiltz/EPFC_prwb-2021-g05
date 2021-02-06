@@ -9,6 +9,7 @@
   font-weight: 600;
   width: 100%;
   z-index: 100;
+  white-space: nowrap;
 }
 
 .spacer {
@@ -47,8 +48,10 @@
   margin: 0 0 0 0.25em;
 }
 
-.page-title {
-  margin-right: 1em;
+.page-title {    
+  margin: 0 1em;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
 }
 
 .page-subtitle {
