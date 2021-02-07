@@ -76,13 +76,13 @@ class ControllerCard extends Controller {
             $card = Card::get_card($card_id);
             $direction = $_POST["direction"];
             if($direction === "up"){
-                $errors =$card->change_position(1);
-            }else if($direction === "down"){
                 $errors =$card->change_position(-1);
+            }else if($direction === "down"){
+                $errors =$card->change_position(1);
             }else if($direction === "left"){
-                $errors =$card->change_column(1);
-            }else if($direction === "right"){
                 $errors =$card->change_column(-1);
+            }else if($direction === "right"){
+                $errors =$card->change_column(1);
             }
             if (count($errors) == 0) { 
                 $this->redirect("board","board", $card->get_board_id());

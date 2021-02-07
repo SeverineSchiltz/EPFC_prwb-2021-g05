@@ -252,7 +252,7 @@ class Card extends Model {
             }
             ++$i;
         }
-        $new_pos = $num - $dif;
+        $new_pos = $num + $dif;
         if($new_pos < 0 || $new_pos >= count($cards)){
             $errors[] = "You cannot move this card there!";
         }
@@ -281,7 +281,7 @@ class Card extends Model {
             }
             ++$i;
         }
-        $new_pos = $num - $dif;
+        $new_pos = $num + $dif;
         if($new_pos < 0 || $new_pos >= count($columns)){
             $errors[] = "You cannot move this card there!";
         }
