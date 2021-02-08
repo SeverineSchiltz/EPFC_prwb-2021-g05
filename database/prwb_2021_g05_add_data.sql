@@ -1,4 +1,4 @@
-INSERT INTO `user` VALUES (6,'severine@test.be','Severine','56ce92d1de4f05017cf03d6cd514d6d1','2020-10-11 17:46:19'),(7,'sinouhe@test.be','Sinouhe','56ce92d1de4f05017cf03d6cd514d6d1','2020-10-11 17:46:19');
+INSERT INTO `user` VALUES (6,'severine@test.be','Severine','56ce92d1de4f05017cf03d6cd514d6d1','2020-10-11 17:46:19', 'user'),(7,'sinouhe@test.be','Sinouhe','56ce92d1de4f05017cf03d6cd514d6d1','2020-10-11 17:46:19', 'user');
 
 DROP PROCEDURE IF EXISTS add100BCC;
 DELIMITER $$

@@ -8,6 +8,7 @@ CREATE TABLE `user` (
   `FullName` varchar(128) NOT NULL,
   `Password` varchar(256) NOT NULL,
   `RegisteredAt` datetime NOT NULL DEFAULT current_timestamp(),
+  `Role` ENUM('user', 'admin') DEFAULT 'user',
   PRIMARY KEY(`ID`),
   UNIQUE(`Mail`)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
@@ -44,6 +45,7 @@ CREATE TABLE `card` (
   `ModifiedAt` datetime NULL,
   `Author` int(11) NOT NULL,
   `Column` int(11) NOT NULL,
+  `DueDate` DATE NULL,
   PRIMARY KEY(`ID`),
   FOREIGN KEY(`Author`) REFERENCES `User`(`ID`),
   FOREIGN KEY(`Column`) REFERENCES `Column`(`ID`)
@@ -59,4 +61,21 @@ CREATE TABLE `comment` (
   PRIMARY KEY(`ID`),
   FOREIGN KEY(`Author`) REFERENCES `User`(`ID`),
   FOREIGN KEY(`Card`) REFERENCES `Card`(`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE collaborate(
+    Board INT(11) NOT NULL,
+    Collaborator INT(11) NOT NULL,
+    PRIMARY KEY (Board, Collaborator),
+    FOREIGN KEY(Collaborator) REFERENCES User(ID),
+    FOREIGN KEY(Board) REFERENCES Board(ID)
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;
+
+CREATE TABLE participate(
+    Participant INT(11) NOT NULL,
+    Card INT(11) NOT NULL,
+    PRIMARY KEY(Participant, Card),
+    FOREIGN KEY(Card) REFERENCES Card(ID),
+    FOREIGN KEY(Participant) REFERENCES User(ID)
 ) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;

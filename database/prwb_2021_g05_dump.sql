@@ -1,8 +1,8 @@
--- MariaDB dump 10.17  Distrib 10.4.13-MariaDB, for Win64 (AMD64)
+-- MariaDB dump 10.17  Distrib 10.4.11-MariaDB, for osx10.10 (x86_64)
 --
 -- Host: 127.0.0.1    Database: prwb_2021_g05
 -- ------------------------------------------------------
--- Server version	10.4.13-MariaDB
+-- Server version	10.4.11-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -61,11 +61,12 @@ CREATE TABLE `card` (
   `ModifiedAt` datetime DEFAULT NULL,
   `Author` int(11) NOT NULL,
   `Column` int(11) NOT NULL,
+  `DueDate` date DEFAULT NULL,
   PRIMARY KEY (`ID`),
   KEY `Author` (`Author`),
   KEY `Column` (`Column`),
   CONSTRAINT `card_ibfk_1` FOREIGN KEY (`Author`) REFERENCES `user` (`ID`),
-  CONSTRAINT `card_ibfk_2` FOREIGN KEY (`Column`) REFERENCES `column` (`ID`)
+  CONSTRAINT `card_ibfk_2` FOREIGN KEY (`Column`) REFERENCES `Column` (`ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -75,8 +76,35 @@ CREATE TABLE `card` (
 
 LOCK TABLES `card` WRITE;
 /*!40000 ALTER TABLE `card` DISABLE KEYS */;
-INSERT INTO `card` VALUES (1,'Analyse conceptuelle','Faire l\'analyse conceptuelle de la base de données du projet.',1,'2020-10-11 17:56:40','2020-11-27 13:07:39',2,3),(2,'Mockups itération 1','Faire des prototypes d\'écrans pour les fonctionnalités de la première itération.',0,'2020-10-11 17:56:40','2020-11-27 13:07:40',1,2),(3,'Ecrire énoncé itération 1.','',1,'2020-10-11 17:58:37','2020-11-27 13:07:42',4,2),(4,'Echéances IT1 !','Décider des dates d\'échéance pour la première itération.',0,'2020-10-11 17:58:37','2020-11-27 13:07:34',1,3),(6,'Enoncé itération 2','',0,'2020-11-27 13:07:54',NULL,5,1);
+INSERT INTO `card` VALUES (1,'Analyse conceptuelle','Faire l\'analyse conceptuelle de la base de données du projet.',1,'2020-10-11 17:56:40','2020-11-27 13:07:39',2,3,NULL),(2,'Mockups itération 1','Faire des prototypes d\'écrans pour les fonctionnalités de la première itération.',0,'2020-10-11 17:56:40','2020-11-27 13:07:40',1,2,NULL),(3,'Ecrire énoncé itération 1.','',1,'2020-10-11 17:58:37','2020-11-27 13:07:42',4,2,'2021-01-01'),(4,'Echéances IT1 !','Décider des dates d\'échéance pour la première itération.',0,'2020-10-11 17:58:37','2020-11-27 13:07:34',1,3,NULL),(6,'Enoncé itération 2','',0,'2020-11-27 13:07:54',NULL,5,1,NULL);
 /*!40000 ALTER TABLE `card` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `collaborate`
+--
+
+DROP TABLE IF EXISTS `collaborate`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `collaborate` (
+  `Board` int(11) NOT NULL,
+  `Collaborator` int(11) NOT NULL,
+  PRIMARY KEY (`Board`,`Collaborator`),
+  KEY `Collaborator` (`Collaborator`),
+  CONSTRAINT `collaborate_ibfk_1` FOREIGN KEY (`Collaborator`) REFERENCES `User` (`ID`),
+  CONSTRAINT `collaborate_ibfk_2` FOREIGN KEY (`Board`) REFERENCES `Board` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `collaborate`
+--
+
+LOCK TABLES `collaborate` WRITE;
+/*!40000 ALTER TABLE `collaborate` DISABLE KEYS */;
+INSERT INTO `collaborate` VALUES (1,2),(1,4),(1,5),(2,1);
+/*!40000 ALTER TABLE `collaborate` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -126,8 +154,8 @@ CREATE TABLE `comment` (
   PRIMARY KEY (`ID`),
   KEY `Author` (`Author`),
   KEY `Card` (`Card`),
-  CONSTRAINT `comment_ibfk_1` FOREIGN KEY (`Author`) REFERENCES `user` (`ID`),
-  CONSTRAINT `comment_ibfk_2` FOREIGN KEY (`Card`) REFERENCES `card` (`ID`)
+  CONSTRAINT `comment_ibfk_1` FOREIGN KEY (`Author`) REFERENCES `User` (`ID`),
+  CONSTRAINT `comment_ibfk_2` FOREIGN KEY (`Card`) REFERENCES `Card` (`ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -137,8 +165,35 @@ CREATE TABLE `comment` (
 
 LOCK TABLES `comment` WRITE;
 /*!40000 ALTER TABLE `comment` DISABLE KEYS */;
-INSERT INTO `comment` VALUES (1,'Ceci est un commentaire','2020-11-27 14:45:39',NULL,5,6),(2,'Voilà un autre commentaire','2020-11-27 14:46:02',NULL,1,6),(3,'Je dirais même plus : ceci est mon commentaire','2020-11-27 14:48:56',NULL,3,6);
+INSERT INTO `comment` VALUES (1,'Ceci est un commentaire','2020-11-27 14:45:39',NULL,5,6),(2,'Voilà un autre commentaire','2020-11-27 14:46:02',NULL,1,6);
 /*!40000 ALTER TABLE `comment` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `participate`
+--
+
+DROP TABLE IF EXISTS `participate`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `participate` (
+  `Participant` int(11) NOT NULL,
+  `Card` int(11) NOT NULL,
+  PRIMARY KEY (`Participant`,`Card`),
+  KEY `Card` (`Card`),
+  CONSTRAINT `participate_ibfk_1` FOREIGN KEY (`Card`) REFERENCES `Card` (`ID`),
+  CONSTRAINT `participate_ibfk_2` FOREIGN KEY (`Participant`) REFERENCES `User` (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `participate`
+--
+
+LOCK TABLES `participate` WRITE;
+/*!40000 ALTER TABLE `participate` DISABLE KEYS */;
+INSERT INTO `participate` VALUES (1,1),(5,1);
+/*!40000 ALTER TABLE `participate` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -154,6 +209,7 @@ CREATE TABLE `user` (
   `FullName` varchar(128) NOT NULL,
   `Password` varchar(256) NOT NULL,
   `RegisteredAt` datetime NOT NULL DEFAULT current_timestamp(),
+  `Role` enum('user','admin') DEFAULT 'user',
   PRIMARY KEY (`ID`),
   UNIQUE KEY `Mail` (`Mail`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
@@ -165,7 +221,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'boverhaegen@epfc.eu','Boris Verhaegen','56ce92d1de4f05017cf03d6cd514d6d1','2020-10-11 17:46:19'),(2,'bepenelle@epfc.eu','Benoît Penelle','56ce92d1de4f05017cf03d6cd514d6d1','2020-10-11 17:46:19'),(3,'brlacroix@epfc.eu','Bruno Lacroix','56ce92d1de4f05017cf03d6cd514d6d1','2020-10-11 17:47:20'),(4,'xapigeolet@epfc.eu','Xavier Pigeolet','56ce92d1de4f05017cf03d6cd514d6d1','2020-10-11 17:47:20'),(5,'galagaffe@epfc.eu','Gaston Lagaffe','56ce92d1de4f05017cf03d6cd514d6d1','2020-11-25 18:46:55');
+INSERT INTO `user` VALUES (1,'boverhaegen@epfc.eu','Boris Verhaegen','56ce92d1de4f05017cf03d6cd514d6d1','2020-10-11 17:46:19','admin'),(2,'bepenelle@epfc.eu','Benoît Penelle','56ce92d1de4f05017cf03d6cd514d6d1','2020-10-11 17:46:19','admin'),(3,'brlacroix@epfc.eu','Bruno Lacroix','56ce92d1de4f05017cf03d6cd514d6d1','2020-10-11 17:47:20','user'),(4,'xapigeolet@epfc.eu','Xavier Pigeolet','56ce92d1de4f05017cf03d6cd514d6d1','2020-10-11 17:47:20','admin'),(5,'galagaffe@epfc.eu','Gaston Lagaffe','56ce92d1de4f05017cf03d6cd514d6d1','2020-11-25 18:46:55','user');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -178,4 +234,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-11-29 13:03:04
+-- Dump completed on 2021-02-07 18:18:23
