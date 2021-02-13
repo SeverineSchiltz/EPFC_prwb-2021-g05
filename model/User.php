@@ -8,11 +8,13 @@ class User extends Model {
     private $mail;
     private $hashed_password;
     private $full_name;
+    private $role;
 
-    public function __construct($mail, $hashed_password, $full_name, $id = null) {
+    public function __construct($mail, $hashed_password, $full_name, $role, $id = null) {
         $this->mail = $mail;
         $this->hashed_password = $hashed_password;
         $this->full_name = $full_name;
+        $this->role = $role;
         $this->user_id = $id;
     }
 
@@ -26,6 +28,10 @@ class User extends Model {
 
     public function get_user_id(){
         return $this->user_id;
+    }
+
+    public function get_role(){
+        return $this->role;
     }
 
     public function update() {
@@ -44,7 +50,7 @@ class User extends Model {
         if ($query->rowCount() == 0) {
             return false;
         } else {
-            return new User($data["Mail"], $data["Password"], $data["FullName"], $data["ID"]);
+            return new User($data["Mail"], $data["Password"], $data["FullName"], $data['Role'], $data["ID"]);
         }
     }
 
@@ -54,7 +60,7 @@ class User extends Model {
         if ($query->rowCount() == 0) {
             return false;
         } else {
-            return new User($data["Mail"], $data["Password"], $data["FullName"], $data["ID"]);
+            return new User($data["Mail"], $data["Password"], $data["FullName"], $data['Role'], $data["ID"]);
         }
     }
 
@@ -63,7 +69,7 @@ class User extends Model {
         $data = $query->fetchAll();
         $results = [];
         foreach ($data as $row) {
-            $results[] = new User($row["Mail"], $row["Password"], $row['FullName'], $data["ID"]);
+            $results[] = new User($row["Mail"], $row["Password"], $row['FullName'], $row['Role'], $row["ID"]);
         }
         return $results;
     }

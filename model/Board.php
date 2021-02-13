@@ -10,6 +10,7 @@ class Board extends Model {
     private $title;
     private $created_at;
     private $last_modified;
+    private $collaborators;
 
     public function __construct($board_id, $author, $title, $created_at, $last_modified = NULL) {
         $this->board_id = $board_id;
@@ -62,7 +63,7 @@ class Board extends Model {
         return $errors;
     }
 
-    public static function get_boards($user) {
+    public static function get_my_boards($user) {
         $query = self::execute("select b.*, u.Mail from board b join user u on b.Owner = u.ID where u.Mail = :mail order by b.ModifiedAt, b.CreatedAt DESC", array("mail" => $user->get_mail()));
         $data = $query->fetchAll();
         $boards = [];
@@ -92,6 +93,40 @@ class Board extends Model {
             $row = $query->fetch();
             return new Board($row['ID'], User::get_user_by_mail($row['Mail']), $row['Title'], $row['CreatedAt'], $row['ModifiedAt']);
         }
+    }
+
+    public static function get_other_shared_boards($user) {
+        $query = self::execute(
+            "SELECT DISTINCT b.*
+            FROM board b
+            INNER JOIN collaborate c ON c.Board = b.ID AND c.Collaborator = :userID
+            WHERE b.Owner <> :userID
+            ORDER BY b.ModifiedAt, b.CreatedAt DESC",
+            array(":userID" => $user->get_user_id()));
+            $data = $query->fetchAll();
+            $boards = [];
+            foreach ($data as $row) {
+                $board = new Board($row['ID'], User::get_user_by_id($row['Owner']), $row['Title'], $row['CreatedAt'], $row['ModifiedAt']);
+                $boards[] = $board;
+            }
+            return $boards;
+    }
+
+    public static function get_other_not_shared_boards($user) {
+        $query = self::execute(
+        "SELECT DISTINCT b.*
+        FROM board b
+        WHERE b.Owner <> :userID AND 
+        b.ID NOT IN (SELECT Board FROM collaborate WHERE Collaborator =:userID)
+        ORDER BY b.ModifiedAt, b.CreatedAt DESC",
+        array(":userID" => $user->get_user_id()));
+        $data = $query->fetchAll();
+        $boards = [];
+        foreach ($data as $row) {
+            $board = new Board($row['ID'], User::get_user_by_id($row['Owner']), $row['Title'], $row['CreatedAt'], $row['ModifiedAt']);
+            $boards[] = $board;
+        }
+        return $boards;
     }
 
     public function has_columns() {

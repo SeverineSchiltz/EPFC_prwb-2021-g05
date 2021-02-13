@@ -14,7 +14,8 @@ class ControllerBoard extends Controller {
         $new_board_name = "";
         if ($this->user_logged()) {
             $user = $this->get_user_or_redirect();
-            (new View("main_menu"))->show(array("user" => $user, "errors" => $errors, "new_board_name" => $new_board_name, "personal_boards" => Board::get_boards($user), "other_boards" => Board::get_other_boards($user)));
+            //(new View("main_menu"))->show(array("user" => $user, "errors" => $errors, "new_board_name" => $new_board_name, "personal_boards" => Board::get_boards($user), "other_boards" => Board::get_other_boards($user)));
+            (new View("main_menu"))->show(array("user" => $user, "errors" => $errors, "new_board_name" => $new_board_name, "personal_boards" => Board::get_my_boards($user), "other_shared_boards" => Board::get_other_shared_boards($user), "other_not_shared_boards" => Board::get_other_not_shared_boards($user)));
         } else {
             (new View("home"))->show();
         }

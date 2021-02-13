@@ -47,17 +47,28 @@
                 </div>
             <?php endif; ?>
 
-            <h2>Others' boards</h2>
+            <h2>Boards shared with you</h2>
             <div class="boards">          
-            <!-- others' boards -->
-                <?php foreach($other_boards as $board): ?>
-                    <a href=<?= "board/board/".$board->get_board_id() ?> class="btn btboardsOther">
+                <?php foreach($other_shared_boards as $board): ?>
+                    <a href=<?= "board/board/".$board->get_board_id() ?> class="btn btboardsShared">
                         <span class="board-title"><?= $board->get_title()?> (<?= $board->get_nb_columns()?> columns)</span>
                         <br/>
                         <span class="author-name">by <?=$board->get_author_name()?></span>
                     </a>
                 <?php endforeach; ?> 
-            </div>    
+            </div>
+            <?php if ($user->get_role() === "admin"): ?>    
+                <h2>Others' boards</h2>
+                <div class="boards">          
+                    <?php foreach($other_not_shared_boards as $board): ?>
+                        <a href=<?= "board/board/".$board->get_board_id() ?> class="btn btboardsOther">
+                            <span class="board-title"><?= $board->get_title()?> (<?= $board->get_nb_columns()?> columns)</span>
+                            <br/>
+                            <span class="author-name">by <?=$board->get_author_name()?></span>
+                        </a>
+                    <?php endforeach; ?> 
+                </div> 
+            <?php endif; ?> 
         </div>
     </body>
 </html>

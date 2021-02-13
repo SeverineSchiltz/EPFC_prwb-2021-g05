@@ -31,17 +31,31 @@ a {
     flex-wrap: wrap;
 }
 
-.btboardsOther{
+.btboardsShared{
     margin: 0.25em 0.25em;
     padding: 0.5em;
     background-color:rgb(40, 167, 69);
     border: 0px;
 }
 
-.btboardsOther span{
+.btboardsShared span{
     margin: 0px;
     padding: 0px;
     background-color:rgb(40, 167, 69);
+    color: white;
+}
+
+.btboardsOther{
+    margin: 0.25em 0.25em;
+    padding: 0.5em;
+    background-color:#808080;
+    border: 0px;
+}
+
+.btboardsOther span{
+    margin: 0px;
+    padding: 0px;
+    background-color:#808080;
     color: white;
 }
 
