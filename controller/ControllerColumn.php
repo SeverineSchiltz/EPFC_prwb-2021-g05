@@ -28,15 +28,27 @@ class ControllerColumn extends Controller {
         }
     }
 
+    public static function get_column_if_exist() {
+        $column_id = "";
+        if (isset($_GET["param1"]) && $_GET["param1"] != "" && is_numeric($_GET["param1"])) {
+            $column_id = $_GET["param1"];
+            $column = Column::get_column($column_id);
+            if($column){
+                return $column;
+            }
+        }
+        return false;
+    }
+
     //édition de la colonne donnée
     public function edit() {
         $errors = [];
         $user = $this->get_user_or_redirect();
-        if (isset($_GET["param1"]) && $_GET["param1"] !== "") {
-            $column = Column::get_column($_GET["param1"]);
+        $column = $this::get_column_if_exist();
+        if($column && $user->has_permission($column->get_board_id())){
             (new View("column_edit"))->show(array("user" => $user, "column" => $column, "errors" => $errors));
-        } else {    
-            $this->redirect("board", "index");
+        }else{
+            $this->redirect("board","index");
         }
     }
 
@@ -132,12 +144,14 @@ class ControllerColumn extends Controller {
         }
     }
 
-    //suppression du tableau donné
     public function delete_confirm() {
         $user = $this->get_user_or_redirect();
-        $column = Column::get_column($_GET["param1"]);
-
-        (new View("column_delete"))->show(array("user" => $user, "column" => $column));
+        $column = $this::get_column_if_exist();
+        if($column && $user->has_permission($column->get_board_id())){
+            (new View("column_delete"))->show(array("user" => $user, "column" => $column));
+        }else{
+            $this->redirect("board","index");
+        }
     }
 
     private function delete_column() {

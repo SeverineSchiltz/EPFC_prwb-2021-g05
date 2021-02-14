@@ -25,11 +25,12 @@ class ControllerBoard extends Controller {
     public function board() {
         $errors = [];
         $user = $this->get_user_or_redirect();
-        if (isset($_GET["param1"]) && $_GET["param1"] !== "") {
-            $board = board::get_board($_GET["param1"]);
+        $board = $this::get_board_if_exist();
+        if($board && $user->has_permission($board->get_board_id())){
             (new View("board"))->show(array("board" => $board, "user" => $user, "errors" => $errors));
-        } 
-        else $this->index();
+        }else{
+            $this->redirect("board","index");
+        }
     }
 
     public function delete() {
@@ -73,9 +74,12 @@ class ControllerBoard extends Controller {
     //suppression du tableau donné
     public function delete_confirm() {
         $user = $this->get_user_or_redirect();
-        $board = Board::get_board($_GET["param1"]);
-
-        (new View("board_delete"))->show(array("user" => $user, "board" => $board));
+        $board = $this::get_board_if_exist();
+        if($board && $user->has_permission($board->get_board_id())){
+            (new View("board_delete"))->show(array("user" => $user, "board" => $board));
+        }else{
+            $this->redirect("board","index");
+        }
     }
 
     private function delete_board() {

@@ -26,7 +26,7 @@ class ControllerCard extends Controller {
     public function view() {
         $user = $this->get_user_or_redirect();
         $card = $this::get_card_if_exist();
-        if($card){
+        if($card && $user->has_permission($card->get_board_id())){
             (new View("card"))->show(array("card" => $card, "user" => $user));
         }else{
             $this->redirect("board","index");
@@ -38,7 +38,7 @@ class ControllerCard extends Controller {
         $user = $this->get_user_or_redirect();
         $card = $this::get_card_if_exist();
         $errors = [];
-        if($card){
+        if($card && $user->has_permission($card->get_board_id())){
             (new View("card_edit"))->show(array("card" => $card, "user" => $user, "errors" => $errors));
         }else{
             $this->redirect("board","index");
@@ -120,7 +120,7 @@ class ControllerCard extends Controller {
     public function delete_confirm() {
         $user = $this->get_user_or_redirect();
         $card = $this::get_card_if_exist();
-        if($card){
+        if($card && $user->has_permission($card->get_board_id())){
             (new View("card_delete"))->show(array("card" => $card, "user" => $user));
         }else{
             $this->redirect("board","index");
