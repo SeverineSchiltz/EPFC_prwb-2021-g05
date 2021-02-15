@@ -1,0 +1,45 @@
+.content {
+    padding: 1.25em 1.5em;
+    margin-top: 60px;
+    flex-grow: 1;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  .invisible-link {
+    color: black;
+    font-size: large;
+  }
+
+  .invisible-link:hover {
+    color: rgb(59, 59, 59);
+  }
+
+  #add-collaborators{
+    max-width: 500px;
+  }
+
+  .one-collaborator{
+    color: #157ffb;
+    min-width: 500px;
+  }
+
+  .invisible-btn {
+    border: none;
+    background-color: white;
+  }
+
+  .invisible-btn:hover {
+    color: rgb(59, 59, 59);
+  }
+
+  h3{
+    font-size: medium;
+  }
+
+  #add-collaborators .input-group-text {
+    background-color: #157ffb;
+    color: white;
+  }

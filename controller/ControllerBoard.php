@@ -130,7 +130,7 @@ class ControllerBoard extends Controller {
         $user = $this->get_user_or_redirect();
         $board = $this::get_board_if_exist();
         $errors = [];
-        if($board){
+        if($board && $user->has_permission($board->get_board_id())){
             (new View("board_edit"))->show(array("board" => $board, "user" => $user, "errors" => $errors));
         }else{
             $this->redirect("board","index");
@@ -151,5 +151,22 @@ class ControllerBoard extends Controller {
             }
             (new View("board_edit"))->show(array("board" => $board, "user" => $user, "errors" => $errors, "proposed_title" => $proposed_title));
         }
+    }
+
+    public function collaborators(){
+        $user = $this->get_user_or_redirect();
+        $board = $this::get_board_if_exist();
+        $errors = [];
+        //attention ici, seul l'admin ou l'auteur du tableau peut voir les collaborateurs
+        if($board && ($user->is_admin() || $board->get_author_id() === $user->get_user_id())){
+            (new View("board_collaborators"))->show(array("board" => $board, "user" => $user, "errors" => $errors));
+        }else{
+            $this->redirect("board","index");
+        }
+    }
+
+    public function add_collaborator(){
+        $test_id = $_POST["new-collaborator"];
+        
     }
 }

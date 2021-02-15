@@ -18,6 +18,7 @@ class Board extends Model {
         $this->title = $title;
         $this->created_at = $created_at;
         $this->last_modified = $last_modified;
+        $this->collaborators = self::get_collaborators_in_db($board_id);
     }
 
     public function get_title(){
@@ -38,6 +39,42 @@ class Board extends Model {
 
     public function get_author() {
         return $this->author;
+    }
+
+    public function get_author_id() {
+        return $this->author->get_user_id();
+    }
+
+    public function get_collaborators(){
+        return $this->collaborators;
+    }
+
+    public static function get_collaborators_in_db($board_id){
+        $query = self::execute("SELECT u.*
+                                FROM collaborate c
+                                INNER JOIN user u ON u.ID = c.Collaborator
+                                WHERE c.Board = :board_id", array("board_id" => $board_id));
+        $data = $query->fetchAll();
+        $collaborators = array();
+        foreach ($data as $row) {
+            $collaborators[] = new User($row["Mail"], $row["Password"], $row['FullName'], $row['Role'], $row["ID"]);
+        }
+        return $collaborators;
+    }
+
+    public function get_non_collaborators(){
+
+        $query = self::execute("SELECT u.*
+                                FROM user u
+                                WHERE u.ID <> :owner_id AND u.ID NOT IN 
+                                (SELECT c.Collaborator FROM collaborate c WHERE c.Board = :board_id)"
+                                , array("board_id" => $this->get_board_id(), "owner_id" => $this->get_author_id()));
+        $data = $query->fetchAll();
+        $non_collaborators = array();
+        foreach ($data as $row) {
+            $non_collaborators[] = new User($row["Mail"], $row["Password"], $row['FullName'], $row['Role'], $row["ID"]);
+        }
+        return $non_collaborators;
     }
     
     //renvoie un tableau d'erreur(s) 
@@ -114,11 +151,11 @@ class Board extends Model {
 
     public static function get_other_not_shared_boards($user) {
         $query = self::execute(
-        "SELECT DISTINCT b.*
-        FROM board b
-        WHERE b.Owner <> :userID AND 
-        b.ID NOT IN (SELECT Board FROM collaborate WHERE Collaborator =:userID)
-        ORDER BY b.ModifiedAt, b.CreatedAt DESC",
+            "SELECT DISTINCT b.*
+            FROM board b
+            WHERE b.Owner <> :userID AND 
+            b.ID NOT IN (SELECT Board FROM collaborate WHERE Collaborator =:userID)
+            ORDER BY b.ModifiedAt, b.CreatedAt DESC",
         array(":userID" => $user->get_user_id()));
         $data = $query->fetchAll();
         $boards = [];
