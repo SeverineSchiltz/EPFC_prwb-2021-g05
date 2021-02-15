@@ -6,7 +6,11 @@
         <div class="right-menu">
             <div class="page-subtitle"><?php echo $menu_subtitle ?></div>
             <a href="board/index">
-                <i class="fa fa-user"></i>
+                <?php if ($user->is_admin()): ?>
+                    <i class="fas fa-user-shield"></i>
+                <?php else: ?>
+                    <i class="fa fa-user"></i>
+                <?php endif; ?>
                 <span class="username"><?php echo $user->get_full_name() ?></span>
             </a>            
             <a class="signout btn" href="main/logout">
