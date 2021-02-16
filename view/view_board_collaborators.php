@@ -37,18 +37,20 @@
                         </li>
                     <?php endforeach; ?>
                 </ul>
-                <h3>Add a new collaborator :</h3>
-                <form id="add-collaborators" action="board/add_collaborator/" class="input-group" method="post">
-                    <input type="hidden" name="board_id" value=<?= $board->get_board_id() ?>>
-                    <select name="new-collaborator" class="form-control" form="add-collaborators">
-                        <?php foreach ($board->get_non_collaborators() as $new_collaborator): ?>
-                            <option value="<?= $new_collaborator->get_user_id()?>"><?php echo $new_collaborator->get_full_name()." (".$new_collaborator->get_mail().")" ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                    <button class="add-collaborators input-group-text" type="submit" form="add-collaborators">    
-                        <i class="fa fa-plus"></i>
-                    </button>
-                </form>  
+                <?php if (count($board->get_non_collaborators()) != 0): ?>
+                    <h3>Add a new collaborator :</h3>
+                    <form id="add-collaborators" action="board/add_collaborator/" class="input-group" method="post">
+                        <input type="hidden" name="board_id" value="<?= $board->get_board_id() ?>" form="add-collaborators">
+                        <select name="new_collaborator_id" class="form-control" form="add-collaborators">
+                            <?php foreach ($board->get_non_collaborators() as $new_collaborator): ?>
+                                <option value=<?= $new_collaborator->get_user_id()?>><?php echo $new_collaborator->get_full_name()." (".$new_collaborator->get_mail().")" ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                        <button class="add-collaborators input-group-text" type="submit" form="add-collaborators">    
+                            <i class="fa fa-plus"></i>
+                        </button>
+                    </form>  
+                <?php endif; ?>
             </div>
         </div>
     </body>

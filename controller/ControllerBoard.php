@@ -166,7 +166,33 @@ class ControllerBoard extends Controller {
     }
 
     public function add_collaborator(){
-        $test_id = $_POST["new-collaborator"];
-        
+        $errors = [];
+        if (isset($_POST['board_id']) && isset($_POST['new_collaborator_id'])) {
+            $new_collaborator_id = $_POST["new_collaborator_id"];
+            $board = Board::get_board($_POST['board_id']);
+            $errors = $board->validate_board_new_collaborator($new_collaborator_id);
+            if (count($errors) == 0) { 
+                $board->add_new_collaborator($new_collaborator_id); 
+                $this->redirect("board", "collaborators", $board->get_board_id());
+            }
+            (new View("board_collaborators"))->show(array("board" => $board, "user" => $user, "errors" => $errors));
+        }else{
+            $this->redirect("board","index");
+        }
+    }
+
+    public function collaborator_delete(){
+        $errors = [];
+        if (isset($_POST['board_id']) && isset($_POST['collaborator_id'])) {
+            $collaborator_id = $_POST["collaborator_id"];
+            $board = Board::get_board($_POST['board_id']);
+            if (count($errors) == 0) { 
+                $board->remove_collaborator($collaborator_id); 
+                $this->redirect("board", "collaborators", $board->get_board_id());
+            }
+            (new View("board_collaborators"))->show(array("board" => $board, "user" => $user, "errors" => $errors));
+        }else{
+            $this->redirect("board","index");
+        }
     }
 }

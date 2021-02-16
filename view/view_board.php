@@ -22,7 +22,9 @@
                 <h2>
                     <?= $board->get_menu_title() ?> 
                     <a href=<?= "board/edit/".$board->get_board_id() ?> class="invisible-link"><i class="fa fa-edit"></i></a>
-                    <a href=<?= "board/collaborators/".$board->get_board_id() ?> class="invisible-link"><i class="fa fa-users"></i></a>
+                    <?php if($board && ($user->is_admin() || $board->get_author_id() === $user->get_user_id())): ?>
+                        <a href=<?= "board/collaborators/".$board->get_board_id() ?> class="invisible-link"><i class="fa fa-users"></i></a>
+                    <?php endif; ?>
                     <a href=<?= "board/delete/".$board->get_board_id() ?> class="invisible-link"><i class="fa fa-trash"></i></a>
                 </h2>
                 Created <?= $board->get_duration_since_creation() ?> ago by <a href="board/index"><?= $board->get_author_name() ?></a>. <?= $board->get_last_modification()?"Modified ".$board->get_duration_since_last_edit()." ago.":"Never modified." ?>

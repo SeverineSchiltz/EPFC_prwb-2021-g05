@@ -298,4 +298,44 @@ class Board extends Model {
             return " less than a minute";
     }
 
+    public function validate_board_new_collaborator($new_collaborator_id){
+        $errors = [];
+        if(!is_numeric($new_collaborator_id)){
+            $errors = "Not a user!";
+        }
+        return $errors;
+    }
+
+    public function add_new_collaborator($new_collaborator_id){
+        $this->collaborators[] =  User::get_user_by_id($new_collaborator_id);
+        self::add_new_collaborator_in_db($this->get_board_id(), $new_collaborator_id);
+    }
+
+    public static function add_new_collaborator_in_db($board_id, $new_collaborator_id){
+        self::execute('INSERT INTO collaborate (Board, Collaborator) VALUES (:board, :collaborator)', array(
+            'board' => $board_id,
+            'collaborator' => $new_collaborator_id
+        ));
+    }
+
+    public function remove_collaborator($collaborator_id){
+        $user = User::get_user_by_id($collaborator_id);
+        //ne fonctionne pas car pas de redéfinition de la méthode Equals
+        /*
+        if(($key = array_search($user, $this->collaborators, TRUE)) !== FALSE) {
+            unset($this->collaborators[$key]);
+            self::remove_collaborator_in_db($this->get_board_id(), $collaborator_id);
+        }
+        */
+        unset($this->collaborators[$user]);
+        self::remove_collaborator_in_db($this->get_board_id(), $collaborator_id);
+    }
+
+    public static function remove_collaborator_in_db($board_id, $collaborator_id){
+        self::execute('DELETE FROM collaborate WHERE board = :board AND collaborator = :collaborator', array(
+            'board' => $board_id,
+            'collaborator' => $collaborator_id
+        ));
+    }
+
  }
