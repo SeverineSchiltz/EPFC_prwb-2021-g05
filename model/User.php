@@ -160,10 +160,10 @@ class User extends Model {
         else{
             $query = self::execute("SELECT DISTINCT b.*
                                     FROM board b
-                                    INNER JOIN collaborate c ON c.Board = b.ID
-                                    WHERE b.ID = :board_id AND (b.Owner = :card_id OR c.Collaborator = :card_id)
+                                    LEFT JOIN collaborate c ON c.Board = b.ID
+                                    WHERE b.ID = :board_id AND (b.Owner = :user_id OR c.Collaborator = :user_id)
                                     ORDER BY b.ModifiedAt, b.CreatedAt DESC", 
-                                    array("card_id"=>$this->user_id, "board_id"=>$board_id));
+                                    array("user_id"=>$this->user_id, "board_id"=>$board_id));
             if ($query->rowCount() == 0) {
                 return false;
             } else {
