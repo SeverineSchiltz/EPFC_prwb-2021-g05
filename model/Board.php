@@ -173,7 +173,7 @@ class Board extends Model {
     //supprimer le tableau
     
     public function delete($initiator) {
-        if ($this->author == $initiator) {
+        if ($this->author == $initiator || $initiator->is_admin()) {
             foreach($this->get_columns() as $column)
                 $column->delete();
             self::remove_all_collaborators_in_db($this->get_board_id());

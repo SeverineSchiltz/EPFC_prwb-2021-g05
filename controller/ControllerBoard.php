@@ -40,7 +40,7 @@ class ControllerBoard extends Controller {
 
             $board = Board::get_board($_GET["param1"]);
 
-            if($user != $board->get_author()) {
+            if($user != $board->get_author() && !$user->is_admin()) {
                 $errors[] = "You cannot delete someone else's board";
                 (new View("board"))->show(array("board" => $board, "user" => $user, "errors" => $errors));
             } else if($board->has_columns()) { // s'il y a des colonnes il faut confirmation
