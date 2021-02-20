@@ -176,6 +176,7 @@ class Board extends Model {
         if ($this->author == $initiator) {
             foreach($this->get_columns() as $column)
                 $column->delete();
+            self::remove_all_collaborators_in_db($this->get_board_id());
             self::execute('DELETE FROM board WHERE ID = :id', array('id' => $this->get_board_id()));
             return true;
         }
@@ -336,6 +337,11 @@ class Board extends Model {
             'board' => $board_id,
             'collaborator' => $collaborator_id
         ));
+    }
+
+    public static function remove_all_collaborators_in_db($board_id){
+        self::execute('DELETE FROM collaborate WHERE board = :board', array(
+            'board' => $board_id));
     }
 
  }
