@@ -114,7 +114,7 @@ class ControllerBoard extends Controller {
     }
 
         
-    public static function get_board_if_exist() {
+    private static function get_board_if_exist() {
         $board_id = "";
         if (isset($_GET["param1"]) && $_GET["param1"] != "" && is_numeric($_GET["param1"])) {
             $board_id = $_GET["param1"];

@@ -28,7 +28,7 @@ class ControllerColumn extends Controller {
         }
     }
 
-    public static function get_column_if_exist() {
+    private static function get_column_if_exist() {
         $column_id = "";
         if (isset($_GET["param1"]) && $_GET["param1"] != "" && is_numeric($_GET["param1"])) {
             $column_id = $_GET["param1"];

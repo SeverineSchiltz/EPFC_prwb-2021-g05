@@ -11,7 +11,7 @@ class ControllerCard extends Controller {
         $this->view();
     }
 
-    public static function get_card_if_exist() {
+    private static function get_card_if_exist() {
         $card_id = "";
         if (isset($_GET["param1"]) && $_GET["param1"] != "" && is_numeric($_GET["param1"])) {
             $card_id = $_GET["param1"];
