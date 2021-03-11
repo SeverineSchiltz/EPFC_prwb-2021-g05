@@ -101,57 +101,11 @@ class Card extends Model {
     }
 
     public function get_duration_since_creation() {
-        return $this->get_duration_since_date($this->created_at);
+        return MyTools::get_duration_since_date($this->created_at);
     }
 
     public function get_duration_since_last_edit() {     
-        if($this->last_modified !== null){
-            return "Modified ".$this->get_duration_since_date($this->last_modified);
-        }
-        return "Never modified.";
-    }
-
-    public static function get_duration_since_date($date) {
-        $date = new DateTime($date);
-        $now = new DateTime("now");
-        $interval = $date->diff($now);
-        $text_duration = "";
-        $nb = 0; //afficher que les 2 valeurs les plus élevées si elles sont plus grandes que 0
-        if($interval->y>0){
-            $text_duration.=$interval->y.($interval->y>1?" years":" year");
-            $nb += 1;
-        }
-        if($interval->m>0){
-            $text_duration .= $interval->m.($interval->m>1?" months":" month");
-            $nb += 2;
-        }
-        if($interval->d>0){
-            if($nb ===0)
-                $text_duration .= $interval->d.($interval->d>1?" days":" day");
-            else if($nb ===2)
-                $text_duration .= " and ".$interval->d.($interval->d>1?" days":" day");
-            $nb += 4;
-        }
-        if($interval->h>0){
-            if($nb ===0)
-                $text_duration .= $interval->h.($interval->h>1?" hours":" hour");
-            else if($nb ===4)
-                $text_duration .= " and ".$interval->h.($interval->h>1?" hours":" hour");
-            $nb += 8;
-        }
-        if($interval->i>0){
-            if($nb ===0)
-                $text_duration .= $interval->i.($interval->i>1?" minutes":" minute");
-            else if($nb ===8)
-                $text_duration .= " and ".$interval->i.($interval->i>1?" minutes":" minute");
-            $nb += 20;
-        }
-        if($nb ===0)
-            $text_duration .= "less than a minute.";
-        else
-            $text_duration .= " ago.";
-
-        return $text_duration;
+        return MyTools::get_duration_since_date($this->last_modified);
     }
 
     public function update_content() {
