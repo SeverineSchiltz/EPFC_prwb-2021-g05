@@ -53,6 +53,7 @@ class ControllerCard extends Controller {
             $card_id = $_POST["card_id"];
             $card = Card::get_card($card_id);
             $card->set_body($_POST["body"]);
+            if(isset($_POST["due_date"])) $card->set_due_date($_POST["due_date"]);
             $card->update_content(); 
             $errors = $card->validate_title($proposed_title);
             if (count($errors) == 0) { 

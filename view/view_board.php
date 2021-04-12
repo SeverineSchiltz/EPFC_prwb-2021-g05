@@ -68,7 +68,7 @@
                             <?php endif; ?>
                         </div>                        
                         <?php foreach($column->get_cards() as $card): ?>
-                            <div class="card">
+                            <div class="<?="card".($card->past_due_date() ? " expired" : "")?>">
                                 <div class="card-title">
                                 <a href=<?= "card/index/".$card->get_card_id() ?>><?=$card->get_title()?></a>
                                 </div>

@@ -85,7 +85,7 @@ a {
 
 .invisible-btn-card{
   color: black;
-  background-color: white;
+  background-color: transparent;
   border: none;
   margin: 0px;
   padding: 0px;
@@ -107,4 +107,12 @@ a {
 .card-name{
   color: red;
   font-weight: bold;
+}
+
+.card.expired {
+  background-color: #cb444a;
+}
+
+.card.expired .card-title a {
+  color: white;
 }

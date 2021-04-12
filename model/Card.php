@@ -17,7 +17,7 @@ class Card extends Model {
     private $last_modified;
     private $cards;
 
-    public function __construct($card_id, $column, $position, $author, $title, $body, $created_at, $due_date = NULL, $last_modified = NULL) {
+    public function __construct($card_id, $column, $position, $author, $title, $body, $created_at, $last_modified = NULL, $due_date = NULL) {
         $this->card_id = $card_id;
         $this->column =  $column;
         $this->position = $position;
@@ -25,8 +25,8 @@ class Card extends Model {
         $this->title = $title;
         $this->body = $body;
         $this->created_at = $created_at;
-        $this->due_date = $due_date;
         $this->last_modified = $last_modified;
+        $this->due_date = $due_date;
     }
 
     public function get_card_id() {
@@ -47,6 +47,10 @@ class Card extends Model {
 
     public function get_due_date() {
         return $this->due_date;
+    } 
+
+    public function get_formatted_due_date() {
+        return MyTools::format_date($this->due_date);
     } 
 
     public function get_participants() {
@@ -76,7 +80,7 @@ class Card extends Model {
         $data = $query->fetchAll();
         $cards = [];
         foreach ($data as $row) {
-            $cards[] = new Card($row['ID'], $column, $row['Position'], User::get_user_by_id($row['Author']), $row['Title'], $row['Body'], $row['CreatedAt'], $row['ModifiedAt']);
+            $cards[] = new Card($row['ID'], $column, $row['Position'], User::get_user_by_id($row['Author']), $row['Title'], $row['Body'], $row['CreatedAt'], $row['ModifiedAt'], $row['DueDate']);
         }
         return $cards;
     }
@@ -92,7 +96,7 @@ class Card extends Model {
         if ($query->rowCount() == 0) {
             return false;
         } else {
-            return new Card($data['ID'], Column::get_column($data['Column']), $data['Position'], User::get_user_by_id($data['Author']), $data['Title'], $data['Body'], $data['CreatedAt'], $data['ModifiedAt']);
+            return new Card($data['ID'], Column::get_column($data['Column']), $data['Position'], User::get_user_by_id($data['Author']), $data['Title'], $data['Body'], $data['CreatedAt'], $data['ModifiedAt'], $data['DueDate']);
         }
     }
 
@@ -134,12 +138,13 @@ class Card extends Model {
     }
 
     public static function update($card) {
-        self::execute('UPDATE card SET Title = :title, Body = :body, Position = :position,  `Column`= :column, ModifiedAt = current_timestamp() WHERE ID = :card_id', array(
+        self::execute('UPDATE card SET Title = :title, Body = :body, Position = :position,  `Column`= :column, ModifiedAt = current_timestamp(), DueDate = :due_date WHERE ID = :card_id', array(
             'card_id' => $card->card_id,
             'title' => $card->title,
             'body' => $card->body,
             'position' => $card->position,
-            'column' => $card->get_column_id()
+            'column' => $card->get_column_id(),
+            'due_date' => $card->due_date
         ));
     }
 
@@ -189,6 +194,15 @@ class Card extends Model {
     public function set_body($new_body) {
         $this->body = $new_body;
     } 
+
+    public function set_due_date($new_due_date) {
+        $this->due_date = $new_due_date;
+    } 
+
+    public function past_due_date() {
+        if($this->due_date == null) return false;
+        return strtotime($this->due_date) < time();
+    }
 
     public static function get_last_card_position_in_column($column_id) {
         $query = self::execute("SELECT MAX(Position) pos FROM card ca WHERE ca.Column = :column_id", 

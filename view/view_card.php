@@ -33,6 +33,12 @@
                     <textarea readonly class="form-control"><?= $card->get_body()?></textarea>
                 </form>
                 <br>
+                <?php if($card->get_due_date() != null): ?>
+                    <h3>Due date: <?= $card->get_formatted_due_date() ?></h3>
+                <?php else: ?>
+                    <h3>This card has no due date yet.</h3>
+                <?php endif; ?>
+                <br>
                 <?php if (count($card->get_participants()) != 0): ?>
                         <h3>Current participant(s)</h3>
                         <ul>

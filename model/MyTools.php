@@ -24,6 +24,8 @@ class MyTools extends Model {
             return " less than a minute";
     }
 
-   
-
+    public static function format_date($date) {
+        $date = new DateTime($date);
+        return $date->format('l jS F Y');
+    }
  }
