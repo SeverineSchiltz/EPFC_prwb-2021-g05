@@ -138,5 +138,27 @@ class ControllerCard extends Controller {
         }
     }
 
+    public function remove_participant() {        
+        $user = $this->get_user_or_redirect();
+        if(isset($_POST["card_id"]) && isset($_POST["participant_id"])){
+            $card = Card::get_card($_POST["card_id"]);
+            $card->remove_participant($_POST["participant_id"]); 
+            $this->redirect("card","edit",$_POST["card_id"]);
+        }else{
+            $this->redirect("board","index");
+        }
+    }
+
+    public function add_participant() {     
+        $user = $this->get_user_or_redirect();
+        if(isset($_POST["card_id"]) && isset($_POST["collaborator_id"])){
+            $card = Card::get_card($_POST["card_id"]);
+            $card->add_participant($_POST["collaborator_id"]); 
+            $this->redirect("card","edit",$_POST["card_id"]);
+        }else{
+            $this->redirect("board","index");
+        }
+    }
+
 }
 

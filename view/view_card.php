@@ -32,6 +32,19 @@
                 <form>
                     <textarea readonly class="form-control"><?= $card->get_body()?></textarea>
                 </form>
+                <br>
+                <?php if (count($card->get_participants()) != 0): ?>
+                        <h3>Current participant(s)</h3>
+                        <ul>
+                            <?php foreach ($card->get_participants() as $participant): ?>
+                                <li>
+                                    <span class="participant"><?= $participant->get_full_name().' ('.$participant->get_mail().') ' ?></span>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php else: ?>
+                        <h3>This card has no participant yet.</h3>
+                    <?php endif; ?>
             </div>
         </div>
     </body>

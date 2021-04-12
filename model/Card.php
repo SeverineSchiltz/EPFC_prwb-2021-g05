@@ -13,10 +13,11 @@ class Card extends Model {
     private $title;
     private $body;
     private $created_at;
+    private $due_date;
     private $last_modified;
     private $cards;
 
-    public function __construct($card_id, $column, $position, $author, $title, $body, $created_at, $last_modified = NULL) {
+    public function __construct($card_id, $column, $position, $author, $title, $body, $created_at, $due_date = NULL, $last_modified = NULL) {
         $this->card_id = $card_id;
         $this->column =  $column;
         $this->position = $position;
@@ -24,6 +25,7 @@ class Card extends Model {
         $this->title = $title;
         $this->body = $body;
         $this->created_at = $created_at;
+        $this->due_date = $due_date;
         $this->last_modified = $last_modified;
     }
 
@@ -42,6 +44,20 @@ class Card extends Model {
     public function get_body() {
         return $this->body;
     } 
+
+    public function get_due_date() {
+        return $this->due_date;
+    } 
+
+    public function get_participants() {
+        $query = self::execute("select * from `participate` where Card = :id", array("id" => $this->card_id));
+        $data = $query->fetchAll();
+        $participants = [];
+        foreach ($data as $row) {
+            $participants[] = User::get_user_by_id($row['Participant']);
+        }
+        return $participants;
+    }
 
     public function get_last_position() {
         $query = self::execute("select Position from card where `Column` = :id order by Position DESC limit 1", array("id" => $this->column->get_column_id())); 
@@ -249,4 +265,28 @@ class Card extends Model {
         return $errors;
     }
 
+    public function add_participant($user_id) {
+        self::execute('INSERT INTO `participate` (Card, Participant) VALUES (:card_id, :user_id)', array('user_id' => $user_id, 'card_id' => $this->card_id));
+    }
+
+    public function remove_participant($user_id) {
+        self::execute('DELETE FROM `participate` WHERE Card = :card_id and Participant = :user_id', array('user_id' => $user_id, 'card_id' => $this->card_id));
+    }
+
+    public function get_non_participants(){
+
+        $query = self::execute(
+            "SELECT Collaborator
+            FROM collaborate c
+            WHERE Board = :board_id AND Collaborator NOT IN 
+            (SELECT Participant FROM `participate` WHERE Card = :card_id)"
+            , array("board_id" => $this->get_board_id(), "card_id" => $this->get_card_id())
+        );
+        $data = $query->fetchAll();
+        $non_participants = array();
+        foreach ($data as $row) {
+            $non_participants[] = User::get_user_by_id($row['Collaborator']);
+        }
+        return $non_participants;
+    }
 }

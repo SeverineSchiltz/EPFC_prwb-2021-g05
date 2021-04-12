@@ -39,3 +39,21 @@
   .errors p{
     margin : 0px;
   }
+
+.invisible-btn {
+  border: none;
+  background-color: transparent;
+}
+
+.invisible-btn:hover {
+  color: rgb(59, 59, 59);
+}
+
+.participant {
+  color:#157ffb;
+}
+
+.add-participant {
+  background-color: #157ffb;
+  color: white;
+}
