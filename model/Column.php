@@ -259,4 +259,8 @@ class Column extends Model {
         return MyTools::get_duration_since_date($this->last_modified);
     }
 
+    public function remove_participant($participant_id){
+        foreach($this->get_cards() as $card)
+                $card->remove_participant($participant_id);
+    }
 }

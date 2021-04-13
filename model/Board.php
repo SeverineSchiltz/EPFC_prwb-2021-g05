@@ -311,6 +311,8 @@ class Board extends Model {
         }
         */
         unset($this->collaborators[$user]);
+        foreach($this->get_columns() as $column)
+                $column->remove_participant($collaborator_id);
         self::remove_collaborator_in_db($this->get_board_id(), $collaborator_id);
     }
 
