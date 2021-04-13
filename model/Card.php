@@ -291,8 +291,13 @@ class Card extends Model {
 
         $query = self::execute(
             "SELECT Collaborator
-            FROM collaborate c
+            FROM collaborate
             WHERE Board = :board_id AND Collaborator NOT IN 
+            (SELECT Participant FROM `participate` WHERE Card = :card_id)
+            UNION
+            SELECT Owner as Collaborator
+            FROM board
+            WHERE ID = :board_id AND Owner NOT IN 
             (SELECT Participant FROM `participate` WHERE Card = :card_id)"
             , array("board_id" => $this->get_board_id(), "card_id" => $this->get_card_id())
         );
