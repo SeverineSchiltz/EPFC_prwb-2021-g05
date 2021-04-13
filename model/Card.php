@@ -129,23 +129,32 @@ class Card extends Model {
     }
 
     public function update_content() {
-        $errors = $this->validate_title($this->title);
+        $errors = $this->validate();
         if(empty($errors)){
-            self::update($this);
+            self::update();
             return true;
         }
         return false;
     }
 
-    public static function update($card) {
-        self::execute('UPDATE card SET Title = :title, Body = :body, Position = :position,  `Column`= :column, ModifiedAt = current_timestamp(), DueDate = :due_date WHERE ID = :card_id', array(
-            'card_id' => $card->card_id,
-            'title' => $card->title,
-            'body' => $card->body,
-            'position' => $card->position,
-            'column' => $card->get_column_id(),
-            'due_date' => $card->due_date
-        ));
+    private function update() {
+        if($this->due_date == null)
+            self::execute('UPDATE card SET Title = :title, Body = :body, Position = :position,  `Column`= :column, ModifiedAt = current_timestamp(), DueDate = null WHERE ID = :card_id', array(
+                'card_id' => $this->card_id,
+                'title' => $this->title,
+                'body' => $this->body,
+                'position' => $this->position,
+                'column' => $this->get_column_id()
+            ));
+        else
+            self::execute('UPDATE card SET Title = :title, Body = :body, Position = :position,  `Column`= :column, ModifiedAt = current_timestamp(), DueDate = :due_date WHERE ID = :card_id', array(
+                'card_id' => $this->card_id,
+                'title' => $this->title,
+                'body' => $this->body,
+                'position' => $this->position,
+                'column' => $this->get_column_id(),
+                'due_date' => $this->due_date
+            ));
     }
 
     public function insert_new_card() {
@@ -170,6 +179,28 @@ class Card extends Model {
         }
         if($title != $this->title && !$this->validate_unicity_in_board($title)){
             $errors[] = "Title card must be unique on this board.";
+        }
+        return $errors;
+    }
+
+    public function validate_due_date($due_date){
+        $errors = array();
+        if($this->is_past_due_date($due_date)){
+            $errors[] = "Due date must be in the future";
+        }
+        return $errors;
+    }
+
+    private function validate() {
+        $errors = array();
+        if(!(isset($this->title) && is_string($this->title) && strlen($this->title) > 2 && strlen($this->title) < 129)){
+            $errors[] = "Card title length must be between 3 and 128 characters";
+        }
+        if(!$this->validate_unicity_in_board($this->title)){
+            $errors[] = "Title card must be unique on this board.";
+        }
+        if($this->past_due_date()){
+            $errors[] = "Due date must be in the future";
         }
         return $errors;
     }
@@ -199,9 +230,13 @@ class Card extends Model {
         $this->due_date = $new_due_date;
     } 
 
+    private function is_past_due_date($due_date) {
+        if($due_date == null) return false;
+        return strtotime($due_date) < time();
+    }
+
     public function past_due_date() {
-        if($this->due_date == null) return false;
-        return strtotime($this->due_date) < time();
+        return $this->is_past_due_date($this->due_date);
     }
 
     public static function get_last_card_position_in_column($column_id) {
@@ -245,8 +280,8 @@ class Card extends Model {
             $pos_temp = $this->position;
             $this->position = $card_to_exchange->position;
             $card_to_exchange->position = $pos_temp;
-            self::update($this);
-            self::update($card_to_exchange);
+            self::update();
+            $card_to_exchange->update();
         }
         return $errors;
     }
@@ -274,7 +309,7 @@ class Card extends Model {
             $new_position = self::get_last_card_position_in_column($column_to_exchange->get_column_id()) +1;
             $this->column = $column_to_exchange;
             $this->position = $new_position;
-            self::update($this);
+            self::update();
         }
         return $errors;
     }

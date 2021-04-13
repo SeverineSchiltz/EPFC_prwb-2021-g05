@@ -50,14 +50,16 @@ class ControllerCard extends Controller {
         $errors = [];
         if(isset($_POST["card_id"]) && isset($_POST["title"]) && isset($_POST["body"])){
             $proposed_title = $_POST["title"];
+            $proposed_due_date = $_POST["due_date"];
             $card_id = $_POST["card_id"];
             $card = Card::get_card($card_id);
             $card->set_body($_POST["body"]);
-            if(isset($_POST["due_date"])) $card->set_due_date($_POST["due_date"]);
             $card->update_content(); 
             $errors = $card->validate_title($proposed_title);
+            $errors = array_merge($errors, $card->validate_due_date($proposed_due_date));
             if (count($errors) == 0) { 
                 $card->set_title($_POST["title"]);
+                $card->set_due_date($_POST["due_date"]);
                 $card->update_content(); 
                 $this->redirect("card","view", $card_id);
             }
