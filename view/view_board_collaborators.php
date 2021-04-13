@@ -25,14 +25,8 @@
                     <?php foreach ($board->get_collaborators() as $collaborator): ?>
                         <li>
                             <div class="one-collaborator">
-                                <form  id="collaborator" action="board/collaborator_delete/" method="post">
-                                    <?php echo $collaborator->get_full_name()." (".$collaborator->get_mail().")" ?>
-                                    <input type="hidden" name="board_id" value=<?= $board->get_board_id() ?>>
-                                    <input type="hidden" name="collaborator_id" value=<?= $collaborator->get_user_id() ?>>
-                                    <button type="submit" class="invisible-btn">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                </form>
+                                <?php echo $collaborator->get_full_name()." (".$collaborator->get_mail().")" ?>
+                                <a href=<?= "board/remove_collaboration_confirm/".$board->get_board_id()."/". $collaborator->get_user_id() ?> class="invisible-link"><i class="fa fa-trash"></i></a> 
                             </div>
                         </li>
                     <?php endforeach; ?>

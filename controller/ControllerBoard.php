@@ -181,6 +181,21 @@ class ControllerBoard extends Controller {
         }
     }
 
+    public function remove_collaboration_confirm() {
+        $user = $this->get_user_or_redirect();
+        if (isset($_GET["param1"]) && $_GET["param1"] !== "" && isset($_GET["param2"]) && $_GET["param2"] !== "") {
+        $board_id = $_GET["param1"];
+        $collaborator_id = $_GET["param2"];
+        }else{
+            $this->redirect("board","index");
+        }
+        if($user->has_permission($board_id)){
+            (new View("collaboration_delete"))->show(array("user" => $user, "board_id" => $board_id, "collaborator_id" => $collaborator_id));
+        }else{
+            $this->redirect("board","index");
+        }
+    }
+
     public function collaborator_delete(){
         $errors = [];
         if (isset($_POST['board_id']) && isset($_POST['collaborator_id'])) {
