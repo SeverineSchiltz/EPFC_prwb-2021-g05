@@ -110,7 +110,7 @@ class ControllerBoard extends Controller {
                 $this->redirect("board", "index");
             }
         }
-        (new View("main_menu"))->show(array("user" => $user, "new_board_name" => $new_board_name, "errors" => $errors, "personal_boards" => Board::get_boards($user), "other_boards" => Board::get_other_boards($user)));
+        (new View("main_menu"))->show(array("user" => $user, "new_board_name" => $new_board_name, "errors" => $errors, "personal_boards" => Board::get_my_boards($user), "other_shared_boards" => Board::get_other_shared_boards($user), "other_not_shared_boards" => Board::get_other_not_shared_boards($user)));
     }
 
         

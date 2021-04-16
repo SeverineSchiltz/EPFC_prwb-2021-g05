@@ -43,7 +43,7 @@ class ControllerUser extends Controller {
             $password = $_POST['password'];
             $password_confirm = $_POST['password_confirm'];
 
-            $user = new User($mail, Tools::my_hash($password), $name);
+            $user = new User($mail, Tools::my_hash($password), $name, "user");
             $errors = $user->validate(); //valide le mail et le full name
             $errors = array_merge($errors, User::validate_passwords($password, $password_confirm));
             if (count($errors) == 0) { 
