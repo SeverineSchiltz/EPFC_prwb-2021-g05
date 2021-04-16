@@ -185,8 +185,8 @@ class Card extends Model {
 
     public function validate_due_date($due_date){
         $errors = array();
-        if($this->is_past_due_date($due_date)){
-            $errors[] = "Due date must be in the future";
+        if($this->is_past_created_date($due_date)){
+            $errors[] = "Due date must be after the card creation date";
         }
         return $errors;
     }
@@ -199,8 +199,8 @@ class Card extends Model {
         if(!$this->validate_unicity_in_board($this->title)){
             $errors[] = "Title card must be unique on this board.";
         }
-        if($this->past_due_date()){
-            $errors[] = "Due date must be in the future";
+        if($this->past_created_date()){
+            $errors[] = "Due date must be after the card creation date";
         }
         return $errors;
     }
@@ -235,8 +235,17 @@ class Card extends Model {
         return strtotime($due_date) < time();
     }
 
+    private function is_past_created_date($due_date) {
+        if($due_date == null) return false;
+        return $due_date < $this->created_at;
+    }
+
     public function past_due_date() {
         return $this->is_past_due_date($this->due_date);
+    }
+
+    private function past_created_date() {
+        return $this->is_past_created_date($this->due_date);
     }
 
     public static function get_last_card_position_in_column($column_id) {
