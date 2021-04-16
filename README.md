@@ -14,6 +14,8 @@ Bugs:
 
 ## Notes de livraison itération 2
 
+Pas de remarques particulières. Après nos tests, tout semble en ordre.
+
 ## Notes de livraison itération 3
 
 
