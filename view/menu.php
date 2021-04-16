@@ -7,7 +7,7 @@
             <div class="page-subtitle"><?php echo $menu_subtitle ?></div>
             <a href="board/index">
                 <?php if ($user->is_admin()): ?>
-                    <i class="fas fa-user-shield"></i>
+                    <img src="picture/user-shield-solid.svg"> </img>
                 <?php else: ?>
                     <i class="fa fa-user"></i>
                 <?php endif; ?>

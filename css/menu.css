@@ -57,3 +57,10 @@
 .page-subtitle {
   margin-right: 1em;
 }
+
+.right-menu img {
+  width:20px; 
+  height:20px; 
+  filter: invert(100%);
+  margin-bottom: 5px;
+}
