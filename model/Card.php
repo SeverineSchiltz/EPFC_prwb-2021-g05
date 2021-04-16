@@ -261,6 +261,7 @@ class Card extends Model {
 
     public function delete() {
         if($this->card_id !== NULL) {
+            self::remove_all_participants_in_db($this->get_card_id());
             self::execute('DELETE FROM comment WHERE card = :card_id; DELETE FROM card WHERE ID = :card_id;', array('card_id' => $this->card_id));
             return $this;
         }
@@ -351,5 +352,10 @@ class Card extends Model {
             $non_participants[] = User::get_user_by_id($row['Collaborator']);
         }
         return $non_participants;
+    }
+
+    public static function remove_all_participants_in_db($card_id){
+        self::execute('DELETE FROM participate WHERE Card = :card', array(
+            'card' => $card_id));
     }
 }
