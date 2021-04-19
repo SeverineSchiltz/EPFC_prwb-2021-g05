@@ -64,3 +64,8 @@
   filter: invert(100%);
   margin-bottom: 5px;
 }
+
+label.error {
+  color: red;
+  padding-left: .5em;
+}
