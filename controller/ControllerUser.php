@@ -54,4 +54,15 @@ class ControllerUser extends Controller {
         (new View("signup"))->show(array("mail" => $mail, "name" => $name, "password" => $password, 
                                          "password_confirm" => $password_confirm, "errors" => $errors));
     }
+
+    public function email_available_service(){
+        $res = "true";
+        if(isset($_POST["email"]) && $_POST["email"] !== ""){
+            $user = User::get_user_by_mail($_POST["email"]);
+            if($user){
+                $res = "false";
+            }
+        }
+        echo $res;
+    }
 }

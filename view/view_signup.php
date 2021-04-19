@@ -10,6 +10,70 @@
         <link href="css/style.css" rel="stylesheet" type="text/css"/>
         <link href="css/menu.css" rel="stylesheet" type="text/css"/>
         <link href="css/signup.css" rel="stylesheet" type="text/css"/>
+        <script src="lib/jquery-3.6.0.min.js" type="text/javascript"></script>
+        <script src="lib/jquery-validation-1.19.3/jquery.validate.min.js" type="text/javascript"></script>
+        <script src="lib/MyLib.js" type="text/javascript"></script>
+        <script>
+            $(function(){
+                $('#signupForm').validate({
+                    rules: {
+                        mail: {
+                            remote: {
+                                url: 'user/email_available_service',
+                                type: 'post',
+                                data:  {
+                                    email: function() { 
+                                        return $("#mail").val();
+                                    }
+                                }
+                            },
+                            required: true,
+                            regex: /^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,})$/i,
+                        },
+                        name: {
+                            required: true,
+                            minlength: 3,
+                            regex: /^[a-zA-Z][a-zA-Z0-9]*$/,
+                        },
+                        password: {
+                            required: true,
+                            minlength: 8,
+                            regex: [/[A-Z]/, /\d/, /['";:,.\/?\\-]/],
+                        },
+                        password_confirm: {
+                            required: true,
+                            minlength: 8,
+                            equalTo: "#password",
+                            regex: [/[A-Z]/, /\d/, /['";:,.\/?\\-]/],
+                        }
+                    },
+                    messages: {
+                        mail: {
+                            remote: 'this email already exists',
+                            required: 'required',
+                            regex: 'bad format for email',
+                        },
+                        name: {
+                            required: 'required',
+                            minlength: 'minimum 3 characters',
+                            regex: 'bad name format',
+                        },
+                        password: {
+                            required: 'required',
+                            minlength: 'minimum 8 characters',
+                            regex: 'bad password format',
+                        },
+                        password_confirm: {
+                            required: 'required',
+                            minlength: 'minimum 8 characters',
+                            equalTo: 'must be identical to password above',
+                            regex: 'bad password format',
+                        }
+                    }
+                });
+                $("input:text:first").focus();
+            });
+        </script>
     </head>
     <body>
         <?php
@@ -23,12 +87,12 @@
                 <div class="col-sm-6 form">
                     <h2>Sign up</h2>
                     <hr>
-                    <form action="user/signup" method="post">
+                    <form action="user/signup" method="post" id="signupForm">
                         <div class="form-group">
                             <div class="input-group mail">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">
-                                    <i class="fa fa-at"></i>
+                                        <i class="fa fa-at"></i>
                                     </span>
                                 </div> 
                                 <input id="mail" name="mail" type="text" value="<?= $mail ?>" placeholder="Email" class="form-control">
