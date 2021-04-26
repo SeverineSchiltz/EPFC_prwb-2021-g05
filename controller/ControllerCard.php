@@ -141,6 +141,11 @@ class ControllerCard extends Controller {
         }
     }
 
+    public function delete_service(){
+        $this->delete();
+        echo "true";
+    }
+
     public function remove_participant() {        
         $user = $this->get_user_or_redirect();
         if(isset($_POST["card_id"]) && isset($_POST["participant_id"])){

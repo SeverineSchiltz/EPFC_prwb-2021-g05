@@ -14,15 +14,61 @@
         <link href="css/style.css" rel="stylesheet" type="text/css"/>
         <link href="css/menu.css" rel="stylesheet" type="text/css"/>
         <link href="css/card_view.css" rel="stylesheet" type="text/css"/>
+        <script src="lib/jquery-3.6.0.min.js" type="text/javascript"></script>
+        <script src="lib/jquery-ui-1.12.1.ui-lightness/jquery-ui.min.js" type="text/javascript"></script>
+        <link href="lib/jquery-ui-1.12.1.ui-lightness/jquery-ui.min.css" rel="stylesheet" type="text/css"/>
+        <link href="lib/jquery-ui-1.12.1.ui-lightness/jquery-ui.theme.min.css" rel="stylesheet" type="text/css"/>
+        <link href="lib/jquery-ui-1.12.1.ui-lightness/jquery-ui.structure.min.css" rel="stylesheet" type="text/css"/>
+        <script>
+            $(function(){
+                document.getElementById('delete_card').setAttribute("href", "javascript:deleteCardConfirm(\"" + <?= $card->get_card_id()?>  + "\")");
+            });
+
+            function deleteCardConfirm(id) {
+                /*
+                var toDelete = card.find(function (element) {
+                    return element.id === id;
+                });
+                $('#card_to_delete_body').text(toDelete.body);
+                $('#card_to_delete_author').text(toDelete.author);
+                $('#card_to_delete_datetime').text(toDelete.createdat);
+                */
+                $('#confirm_dialog').dialog({
+                    resizable: false,
+                    height: 300,
+                    width: 600,
+                    modal: true,
+                    autoOpen: true,
+                    buttons: {
+                        Confirm: function () {
+                            deleteCard(id);
+                            $(this).dialog("close");
+                        },
+                        Cancel: function () {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+            }
+
+            function deleteCard(id){
+                $.post("card/delete_service/",
+                    {"card_id": id}
+                ).fail(function(){
+                    alert("<p>Error encountered while retrieving the messages!</p>");
+                });
+            }
+
+        </script>
     </head>
     <body>
         <?php include("menu.php");?>
         <div class="content">
             <div class="card-header">
-                <h2>
+                <h2 id='card_title'>
                     <?= $menu_title?> 
                     <a href=<?= "card/edit/".$card->get_card_id() ?> class="invisible-link"><i class="fa fa-edit"></i></a>
-                    <a href=<?= "card/delete_confirm/".$card->get_card_id() ?> class="invisible-link"><i class="fa fa-trash"></i></a>
+                    <a id='delete_card' href=<?= "card/delete_confirm/".$card->get_card_id() ?> class="invisible-link"><i class="fa fa-trash"></i></a>
                 </h2>
                 <h4>Created by <span><?= $card->get_author_name() ?></span> <?= $card->get_duration_since_creation() ?> ago. <?= $card->get_last_modification()?"Modified ".$card->get_duration_since_last_edit()." ago.":"Never modified." ?></h4>
                 <h4>This card is on the board "<span><a href=<?= "board/board/".$card->get_board_id() ?> ><?= $card->get_board_title() ?></a></span>", column "<span><?= $card->get_column_title() ?></span>" at position <?= $card->get_position() ?>.</h4>
@@ -52,6 +98,10 @@
                         <h3>This card has no participant yet.</h3>
                     <?php endif; ?>
             </div>
+        </div>
+        <div id="confirm_dialog" title="Confirm Card Deletion" hidden>
+            <p>Please confirm that you want to delete this card.</p>
+            <p>This operation can't be reversed!</p>
         </div>
     </body>
 </html>
