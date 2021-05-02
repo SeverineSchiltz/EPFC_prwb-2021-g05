@@ -12,4 +12,10 @@ class ControllerMain extends Controller {
         $this->redirect("board", "index");
     }
 
+    //affichage du tableau donné
+    public function calendar() {
+        $user = $this->get_user_or_redirect();
+        (new View("calendar"))->show(array("user" => $user));
+    }
+
 }

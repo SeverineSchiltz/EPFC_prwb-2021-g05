@@ -39,3 +39,7 @@
 .participant {
   color:#157ffb;
 }
+
+.ui-dialog-content{
+  display: block !important;
+}

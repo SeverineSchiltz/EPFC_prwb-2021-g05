@@ -1,0 +1,14 @@
+.content {
+    margin-top: 60px;
+    padding: 1.25em 1.5em;
+    color: #dc3848;
+    font-weight: 500;
+  }
+
+  a {
+    text-decoration: none;
+}
+
+.calendar{
+    color: white;
+}

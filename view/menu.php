@@ -4,7 +4,9 @@
     <?php if (isset($user) && $user->get_mail()): ?>
         <div class="page-title"><?php echo $menu_title ?></div>
         <div class="right-menu">
-            <div class="page-subtitle"><?php echo $menu_subtitle ?></div>
+            <!-- <div class="page-subtitle"><?php echo $menu_subtitle ?></div> -->
+            <a class="page-title" href="board/index">Boards</a>  
+            <a class="page-title calendar" href="main/calendar">Calendar</a>  
             <a href="board/index">
                 <?php if ($user->is_admin()): ?>
                     <img src="picture/user-shield-solid.svg"> </img>
@@ -12,7 +14,7 @@
                     <i class="fa fa-user"></i>
                 <?php endif; ?>
                 <span class="username"><?php echo $user->get_full_name() ?></span>
-            </a>            
+            </a>        
             <a class="signout btn" href="main/logout">
                 <i class="fa fa-sign-out"></i>
             </a>

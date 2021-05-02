@@ -33,6 +33,7 @@
                 $('#card_to_delete_author').text(toDelete.author);
                 $('#card_to_delete_datetime').text(toDelete.createdat);
                 */
+                //$('#confirm_dialog')
                 $('#confirm_dialog').dialog({
                     resizable: false,
                     height: 300,
@@ -53,7 +54,12 @@
 
             function deleteCard(id){
                 $.post("card/delete_service/",
-                    {"card_id": id}
+                    {"card_id": id},
+                    function (data) {
+                        //history.pushState({}, null, "board/index/");
+                        //window.location.hash = "";
+                        window.location.replace("board/board/" + <?= $card->get_board_id()?>);
+                    }
                 ).fail(function(){
                     alert("<p>Error encountered while retrieving the messages!</p>");
                 });
