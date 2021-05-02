@@ -142,7 +142,7 @@ class ControllerCard extends Controller {
     }
 
     public function delete_service(){
-        /*$user = $this->get_user_or_redirect();
+        $user = $this->get_user_or_redirect();
         if(isset($_POST["card_id"])){
             $card = Card::get_card($_POST["card_id"]);
             $card->delete(); 
@@ -150,8 +150,6 @@ class ControllerCard extends Controller {
         }else{
             echo "false";
         }
-        */
-        echo "true";
     }
 
     public function remove_participant() {        

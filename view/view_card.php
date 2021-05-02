@@ -56,8 +56,6 @@
                 $.post("card/delete_service/",
                     {"card_id": id},
                     function (data) {
-                        //history.pushState({}, null, "board/index/");
-                        //window.location.hash = "";
                         window.location.replace("board/board/" + <?= $card->get_board_id()?>);
                     }
                 ).fail(function(){

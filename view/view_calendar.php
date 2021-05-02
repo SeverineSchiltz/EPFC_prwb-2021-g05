@@ -21,7 +21,7 @@
         });
         calendar.render();
       });
-
+      
     </script>
   </head>
   <body>
@@ -32,6 +32,9 @@
             include("menu.php");
         ?>
       <div id='calendar'></div>
+      <noscript>
+        Your browser does not support JavaScript!
+      </noscript>
     </div>
   </body>
 </html>
