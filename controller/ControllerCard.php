@@ -174,5 +174,18 @@ class ControllerCard extends Controller {
         }
     }
 
+    public function change_cards_in_column_service(){
+        $user = $this->get_user_or_redirect();
+        if(isset($_POST["column_info"])){
+            $column_info = $_POST["column_info"];
+            $column_to_update = Column::get_column($column_info["id"]);
+            $cards_id = $column_info["cards_id"];
+            $column_to_update->update_all_cards_position($cards_id);
+            echo "true";
+        }else{
+            echo "false";
+        }
+    }
+
 }
 

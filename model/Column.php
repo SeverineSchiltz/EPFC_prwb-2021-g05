@@ -263,4 +263,15 @@ class Column extends Model {
         foreach($this->get_cards() as $card)
                 $card->remove_participant($participant_id);
     }
+
+    public function update_all_cards_position($cards_id){
+        $pos = 1;
+        foreach($cards_id as $card_id){
+            $card = Card::get_card($card_id);
+            $card->set_position($pos);
+            $card->set_column($this);
+            $card->update_content();
+            ++$pos;
+        }
+    }
 }

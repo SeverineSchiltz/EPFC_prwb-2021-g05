@@ -116,3 +116,9 @@ a {
 .card.expired .card-title a {
   color: white;
 }
+
+.cards{
+  /*border: 1px solid red;*/
+  min-height: 20px;
+  list-style-type: none;
+}

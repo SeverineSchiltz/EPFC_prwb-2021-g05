@@ -13,11 +13,22 @@
     <link href='lib/FullCalendar/main.css' rel='stylesheet' />
     <script src='lib/FullCalendar/main.js'></script>
     <script>
-
       document.addEventListener('DOMContentLoaded', function() {
         var calendarEl = document.getElementById('calendar');
         var calendar = new FullCalendar.Calendar(calendarEl, {
-          initialView: 'dayGridMonth'
+          initialView: 'dayGridMonth',
+          headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,listWeek'
+          },
+          events: [
+            {
+              id: 'a',
+              title: 'my event',
+              start: '2021-05-01'
+            }
+          ]
         });
         calendar.render();
       });

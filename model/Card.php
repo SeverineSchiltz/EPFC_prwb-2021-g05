@@ -218,8 +218,16 @@ class Card extends Model {
         }
     }
 
+    public function set_column($column) {
+        $this->column = $column;
+    } 
+
     public function set_title($new_title) {
         $this->title = $new_title;
+    } 
+
+    public function set_position($new_position) {
+        $this->position = $new_position;
     } 
 
     public function set_body($new_body) {

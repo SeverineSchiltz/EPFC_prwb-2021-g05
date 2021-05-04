@@ -9,7 +9,7 @@
             <a class="page-title calendar" href="main/calendar">Calendar</a>  
             <a href="board/index">
                 <?php if ($user->is_admin()): ?>
-                    <img src="picture/user-shield-solid.svg"> </img>
+                    <img src="picture/user-shield-solid.svg" alt="">
                 <?php else: ?>
                     <i class="fa fa-user"></i>
                 <?php endif; ?>
