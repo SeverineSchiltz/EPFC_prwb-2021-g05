@@ -6,7 +6,7 @@
         <div class="right-menu">
             <!-- <div class="page-subtitle"><?php echo $menu_subtitle ?></div> -->
             <a class="page-title" href="board/index">Boards</a>  
-            <a class="page-title calendar" href="main/calendar">Calendar</a>  
+            <a class="page-title calendar" href="calendar/calendar">Calendar</a>
             <a href="board/index">
                 <?php if ($user->is_admin()): ?>
                     <img src="picture/user-shield-solid.svg" alt="">
