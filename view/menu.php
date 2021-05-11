@@ -1,3 +1,11 @@
+
+<script src="lib/jquery-3.6.0.min.js" type="text/javascript"></script>
+<script>
+    $(function(){
+        $('#menu_calendar').removeAttr("hidden");
+    });
+</script>
+
 <div class="menu">
     <div class="title">Trello!</div>
     <div class="spacer"></div>
@@ -6,7 +14,7 @@
         <div class="right-menu">
             <!-- <div class="page-subtitle"><?php echo $menu_subtitle ?></div> -->
             <a class="page-title" href="board/index">Boards</a>  
-            <a class="page-title calendar" href="calendar/calendar">Calendar</a>
+            <a id="menu_calendar" class="page-title calendar" href="calendar/calendar" hidden>Calendar</a>
             <a href="board/index">
                 <?php if ($user->is_admin()): ?>
                     <img src="picture/user-shield-solid.svg" alt="">
