@@ -19,11 +19,21 @@
                     rules: {
                         new_board_name: {
                             minlength: 3,
+                            remote: {
+                                url: 'board/available_board_title_service',
+                                type: 'post',
+                                data:  {
+                                    board_title: function() { 
+                                        return $("#input-board-name").val();
+                                    }
+                                }
+                            }
                         }
                     },
                     messages: {
                         new_board_name: {
                             minlength: 'minimum 3 characters',
+                            remote: 'this board title already exists'
                         }
                     }
                 });

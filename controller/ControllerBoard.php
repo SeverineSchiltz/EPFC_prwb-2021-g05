@@ -210,4 +210,22 @@ class ControllerBoard extends Controller {
             $this->redirect("board","index");
         }
     }
+
+    public function available_board_title_service(){
+        $res = "true";
+        if(isset($_POST["board_title"]) && $_POST["board_title"] !== ""){
+            $registered_board_id = 0;
+            if(isset($_POST["board_id"]) && $_POST["board_id"] !== ""){
+                $registered_board_id = ($_POST["board_id"]);
+            }
+            $board = Board::get_board_by_title($_POST["board_title"]);
+            if($registered_board_id===0 && $board){
+                $res = "false";
+            }else if($board && $registered_board_id !== $board->get_board_id() ){
+                $res = "false";
+            }
+        }
+        echo $res;
+    }
+
 }

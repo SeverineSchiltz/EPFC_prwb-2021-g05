@@ -176,7 +176,7 @@ class ControllerCard extends Controller {
 
     public function change_cards_in_column_service(){
         $user = $this->get_user_or_redirect();
-        if(isset($_POST["column_info"])){
+        if(isset($_POST["column_info"]) && $_POST["column_info"] !== ""){
             $column_info = $_POST["column_info"];
             $column_to_update = Column::get_column($column_info["id"]);
             $cards_id = $column_info["cards_id"];
@@ -185,6 +185,17 @@ class ControllerCard extends Controller {
         }else{
             echo "false";
         }
+    }
+
+    public function available_card_title_service(){
+        $res = "true";
+        if(isset($_POST["card_title"]) && $_POST["card_title"] !== "" && isset($_POST["card_id"]) && $_POST["card_id"] !== ""){
+            $card = Card::get_card($_POST["card_id"]);
+            if($card->validate_unicity_in_board($_POST["card_title"])){
+                $res = "false";
+            }
+        }
+        echo $res;
     }
 
 }

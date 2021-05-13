@@ -65,13 +65,4 @@
   margin-bottom: 5px;
 }
 
-label.error {
-  position: relative;
-  left: 50px;
-  white-space : nowrap;
-  color: red;
-  padding-left: 0px;
-  width: 0;
-  top: 10px;
-}
 

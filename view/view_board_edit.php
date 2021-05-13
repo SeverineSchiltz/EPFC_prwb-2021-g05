@@ -14,19 +14,55 @@
         <link href="css/style.css" rel="stylesheet" type="text/css"/>
         <link href="css/menu.css" rel="stylesheet" type="text/css"/>
         <link href="css/board_edit.css" rel="stylesheet" type="text/css"/>
+        <script src="lib/jquery-3.6.0.min.js" type="text/javascript"></script>
+        <script src="lib/jquery-validation-1.19.3/jquery.validate.min.js" type="text/javascript"></script>
+        <script src="lib/MyLib.js" type="text/javascript"></script>
+        <script>
+            $(function(){
+                $('#form-board').validate({
+                    rules: {
+                        title: {
+                            minlength: 3,
+                            remote: {
+                                url: 'board/available_board_title_service',
+                                type: 'post',
+                                data:  {
+                                    board_id: function() { return $("#board_id").val();},
+                                    board_title: function() { return $("#board_title").val();}
+                                }
+                               /* data:  {
+                                    board: function() { 
+                                        return {
+                                            id: $("#board_id").val(),
+                                            title: $("#input-board-name").val()
+                                        };
+                                    }
+                                } */
+                            }
+                        }
+                    },
+                    messages: {
+                        title: {
+                            minlength: 'minimum 3 characters',
+                            remote: 'this board title already exists'
+                        }
+                    }
+                });
+            });
+        </script>
     </head>
     <body>
         <?php include("menu.php");?>
         <div class="content">
-            <div class="card-header">
+            <div class="board-header">
                 <h2>Edit a board</h2>
                 <h4>Created by <?= $board->get_author_name() ?> <?= $board->get_duration_since_creation() ?> ago. <?= $board->get_last_modification()?"Modified ".$board->get_duration_since_last_edit()." ago.":"Never modified." ?></h4>
             </div>
-            <div class="card-body">
-                <form action=<?= "board/save/"?> method="post">
-                    <input type="hidden" class="form-control" value="<?= $board->get_board_id()?>" name="board_id">
+            <div class="board-body">
+                <form action=<?= "board/save/"?> method="post" id="form-board">
+                    <input type="hidden" class="form-control" value="<?= $board->get_board_id()?>" name="board_id" id="board_id">
                     <h3>Title</h3>
-                    <input type="text" class="form-control" value="<?= isset($proposed_title) ? $proposed_title : $board->get_title() ?>" name="title">
+                    <input type="text" class="form-control" value="<?= isset($proposed_title) ? $proposed_title : $board->get_title() ?>" name="title" id="board_title">
                     <?php if (count($errors) != 0): ?>
                         <div class='errors'>
                             <p>Please correct the following error(s) :</p>

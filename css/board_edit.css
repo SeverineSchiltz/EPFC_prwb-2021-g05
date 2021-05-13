@@ -14,7 +14,7 @@
   }
 
   textarea{
-    height:300px;
+    height:300px; 
   }
 
   h3{
@@ -38,4 +38,11 @@
 
   .errors p{
     margin : 0px;
+  }
+
+  label.error {
+
+    /*white-space : nowrap;*/
+    color: red;
+
   }

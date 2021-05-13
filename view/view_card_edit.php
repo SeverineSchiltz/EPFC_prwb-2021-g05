@@ -14,6 +14,35 @@
         <link href="css/style.css" rel="stylesheet" type="text/css"/>
         <link href="css/menu.css" rel="stylesheet" type="text/css"/>
         <link href="css/card_edit.css" rel="stylesheet" type="text/css"/>
+        <script src="lib/jquery-3.6.0.min.js" type="text/javascript"></script>
+        <script src="lib/jquery-validation-1.19.3/jquery.validate.min.js" type="text/javascript"></script>
+        <script src="lib/MyLib.js" type="text/javascript"></script>
+        <script>
+            $(function(){
+                $('#card-edit').validate({
+                    rules: {
+                        title: {
+                            minlength: 3,
+                            remote: {
+                                url: 'card/available_card_title_service',
+                                type: 'post',
+                                data:  {
+                                    card_id: function() { return $("#card_id").val();},
+                                    card_title: function() { return $("#card_title").val();}
+                                }
+                            }
+                        }
+                    },
+                    messages: {
+                        title: {
+                            minlength: 'minimum 3 characters',
+                            remote: 'this card title already exists in your board'
+                        }
+                    }
+                });
+            });
+
+        </script>
     </head>
     <body>
         <?php include("menu.php");?>
@@ -36,9 +65,9 @@
                     </div>
                 <?php endif; ?>
 
-                <input type="hidden" class="form-control" value="<?= $card->get_card_id()?>" name="card_id" form="card-edit">
+                <input type="hidden" class="form-control" value="<?= $card->get_card_id()?>" name="card_id" form="card-edit" id="card_id">
                 <h3>Title</h3>
-                <input type="text" class="form-control" value="<?= isset($proposed_title) ? $proposed_title : $card->get_title()?>" name="title" form="card-edit">
+                <input type="text" class="form-control" value="<?= isset($proposed_title) ? $proposed_title : $card->get_title()?>" name="title" form="card-edit" id="card_title">
                 <h3>Body</h3>
                 <textarea class="form-control" name="body" form="card-edit"><?= $card->get_body()?></textarea>
                 <h3>Due date</h3>
