@@ -1,15 +1,13 @@
 
-<script src="lib/jquery-3.6.0.min.js" type="text/javascript"></script>
-<script>
-    $(function(){
-        $('#menu_calendar').removeAttr("hidden");
-    });
-</script>
-
 <div class="menu">
     <div class="title">Trello!</div>
     <div class="spacer"></div>
     <?php if (isset($user) && $user->get_mail()): ?>
+        <script>
+            document.onreadystatechange = function () {
+                document.getElementById("menu_calendar").removeAttribute("hidden");
+            };
+        </script>
         <div class="page-title"><?php echo $menu_title ?></div>
         <div class="right-menu">
             <!-- <div class="page-subtitle"><?php echo $menu_subtitle ?></div> -->
