@@ -19,7 +19,6 @@
         <link href="lib/jquery-ui-1.12.1.ui-lightness/jquery-ui.structure.min.css" rel="stylesheet" type="text/css"/>
         <script>
             $( function() {
-                //TODO : remplacer les noscript!
                var cardsUpdate
                 $( ".cards" ).sortable({
                     connectWith: ".cards",
@@ -33,7 +32,6 @@
                         };
                     },
                     stop:function(){
-                        //alert(JSON.stringify(cardsUpdate, null, 2));
                         $.post("card/change_cards_in_column_service/",
                             cardsUpdate
                         ).fail(function(){

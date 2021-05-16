@@ -30,14 +30,6 @@
                                     board_id: function() { return $("#board_id").val();},
                                     board_title: function() { return $("#board_title").val();}
                                 }
-                               /* data:  {
-                                    board: function() { 
-                                        return {
-                                            id: $("#board_id").val(),
-                                            title: $("#input-board-name").val()
-                                        };
-                                    }
-                                } */
                             }
                         }
                     },

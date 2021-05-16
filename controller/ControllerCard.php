@@ -26,7 +26,7 @@ class ControllerCard extends Controller {
     public function view() {
         $user = $this->get_user_or_redirect();
         $card = $this::get_card_if_exist();
-        if($card && $user->has_permission($card->get_board_id())){
+        if($card && $user->has_permission_aac($card->get_board_id())){
             (new View("card"))->show(array("card" => $card, "user" => $user));
         }else{
             $this->redirect("board","index");
@@ -38,7 +38,7 @@ class ControllerCard extends Controller {
         $user = $this->get_user_or_redirect();
         $card = $this::get_card_if_exist();
         $errors = [];
-        if($card && $user->has_permission($card->get_board_id())){
+        if($card && $user->has_permission_aac($card->get_board_id())){
             (new View("card_edit"))->show(array("card" => $card, "user" => $user, "errors" => $errors));
         }else{
             $this->redirect("board","index");
@@ -53,17 +53,21 @@ class ControllerCard extends Controller {
             $proposed_due_date = $_POST["due_date"];
             $card_id = $_POST["card_id"];
             $card = Card::get_card($card_id);
-            $card->set_body($_POST["body"]);
-            $card->update_content(); 
-            $errors = $card->validate_title($proposed_title);
-            $errors = array_merge($errors, $card->validate_due_date($proposed_due_date));
-            if (count($errors) == 0) { 
-                $card->set_title($_POST["title"]);
-                $card->set_due_date($_POST["due_date"]);
+            if($card && $user->has_permission_aac($card->get_board_id())){
+                $card->set_body($_POST["body"]);
                 $card->update_content(); 
-                $this->redirect("card","view", $card_id);
+                $errors = $card->validate_title($proposed_title);
+                $errors = array_merge($errors, $card->validate_due_date($proposed_due_date));
+                if (count($errors) == 0 && $user->has_permission_aac($card->get_board_id())) { 
+                    $card->set_title($_POST["title"]);
+                    $card->set_due_date($_POST["due_date"]);
+                    $card->update_content(); 
+                    $this->redirect("card","view", $card_id);
+                }
+                (new View("card_edit"))->show(array("card" => $card, "user" => $user, "errors" => $errors, "proposed_title" => $proposed_title));
+            }else{
+                $this->redirect("board","index");
             }
-            (new View("card_edit"))->show(array("card" => $card, "user" => $user, "errors" => $errors, "proposed_title" => $proposed_title));
         }else{
             $this->redirect("board","index");
         }
@@ -78,19 +82,23 @@ class ControllerCard extends Controller {
             $card_id = $_POST["card_id"];
             $card = Card::get_card($card_id);
             $direction = $_POST["direction"];
-            if($direction === "up"){
-                $errors =$card->change_position(-1);
-            }else if($direction === "down"){
-                $errors =$card->change_position(1);
-            }else if($direction === "left"){
-                $errors =$card->change_column(-1);
-            }else if($direction === "right"){
-                $errors =$card->change_column(1);
+            if($user->has_permission_aac($card->get_board_id())){
+                if($direction === "up"){
+                    $errors =$card->change_position(-1);
+                }else if($direction === "down"){
+                    $errors =$card->change_position(1);
+                }else if($direction === "left"){
+                    $errors =$card->change_column(-1);
+                }else if($direction === "right"){
+                    $errors =$card->change_column(1);
+                }
+                if (count($errors) == 0) { 
+                    $this->redirect("board","board", $card->get_board_id());
+                }
+                (new View("board"))->show(array("board" => Board::get_board($card->get_board_id()), "user" => $user, "errors" => $errors));
+            }else{
+                $this->redirect("board","index");
             }
-            if (count($errors) == 0) { 
-                $this->redirect("board","board", $card->get_board_id());
-            }
-            (new View("board"))->show(array("board" => Board::get_board($card->get_board_id()), "user" => $user, "errors" => $errors));
         }else{
             $this->redirect("board","index");
         }
@@ -110,7 +118,7 @@ class ControllerCard extends Controller {
             $card = new Card(null, $column, $position, $user, null, "", new DateTime("now"));
             $errors = $card->validate_title($new_card_name);
             $card->set_title($new_card_name);
-            if (count($errors) == 0) { 
+            if (count($errors) == 0 && $user->has_permission_aac($card->get_board_id())) { 
                 $card->insert_new_card(); 
                 $this->redirect("board","board", $board->get_board_id());
             }
@@ -123,7 +131,7 @@ class ControllerCard extends Controller {
     public function delete_confirm() {
         $user = $this->get_user_or_redirect();
         $card = $this::get_card_if_exist();
-        if($card && $user->has_permission($card->get_board_id())){
+        if($card && $user->has_permission_aac($card->get_board_id())){
             (new View("card_delete"))->show(array("card" => $card, "user" => $user));
         }else{
             $this->redirect("board","index");
@@ -134,8 +142,12 @@ class ControllerCard extends Controller {
         $user = $this->get_user_or_redirect();
         if(isset($_POST["card_id"])){
             $card = Card::get_card($_POST["card_id"]);
-            $card->delete(); 
-            $this->redirect("board","board", $card->get_board_id());
+            if($card && $user->has_permission_aac($card->get_board_id())){
+                $card->delete(); 
+                $this->redirect("board","board", $card->get_board_id());
+            }else{
+                $this->redirect("board","index");
+            }
         }else{
             $this->redirect("board","index");
         }
@@ -145,8 +157,12 @@ class ControllerCard extends Controller {
         $user = $this->get_user_or_redirect();
         if(isset($_POST["card_id"])){
             $card = Card::get_card($_POST["card_id"]);
-            $card->delete(); 
-            echo "true";
+            if($card && $user->has_permission_aac($card->get_board_id())){
+                $card->delete(); 
+                echo "true";
+            }else{
+                echo "false";
+            }
         }else{
             echo "false";
         }
@@ -156,8 +172,12 @@ class ControllerCard extends Controller {
         $user = $this->get_user_or_redirect();
         if(isset($_POST["card_id"]) && isset($_POST["participant_id"])){
             $card = Card::get_card($_POST["card_id"]);
-            $card->remove_participant($_POST["participant_id"]); 
-            $this->redirect("card","edit",$_POST["card_id"]);
+            if($card && $user->has_permission_aac($card->get_board_id())){
+                $card->remove_participant($_POST["participant_id"]); 
+                $this->redirect("card","edit",$_POST["card_id"]);
+            }else{
+                $this->redirect("board","index");
+            }
         }else{
             $this->redirect("board","index");
         }
@@ -167,8 +187,12 @@ class ControllerCard extends Controller {
         $user = $this->get_user_or_redirect();
         if(isset($_POST["card_id"]) && isset($_POST["collaborator_id"])){
             $card = Card::get_card($_POST["card_id"]);
-            $card->add_participant($_POST["collaborator_id"]); 
-            $this->redirect("card","edit",$_POST["card_id"]);
+            if($card && $user->has_permission_aac($card->get_board_id())){
+                $card->add_participant($_POST["collaborator_id"]); 
+                $this->redirect("card","edit",$_POST["card_id"]);
+            }else{
+                $this->redirect("board","index");
+            }
         }else{
             $this->redirect("board","index");
         }
@@ -180,8 +204,12 @@ class ControllerCard extends Controller {
             $column_info = $_POST["column_info"];
             $column_to_update = Column::get_column($column_info["id"]);
             $cards_id = $column_info["cards_id"];
-            $column_to_update->update_all_cards_position($cards_id);
-            echo "true";
+            if($column_to_update && $user->has_permission_aac($column_to_update->get_board_id())){
+                $column_to_update->update_all_cards_position($cards_id);
+                echo "true";
+            }else{
+                echo "false";
+            }
         }else{
             echo "false";
         }

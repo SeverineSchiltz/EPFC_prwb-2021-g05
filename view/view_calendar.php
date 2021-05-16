@@ -35,7 +35,7 @@
               className: new Date(c.card_due_date) <= new Date(Date.now())  ? "redBorder" : "blackBorder", //new Date().toISOString().slice(0,10));
               textColor: 'white',
             }
-            console.log(event);
+            //console.log(event);
             events[i]= event;
             ++i;
           }

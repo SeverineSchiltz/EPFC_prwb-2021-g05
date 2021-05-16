@@ -17,11 +17,6 @@ class ControllerCalendar extends Controller {
     public function calendar() {
         $user = $this->get_user_or_redirect();
         if ($this->user_logged()) {
-            /*$acces_board = array();
-            $acces_board[] = Board::get_my_boards($user);
-            $acces_board[] = Board::get_other_shared_boards($user);
-            (new View("calendar"))->show(array("user" => $user, "acces_board" => $acces_board));*/
-            //(new View("calendar"))->show(array("user" => $user, "personal_boards" => Board::get_my_boards($user), "other_shared_boards" => Board::get_other_shared_boards($user), "other_not_shared_boards" => Board::get_other_not_shared_boards($user)));
             (new View("calendar"))->show(array("user" => $user, "boards_json" => $user->get_boards_with_cards_as_json()));
         } else {
             (new View("home"))->show();

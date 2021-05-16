@@ -157,7 +157,7 @@ class User extends Model {
     }
 
     //le user est soit admin, soit l'auteur, soit collaborateur
-    public function has_permission($board_id){
+    public function has_permission_aac($board_id){
         if($this->role === "admin"){
             return true;
         }
@@ -176,17 +176,30 @@ class User extends Model {
         }
     }
 
+    //le user est soit admin, soit l'auteur, mais pas collaborateur
+    public function has_permission_aa($author_board_id){
+        return $this->is_admin() || $author_board_id === $this->get_user_id();
+    }
+
     public function is_admin(){
         return $this->role === "admin";
     }
 
+    public function get_my_boards(){
+        return Board::get_my_boards($this);
+    }
+
+    public function get_other_shared_boards(){
+        return Board::get_other_shared_boards($this);
+    }
+
     public function get_boards_with_cards_as_json(){
         $strBoard = "";
-        foreach (Board::get_my_boards($this) as $myBoard)
+        foreach ($this->get_my_boards() as $myBoard)
         {
             $strBoard .= $this->get_one_board_with_cards_as_json($myBoard, "my_boards").",";
         }
-        foreach (Board::get_other_shared_boards($this) as $otherBoard)
+        foreach ($this->get_other_shared_boards() as $otherBoard)
         {
             $strBoard .= $this->get_one_board_with_cards_as_json($otherBoard, "other_boards").",";
         }
