@@ -12,7 +12,6 @@ class User extends Model {
     private $hashed_password;
     private $full_name;
     private $role;
-    private $boardColors = array( "rgb(69,210,58)", "rgb(234,104,211)", "rgb(174,56,93)", "rgb(216,132,217)", "rgb(31,132,222)", "rgb(125,16,143)", "rgb(179,241,134)", "rgb(155,44,5)", "rgb(121,158,199)", "rgb(201,87,80)", "rgb(226,185,15)", "rgb(25,130,171)", "rgb(98,79,21)", "rgb(246,223,90)", "rgb(115,27,30)", "rgb(236,105,200)", "rgb(52,44,216)", "rgb(66,223,144)", "black");
 
     public function __construct($mail, $hashed_password, $full_name, $role, $id = null) {
         $this->mail = $mail;
@@ -179,59 +178,4 @@ class User extends Model {
     public function is_admin(){
         return $this->role === "admin";
     }
-
-    public function get_boards_with_cards_as_json(){
-        $strBoard = "";
-        foreach (Board::get_my_boards($this) as $myBoard)
-        {
-            $strBoard .= $this->get_one_board_with_cards_as_json($myBoard, "my_boards").",";
-        }
-        foreach (Board::get_other_shared_boards($this) as $otherBoard)
-        {
-            $strBoard .= $this->get_one_board_with_cards_as_json($otherBoard, "other_boards").",";
-        }
-        if($this->is_admin()){
-            foreach (Board::get_other_not_shared_boards($this) as $not_shared_Board)
-            {
-                $strBoard .= $this->get_one_board_with_cards_as_json($not_shared_Board, "not_shared_boards").",";
-            }
-        }
-        if($strBoard !== "")
-            $strBoard = substr($strBoard,0,strlen($strBoard)-1);
-        return "[$strBoard]";
-    }
-
-    public function get_one_board_with_cards_as_json($board, $type){
-            $strBoard = "";
-            $board_id = json_encode($board->get_board_id());
-            $board_title = json_encode($board->get_title());
-            $board_type = json_encode($type);
-            //$color = json_encode("rgb(".random_int(0, 255).",".random_int(0, 255).",".random_int(0, 255).")");
-            $color = json_encode($this->boardColors[random_int(0, 17)]);
-            $strCards = "";
-            foreach ($board->get_columns() as $column)
-            {
-                foreach ($column->get_cards() as $card)
-                {
-                    if($card->get_due_date() != null){
-                        $card_id = json_encode($card->get_card_id());
-                        $card_title = json_encode($card->get_title());
-                        $card_body = json_encode($card->get_body());
-                        $card_due_date = json_encode($card->get_due_date());
-                        $strCard = "{\"card_id\":$card_id,\"card_title\":$card_title,\"card_body\":$card_body,\"card_due_date\":$card_due_date},"; 
-                        $strCards .= $strCard;
-                    }
-                }
-            }
-            if($strCards !== "")
-                $strCards = substr($strCards,0,strlen($strCards)-1);
-            $strCards = "[$strCards]";
-
-            $strBoard = "{\"board_id\":$board_id,\"board_title\":$board_title,\"board_type\":$board_type,\"color\":$color, \"cards\":$strCards}"; 
-            return $strBoard;
-    }
-
-
-
-
 }

@@ -57,10 +57,11 @@
 
       });
 
-      function addOrRemoveCard(idBoard, color) {
+      function toggleCards(idBoard) {
         var checkBoard = document.getElementById(idBoard);
         if(checkBoard.checked) {
-          alert('You picked ' + idBoard + ", " + color);
+          console.log('You showed ' + idBoard);
+          //showCards(idBoard);
           //pour ajouter
           /*
           calendar.addEvent(
@@ -74,7 +75,8 @@
           ); */
         }
         else {
-          alert('none');
+          console.log('You hid ' + idBoard);
+          //hideCards(idBoard);
           //Pour deleter:
           //var event = calendar.getEventById(1); //attention, ici faut mettre l'id de la carte
           //event.remove();
@@ -87,13 +89,13 @@
         var htmlNotSharedBoard = "";
           for (var b of boards) {
               if(b.board_type === "my_boards"){
-                htmlMyBoard += "<input type='checkbox' id='" + b.board_id + "' onclick='addOrRemoveCard(" + b.board_id + ", \"" + b.color + "\")' checked>";
+                htmlMyBoard += "<input type='checkbox' id='" + b.board_id + "' onclick='toggleCards(" + b.board_id + ")' checked>";
                 htmlMyBoard += "<label style='color: " + b.color + ";'>&ensp;" + b.board_title + "&ensp;&ensp;</label> ";
               }else if(b.board_type === "other_boards"){
-                htmlOtherBoard += "<input type='checkbox' id='" + b.board_id + "' onclick='addOrRemoveCard(" + b.board_id + ", \"" + b.color + "\")' checked>";
+                htmlOtherBoard += "<input type='checkbox' id='" + b.board_id + "' onclick='toggleCards(" + b.board_id + ")' checked>";
                 htmlOtherBoard += "<label style='color: " + b.color + ";'>&ensp;" + b.board_title + "&ensp;&ensp;</label> ";
               }else if(b.board_type === "not_shared_boards"){
-                htmlNotSharedBoard += "<input type='checkbox' id='" + b.board_id + "' onclick='addOrRemoveCard(" + b.board_id + ", \"" + b.color + "\")' checked>";
+                htmlNotSharedBoard += "<input type='checkbox' id='" + b.board_id + "' onclick='toggleCards(" + b.board_id + ")' checked>";
                 htmlNotSharedBoard += "<label style='color: " + b.color + ";'>&ensp;" + b.board_title + "&ensp;&ensp;</label> ";
               }
           }
@@ -112,12 +114,12 @@
     </script>
   </head>
   <body>
+    <?php
+          $menu_title = "";
+          $menu_subtitle = "Boards";
+          include("menu.php");
+    ?>
     <div class="content">
-      <?php
-            $menu_title = "";
-            $menu_subtitle = "Boards";
-            include("menu.php");
-        ?>
       <div id='boardCheck'></div>
       <br />
       <div id='calendar'></div>
