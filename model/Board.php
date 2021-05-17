@@ -241,6 +241,14 @@ class Board extends Model {
         return Column::get_columns($this);
     }
 
+    public function get_cards() {
+        $cards = [];
+        foreach($this->get_columns() as $column)
+            foreach($column->get_cards() as $card)
+                $cards[] = $card;
+        return $cards;
+    }
+
     public function get_nb_columns() {
         $query = self::execute("select count(*) as nb_columns from `column` where Board = :id", array("id" => $this->board_id));
         if ($query->rowCount() == 0) {
