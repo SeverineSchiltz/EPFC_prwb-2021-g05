@@ -19,6 +19,8 @@
         <script src="lib/MyLib.js" type="text/javascript"></script>
         <script>
             $(function(){
+                console.log("<?= $card->get_creation_date()?>");
+                console.log($("#card_due_date").val());
                 $('#card-edit').validate({
                     rules: {
                         title: {
@@ -31,12 +33,18 @@
                                     card_title: function() { return $("#card_title").val();}
                                 }
                             }
+                        },
+                        due_date:{
+                            greaterThan: "<?= $card->get_creation_date()?>",
                         }
                     },
                     messages: {
                         title: {
                             minlength: 'minimum 3 characters',
                             remote: 'this card title already exists in your board'
+                        },
+                        due_date:{
+                            greaterThan: 'must be greater than creation date (' + "<?= date("d-m-Y", strtotime($card->get_creation_date()))?>" + ')!',
                         }
                     }
                 });
@@ -52,27 +60,25 @@
                 <h4>Created by <span><?= $card->get_author_name() ?></span> <?= $card->get_duration_since_creation() ?> ago. <?= $card->get_last_modification()?"Modified ".$card->get_duration_since_last_edit()." ago.":"Never modified." ?></h4>
             </div>
             <div class="card-body">
-                <form action=<?= "card/save/"?> method="post" id="card-edit"></form>
-
-                <?php if (count($errors) != 0): ?>
-                    <div class='errors'>
-                        <p>Please correct the following error(s) :</p>
-                        <ul>
-                            <?php foreach ($errors as $error): ?>
-                                <li><?= $error ?></li>
-                            <?php endforeach; ?>
-                        </ul>
-                    </div>
-                <?php endif; ?>
-
-                <input type="hidden" class="form-control" value="<?= $card->get_card_id()?>" name="card_id" form="card-edit" id="card_id">
-                <h3>Title</h3>
-                <input type="text" class="form-control" value="<?= isset($proposed_title) ? $proposed_title : $card->get_title()?>" name="title" form="card-edit" id="card_title">
-                <h3>Body</h3>
-                <textarea class="form-control" name="body" form="card-edit"><?= $card->get_body()?></textarea>
-                <h3>Due date</h3>
-                <input type="date" class="form-control" value="<?= $card->get_due_date()?>" name="due_date" form="card-edit">
-
+                <form action=<?= "card/save/"?> method="post" id="card-edit">
+                    <?php if (count($errors) != 0): ?>
+                        <div class='errors'>
+                            <p>Please correct the following error(s) :</p>
+                            <ul>
+                                <?php foreach ($errors as $error): ?>
+                                    <li><?= $error ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
+                    <?php endif; ?>
+                    <input type="hidden" class="form-control" value="<?= $card->get_card_id()?>" name="card_id" form="card-edit" id="card_id">
+                    <h3>Title</h3>
+                    <input type="text" class="form-control" value="<?= isset($proposed_title) ? $proposed_title : $card->get_title()?>" name="title" form="card-edit" id="card_title">
+                    <h3>Body</h3>
+                    <textarea class="form-control" name="body" form="card-edit"><?= $card->get_body()?></textarea>
+                    <h3>Due date</h3>
+                    <input type="date" class="form-control" value="<?= $card->get_due_date()?>" name="due_date" form="card-edit" id="card_due_date">
+                </form>
                 <?php if (count($card->get_participants()) != 0): ?>
                     <h3>Current participant(s)</h3>
                     <ul>

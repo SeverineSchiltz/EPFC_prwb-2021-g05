@@ -49,6 +49,10 @@ class Card extends Model {
         return $this->due_date;
     } 
 
+    public function get_creation_date() {
+        return $this->created_at;
+    } 
+
     public function get_formatted_due_date() {
         return MyTools::format_date($this->due_date);
     } 

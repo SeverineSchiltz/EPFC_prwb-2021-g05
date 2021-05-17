@@ -48,7 +48,7 @@ class ControllerCard extends Controller {
     public function save() {
         $user = $this->get_user_or_redirect();
         $errors = [];
-        if(isset($_POST["card_id"]) && isset($_POST["title"]) && isset($_POST["body"])){
+        if(isset($_POST["card_id"]) && isset($_POST["title"]) && isset($_POST["body"]) && isset($_POST["due_date"]) ){
             $proposed_title = $_POST["title"];
             $proposed_due_date = $_POST["due_date"];
             $card_id = $_POST["card_id"];
@@ -58,7 +58,7 @@ class ControllerCard extends Controller {
                 $card->update_content(); 
                 $errors = $card->validate_title($proposed_title);
                 $errors = array_merge($errors, $card->validate_due_date($proposed_due_date));
-                if (count($errors) == 0 && $user->has_permission_aac($card->get_board_id())) { 
+                if (count($errors) == 0) { 
                     $card->set_title($_POST["title"]);
                     $card->set_due_date($_POST["due_date"]);
                     $card->update_content(); 
@@ -219,7 +219,7 @@ class ControllerCard extends Controller {
         $res = "true";
         if(isset($_POST["card_title"]) && $_POST["card_title"] !== "" && isset($_POST["card_id"]) && $_POST["card_id"] !== ""){
             $card = Card::get_card($_POST["card_id"]);
-            if($card->validate_unicity_in_board($_POST["card_title"])){
+            if(!$card->validate_unicity_in_board($_POST["card_title"])){
                 $res = "false";
             }
         }

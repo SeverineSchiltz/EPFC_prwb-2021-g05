@@ -57,3 +57,7 @@
   background-color: #157ffb;
   color: white;
 }
+
+label.error {
+  color: red;
+}
