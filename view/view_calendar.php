@@ -5,45 +5,50 @@
     <title>Calendar</title>
     <base href="<?= $web_root ?>"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <link href='lib/FullCalendar/main.css' rel='stylesheet' />
     <link href="css/calendar.css" rel="stylesheet" type="text/css"/>
     <link href="css/style.css" rel="stylesheet" type="text/css"/>
     <link href="css/menu.css" rel="stylesheet" type="text/css"/>
     <script src="lib/jquery-3.6.0.min.js" type="text/javascript"></script>
     <script src="lib/jquery-validation-1.19.3/jquery.validate.min.js" type="text/javascript"></script>
-    <link href='lib/FullCalendar/main.css' rel='stylesheet' />
+    <script src="https://unpkg.com/popper.js/dist/umd/popper.min.js" type="text/javascript"></script>
+    <script src="https://unpkg.com/tooltip.js/dist/umd/tooltip.min.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js" type="text/javascript"></script>
     <script src='lib/FullCalendar/main.js'></script>
     <script>
-      var boards = <?= $boards_json ?>;
-      var calendar;
-      var events=new Array();
-      var boardCheck;
+      let boards = <?= $boards ?>;
+      let events = new Array();
+      let calendar;
+      let boardCheck;
       $(function(){
         boardCheck = $('#boardCheck');
 
-        //créer les events sur base des cartes
-        var i = 0;
-        for (var b of boards) {
-          for (var c of b.cards) {
-            var event = {
-              id: c.card_id,
-              title: c.card_title,
-              start: c.card_due_date,
-              backgroundColor: b.color,
-              borderColor: new Date(c.card_due_date) <= new Date(Date.now()) ? "red" : "black",
-              className: new Date(c.card_due_date) <= new Date(Date.now())  ? "redBorder" : "blackBorder", //new Date().toISOString().slice(0,10));
-              textColor: 'white',
-            }
-            console.log(event);
-            events[i]= event;
-            ++i;
-          }
-        }
+        boards.forEach(b => {events = events.concat(b.events)});
 
-        var calendarEl = document.getElementById('calendar');
+        let calendarEl = document.getElementById('calendar');
         calendar = new FullCalendar.Calendar(calendarEl, {
           initialView: 'dayGridMonth',
+          
+          // eventDidMount: function(info) {
+          //   let tooltip = new Tooltip(info.el, {
+          //     title: info.event.extendedProps.description,
+          //     placement: 'top',
+          //     trigger: 'hover',
+          //     container: 'body'
+          //   });
+          // },
+
+          eventDidMount: function(info) {
+                      $(info.el).tooltip({ 
+              title: info.event.extendedProps.description,
+              placement: "top",
+              trigger: "hover",
+              container: "body"
+            });
+          },
+
           headerToolbar: {
             left: 'prev,next today',
             center: 'title',
@@ -54,49 +59,57 @@
         calendar.render();
 
         displayCheckboxBoard();
-
       });
 
       function toggleCards(idBoard) {
-        var checkBoard = document.getElementById(idBoard);
+        let checkBoard = document.getElementById(idBoard);
         if(checkBoard.checked) {
           console.log('You showed ' + idBoard);
-          //showCards(idBoard);
-          //pour ajouter
-          /*
-          calendar.addEvent(
-            {
-              id: 2,
-              title: 'Event1',
-              start: '2021-05-04',
-              color: 'yellow',   // an option!
-              textColor: 'black' // an option!
-            }
-          ); */
+          showCards(idBoard);           
         }
         else {
           console.log('You hid ' + idBoard);
-          //hideCards(idBoard);
-          //Pour deleter:
-          //var event = calendar.getEventById(1); //attention, ici faut mettre l'id de la carte
-          //event.remove();
+          hideCards(idBoard);
+        }
+      }
+
+      function getBoard(idBoard) {
+        for(let board of boards) {
+          if(board.id == idBoard)
+            return board;
+        }
+        return null;
+      }
+
+      function showCards(idBoard) {
+        let board = getBoard(idBoard);
+        for(let event of board.events) {
+          calendar.addEvent(event);
+        }
+      }
+
+      function hideCards(idBoard) {
+        let board = getBoard(idBoard);
+        for(let event of board.events) { 
+          let eventCalendar = calendar.getEventById(event.id);
+          eventCalendar.remove();
         }
       }
 
       function displayCheckboxBoard(){
-        var htmlMyBoard = "";
-        var htmlOtherBoard = "";
-        var htmlNotSharedBoard = "";
-          for (var b of boards) {
-              if(b.board_type === "my_boards"){
-                htmlMyBoard += "<input type='checkbox' id='" + b.board_id + "' onclick='toggleCards(" + b.board_id + ")' checked>";
-                htmlMyBoard += "<label style='color: " + b.color + ";'>&ensp;" + b.board_title + "&ensp;&ensp;</label> ";
-              }else if(b.board_type === "other_boards"){
-                htmlOtherBoard += "<input type='checkbox' id='" + b.board_id + "' onclick='toggleCards(" + b.board_id + ")' checked>";
-                htmlOtherBoard += "<label style='color: " + b.color + ";'>&ensp;" + b.board_title + "&ensp;&ensp;</label> ";
-              }else if(b.board_type === "not_shared_boards"){
-                htmlNotSharedBoard += "<input type='checkbox' id='" + b.board_id + "' onclick='toggleCards(" + b.board_id + ")' checked>";
-                htmlNotSharedBoard += "<label style='color: " + b.color + ";'>&ensp;" + b.board_title + "&ensp;&ensp;</label> ";
+        let htmlMyBoard = "";
+        let htmlOtherBoard = "";
+        let htmlNotSharedBoard = "";
+          for (let b of boards) {
+              if(b.type === "my_boards"){
+                htmlMyBoard += "<input type='checkbox' id='" + b.id + "' onclick='toggleCards(" + b.id + ")' checked>";
+                htmlMyBoard += "<label style='color: " + b.color + ";'>&ensp;" + b.title + "&ensp;&ensp;</label> ";
+              }else if(b.type === "other_boards"){
+                htmlOtherBoard += "<input type='checkbox' id='" + b.id + "' onclick='toggleCards(" + b.id + ")' checked>";
+                htmlOtherBoard += "<label style='color: " + b.color + ";'>&ensp;" + b.title + "&ensp;&ensp;</label> ";
+              }else if(b.type === "not_shared_boards"){
+                htmlNotSharedBoard += "<input type='checkbox' id='" + b.id + "' onclick='toggleCards(" + b.id + ")' checked>";
+                htmlNotSharedBoard += "<label style='color: " + b.color + ";'>&ensp;" + b.title + "&ensp;&ensp;</label> ";
               }
           }
           if(htmlMyBoard !== ""){
