@@ -176,6 +176,10 @@ class Column extends Model {
         }
     }
 
+    public function validate_unicity_in_board() {
+        return $this->is_unique_title($this->title, $this->board);
+    } 
+
     private function is_unique_title($title, $board){
         $column = self::get_column_by_title_board($title, $board);
         if ($column && $column->get_column_id() !== $this->get_column_id())

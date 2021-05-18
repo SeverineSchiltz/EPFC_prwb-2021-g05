@@ -166,4 +166,30 @@ class ControllerColumn extends Controller {
         }
         return false;
     }
+
+    //services
+
+    public function change_columns_in_board_service(){
+        $user = $this->get_user_or_redirect();
+        if(isset($_POST["board_info"]) && $_POST["board_info"] !== ""){
+            $board_info = $_POST["board_info"];
+            $board_to_update = Board::get_board($board_info["id"]);
+            $columns_id = $board_info["columns_id"];
+            $board_to_update->update_all_columns_position($columns_id);
+            echo "true";
+        }else{
+            echo "false";
+        }
+    }
+
+    public function available_column_title_service(){
+        $res = "true";
+        if(isset($_POST["column_title"]) && $_POST["column_title"] !== "" && isset($_POST["column_id"]) && $_POST["column_id"] !== ""){
+            $column = Column::get_column($_POST["column_id"]);
+            if($column->validate_unicity_in_board()){
+                $res = "false";
+            }
+        }
+        echo $res;
+    }
 }

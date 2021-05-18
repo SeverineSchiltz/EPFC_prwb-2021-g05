@@ -197,7 +197,7 @@ class Card extends Model {
             $errors[] = "Card title length must be between 3 and 128 characters";
         }
         if(!$this->validate_unicity_in_board($this->title)){
-            $errors[] = "Title card must be unique on this board.";
+            $errors[] = "Card title must be unique on this board.";
         }
         if($this->past_created_date()){
             $errors[] = "Due date must be after the card creation date";

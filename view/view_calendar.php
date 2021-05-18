@@ -30,15 +30,6 @@
         let calendarEl = document.getElementById('calendar');
         calendar = new FullCalendar.Calendar(calendarEl, {
           initialView: 'dayGridMonth',
-          
-          // eventDidMount: function(info) {
-          //   let tooltip = new Tooltip(info.el, {
-          //     title: info.event.extendedProps.description,
-          //     placement: 'top',
-          //     trigger: 'hover',
-          //     container: 'body'
-          //   });
-          // },
 
           eventDidMount: function(info) {
                       $(info.el).tooltip({ 

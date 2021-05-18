@@ -18,9 +18,8 @@
         <link href="lib/jquery-ui-1.12.1.ui-lightness/jquery-ui.theme.min.css" rel="stylesheet" type="text/css"/>
         <link href="lib/jquery-ui-1.12.1.ui-lightness/jquery-ui.structure.min.css" rel="stylesheet" type="text/css"/>
         <script>
-            $( function() {
-                //TODO : remplacer les noscript!
-               var cardsUpdate
+            $(function() {
+                var cardsUpdate;
                 $( ".cards" ).sortable({
                     connectWith: ".cards",
                     update: function(event, ui) {  
@@ -33,9 +32,30 @@
                         };
                     },
                     stop:function(){
-                        //alert(JSON.stringify(cardsUpdate, null, 2));
                         $.post("card/change_cards_in_column_service/",
                             cardsUpdate
+                        ).fail(function(){
+                            alert("<tr><td>Error encountered!</td></tr>");
+                        });
+                    }
+                }).disableSelection();
+
+                
+                var columnsUpdate;
+                $( ".columns" ).sortable({
+                    connectWith: ".columns",
+                    update: function(event, ui) {  
+                        columnsUpdate = {
+                            board_info: {
+                                id: <?= $board->get_board_id() ?>,
+                                moved_column_id: $(ui.item).attr('column-id'),
+                                columns_id: $(this).sortable('toArray', { attribute: 'column-id' })
+                            }
+                        };
+                    },
+                    stop:function(){
+                        $.post("column/change_columns_in_board_service/",
+                            columnsUpdate
                         ).fail(function(){
                             alert("<tr><td>Error encountered!</td></tr>");
                         });

@@ -336,4 +336,14 @@ class Board extends Model {
             'board' => $board_id));
     }
 
+    public function update_all_columns_position($columns_id){
+        $pos = 1;
+        foreach($columns_id as $column_id){
+            $column = Column::get_column($column_id);
+            $column->set_position($pos);
+            $column->set_column($this);
+            $column->update_content();
+            ++$pos;
+        }
+    }
  }
