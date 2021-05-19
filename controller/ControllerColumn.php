@@ -180,6 +180,21 @@ class ControllerColumn extends Controller {
 
     //services
 
+    public function delete_service(){
+        $user = $this->get_user_or_redirect();
+        if(isset($_POST["column_id"])){
+            $column = Column::get_column($_POST["column_id"]);
+            if($column && $user->has_permission_aac($column->get_board_id())){
+                $column->delete(); 
+                echo "true";
+            }else{
+                echo "false";
+            }
+        }else{
+            echo "false";
+        }
+    }
+
     public function change_columns_in_board_service(){
         $user = $this->get_user_or_redirect();
         if(isset($_POST["board_info"]) && $_POST["board_info"] !== ""){

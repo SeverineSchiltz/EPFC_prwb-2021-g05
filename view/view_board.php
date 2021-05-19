@@ -109,7 +109,106 @@
                         }
                     }
                 });
+
+                document.getElementById('delete_board').setAttribute("href", "javascript:deleteBoardConfirm(\"" + <?= $board->get_board_id()?>  + "\")");
+                <?php foreach($board->get_columns() as $column): ?>
+                    document.getElementById("<?= 'delete_column'.$column->get_column_id() ?>").setAttribute("href", "javascript:deleteColumnConfirm(\"" + <?= $column->get_column_id()?>  + "\")");
+                    <?php foreach($column->get_cards() as $card): ?>
+                        document.getElementById("<?= 'delete_card'.$card->get_card_id() ?>").setAttribute("href", "javascript:deleteCardConfirm(\"" + <?= $card->get_card_id()?>  + "\")");
+                    <?php endforeach; ?>
+                <?php endforeach; ?>
             });
+
+            function deleteBoardConfirm(id) {
+                $('#delete_board_confirm_dialog').dialog({
+                    resizable: false,
+                    height: 300,
+                    width: 600,
+                    modal: true,
+                    autoOpen: true,
+                    buttons: {
+                        Confirm: function () {
+                            deleteBoard(id);
+                            $(this).dialog("close");
+                        },
+                        Cancel: function () {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+            }
+
+            function deleteBoard(id){
+                $.post("board/delete_service/",
+                    {"board_id": id},
+                    function (data) {
+                        window.location.replace("board/index");
+                    }
+                ).fail(function(){
+                    alert("<p>Error encountered while retrieving the messages!</p>");
+                });
+            }
+
+            function deleteColumnConfirm(id) {
+                $('#delete_column_confirm_dialog').dialog({
+                    resizable: false,
+                    height: 300,
+                    width: 600,
+                    modal: true,
+                    autoOpen: true,
+                    buttons: {
+                        Confirm: function () {
+                            deleteColumn(id);
+                            $(this).dialog("close");
+                        },
+                        Cancel: function () {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+            }
+
+            function deleteColumn(id){
+                $.post("column/delete_service/",
+                    {"column_id": id},
+                    function (data) {
+                        window.location.replace("board/board/" + <?= $board->get_board_id()?>);
+                    }
+                ).fail(function(){
+                    alert("<p>Error encountered while retrieving the messages!</p>");
+                });
+            }
+
+            function deleteCardConfirm(id) {
+                $('#delete_card_confirm_dialog').dialog({
+                    resizable: false,
+                    height: 300,
+                    width: 600,
+                    modal: true,
+                    autoOpen: true,
+                    buttons: {
+                        Confirm: function () {
+                            deleteCard(id);
+                            $(this).dialog("close");
+                        },
+                        Cancel: function () {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+            }
+
+            function deleteCard(id){
+                $.post("card/delete_service/",
+                    {"card_id": id},
+                    function (data) {
+                        window.location.replace("board/board/" + <?= $board->get_board_id()?>);
+                    }
+                ).fail(function(){
+                    alert("<p>Error encountered while retrieving the messages!</p>");
+                });
+            }
+
         </script>
     </head>
     <body>
@@ -126,7 +225,7 @@
                     <?php if($board && ($user->is_admin() || $board->get_author_id() === $user->get_user_id())): ?>
                         <a href=<?= "board/collaborators/".$board->get_board_id() ?> class="invisible-link"><i class="fa fa-users"></i></a>
                     <?php endif; ?>
-                    <a href=<?= "board/delete/".$board->get_board_id() ?> class="invisible-link"><i class="fa fa-trash"></i></a>
+                    <a id="delete_board" href=<?= "board/delete/".$board->get_board_id() ?> class="invisible-link"><i class="fa fa-trash"></i></a>
                 </h2>
                 Created <?= $board->get_duration_since_creation() ?> ago by <a href="board/index"><?= $board->get_author_name() ?></a>. <?= $board->get_last_modification()?"Modified ".$board->get_duration_since_last_edit()." ago.":"Never modified." ?>
             </div>
@@ -147,7 +246,7 @@
                             <div class="column-title">
                                 <span><?= $column->get_title()?> </span>
                                 <a href=<?= "column/edit/".$column->get_column_id() ?> class="invisible-link"><i class="fa fa-edit"></i></a> 
-                                <a href=<?= "column/delete/".$column->get_column_id() ?> class="invisible-link"><i class="fa fa-trash"></i></a>
+                                <a id=<?= 'delete_column'.$column->get_column_id() ?> href=<?= "column/delete/".$column->get_column_id() ?> class="invisible-link"><i class="fa fa-trash"></i></a>
                                 <noscript>
                                     <?php if($column->get_position() != $column->get_first_position()): ?>
                                         <form  action="column/move" method="post" id=<?= "move-left".$column->get_column_id() ?>>
@@ -181,7 +280,7 @@
                                                 <form  action="card/move/" method="post">
                                                     <a href=<?= "card/view/".$card->get_card_id() ?> class="invisible-link"><i class="fa fa-eye"></i></a> 
                                                     <a href=<?= "card/edit/".$card->get_card_id() ?> class="invisible-link"><i class="fa fa-edit"></i></a> 
-                                                    <a href=<?= "card/delete_confirm/".$card->get_card_id() ?> class="invisible-link"><i class="fa fa-trash"></i></a> 
+                                                    <a id=<?= 'delete_card'.$card->get_card_id() ?> href=<?= "card/delete_confirm/".$card->get_card_id() ?> class="invisible-link"><i class="fa fa-trash"></i></a> 
                                                     <noscript>
                                                     <input type="hidden" name="card_id" value=<?= $card->get_card_id() ?>>
                                                     <?php if($card->get_position() != $card->get_first_position()): ?>
@@ -237,6 +336,18 @@
                     </form> 
                 </div>
             </div>
+        </div>
+        <div id="delete_board_confirm_dialog" title="Confirm Board Deletion" hidden>
+            <p>Please confirm that you want to delete this board.</p>
+            <p>This operation can't be reversed!</p>
+        </div>
+        <div id="delete_column_confirm_dialog" title="Confirm Column Deletion" hidden>
+            <p>Please confirm that you want to delete this column.</p>
+            <p>This operation can't be reversed!</p>
+        </div>
+        <div id="delete_card_confirm_dialog" title="Confirm Card Deletion" hidden>
+            <p>Please confirm that you want to delete this card.</p>
+            <p>This operation can't be reversed!</p>
         </div>
     </body>
 </html>

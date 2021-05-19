@@ -96,6 +96,21 @@ class ControllerBoard extends Controller {
         return false;
     }
 
+    public function delete_service(){
+        $user = $this->get_user_or_redirect();
+        if(isset($_POST["board_id"])){
+            $board = Board::get_board($_POST["board_id"]);
+            if($board)
+                if($board->delete($user)) 
+                    echo "true";
+                else
+                    echo "false";
+            else
+                echo "false";
+        } else
+            echo "false";
+    }
+
     //ajout d'un tableau
     public function add() {
         $user = $this->get_user_or_redirect();
