@@ -189,11 +189,13 @@ class ControllerCard extends Controller {
 
     public function available_card_title_service(){
         $res = "true";
-        if(isset($_POST["card_title"]) && $_POST["card_title"] !== "" && isset($_POST["card_id"]) && $_POST["card_id"] !== ""){
-            $card = Card::get_card($_POST["card_id"]);
-            if($card->validate_unicity_in_board($_POST["card_title"])){
-                $res = "false";
-            }
+        if(isset($_POST["card_title"]) && $_POST["card_title"] !== "" && $_POST["board_id"] && $_POST["board_id"] !== ""){
+            $card = Card::get_card_by_title_board_id($_POST["card_title"], $_POST["board_id"]);
+            if(isset($_POST["card_id"]) && $_POST["card_id"] !== "") {//update of an existing card's title
+                if($card && $_POST["card_id"] !== $card->get_card_id()) 
+                    $res = "false";
+            } else if ($card) //new card's title
+                $res = "false"; 
         }
         echo $res;
     }

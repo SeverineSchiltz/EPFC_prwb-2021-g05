@@ -61,6 +61,54 @@
                         });
                     }
                 }).disableSelection();
+
+                $('#add-card').validate({
+                    rules: {
+                        title: {
+                            minlength: 3,
+                            remote: {
+                                url: 'card/available_card_title_service',
+                                type: 'post',
+                                data:  {
+                                    card_title: function() { 
+                                        return $("#input-card-name").val();
+                                    },
+                                    board_id: <?= $board->get_board_id() ?>
+                                }
+                            }
+                        }
+                    },
+                    messages: {
+                        title: {
+                            minlength: 'minimum 3 characters',
+                            remote: 'this card title already exists'
+                        }
+                    }
+                });
+
+                $('#add-column').validate({
+                    rules: {
+                        title: {
+                            minlength: 3,
+                            remote: {
+                                url: 'column/available_column_title_service',
+                                type: 'post',
+                                data:  {
+                                    column_title: function() { 
+                                        return $("#input-column-name").val();
+                                    },
+                                    board_id: <?= $board->get_board_id() ?>
+                                }
+                            }
+                        }
+                    },
+                    messages: {
+                        title: {
+                            minlength: 'minimum 3 characters',
+                            remote: 'this column title already exists'
+                        }
+                    }
+                });
             });
         </script>
     </head>
@@ -163,11 +211,11 @@
                                 
                                     <?php endforeach; ?>   
                                 </div>  
-                            <form action=<?= "card/add/" ?> class="input-group add-card" method="post">
+                            <form action=<?= "card/add/" ?> class="input-group add-card" method="post" id="add-card">
                                 <?php if(isset($new_card) && $new_card->get_column_id() === $column->get_column_id()): ?>
-                                    <input name="title" type="text" placeholder="Add a card" class="form-control card-name" value="<?= $new_card->get_title()?>">
+                                    <input id="input-card-name" name="title" type="text" placeholder="Add a card" class="form-control card-name" value="<?= $new_card->get_title()?>">
                                 <?php else: ?>
-                                    <input name="title" type="text" placeholder="Add a card" class="form-control">
+                                    <input id="input-card-name" name="title" type="text" placeholder="Add a card" class="form-control">
                                 <?php endif; ?>
                                 <button class="input-group-text" type="submit" name="column_id" value="<?=$column->get_column_id()?>">    
                                     <i class="fa fa-plus"></i>
@@ -179,9 +227,9 @@
                 <div class="column">
                     <form action=<?= "column/index/".$board->get_board_id() ?> id="add-column" class="input-group add-column" method="post">
                         <?php if(isset($add_column_title)): ?>
-                            <input name="title" type="text" placeholder="Add a column" class="form-control" value="<?= $add_column_title?>"> 
+                            <input id="input-column-name" name="title" type="text" placeholder="Add a column" class="form-control" value="<?= $add_column_title?>"> 
                         <?php else: ?>
-                            <input name="title" type="text" placeholder="Add a column" class="form-control"> 
+                            <input id="input-column-name" name="title" type="text" placeholder="Add a column" class="form-control"> 
                         <?php endif; ?>
                         <button class="input-group-text" type="submit" form="add-column">    
                             <i class="fa fa-plus"></i>

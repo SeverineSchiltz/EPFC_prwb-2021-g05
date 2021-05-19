@@ -193,7 +193,11 @@ class Column extends Model {
     }
 
     public static function get_column_by_title_board($title, $board) {
-        $query = self::execute("SELECT * FROM `column` where Title = :title and Board = :board_id", array("title"=>$title, "board_id"=>$board->get_board_id()));
+        return self::get_column_by_title_board_id($title, $board->get_board_id());
+    }
+
+    public static function get_column_by_title_board_id($title, $board_id) {
+        $query = self::execute("SELECT * FROM `column` where Title = :title and Board = :board_id", array("title"=>$title, "board_id"=>$board_id));
         $row = $query->fetch(); // un seul résultat au maximum
         if ($query->rowCount() == 0) {
             return false;

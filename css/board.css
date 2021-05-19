@@ -127,3 +127,14 @@ a {
   min-height: 20px;
   list-style-type: none;
 }
+
+label.error {
+    position: relative;
+    font-weight: bold;
+    top: 55px;
+    right: 260px;
+    white-space : nowrap;
+    color: red;
+    padding-left: 0px;
+    width: 0;
+}

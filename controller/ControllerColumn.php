@@ -184,11 +184,13 @@ class ControllerColumn extends Controller {
 
     public function available_column_title_service(){
         $res = "true";
-        if(isset($_POST["column_title"]) && $_POST["column_title"] !== "" && isset($_POST["column_id"]) && $_POST["column_id"] !== ""){
-            $column = Column::get_column($_POST["column_id"]);
-            if($column->validate_unicity_in_board()){
-                $res = "false";
-            }
+        if(isset($_POST["column_title"]) && $_POST["column_title"] !== "" && $_POST["board_id"] && $_POST["board_id"] !== ""){
+            $column = Column::get_column_by_title_board_id($_POST["column_title"], $_POST["board_id"]);
+            if(isset($_POST["column_id"]) && $_POST["column_id"] !== "") {//update of an existing column's title
+                if($column && $_POST["column_id"] !== $column->get_column_id()) 
+                    $res = "false";
+            } else if ($column) //new column's title
+                $res = "false"; 
         }
         echo $res;
     }

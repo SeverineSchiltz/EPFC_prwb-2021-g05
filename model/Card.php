@@ -92,7 +92,22 @@ class Card extends Model {
     public static function get_card($id) {
         $query = self::execute("select * from card where ID = :id", array("id" => $id));
         $data = $query->fetch(); 
-        $cards = [];
+        if ($query->rowCount() == 0) {
+            return false;
+        } else {
+            return new Card($data['ID'], Column::get_column($data['Column']), $data['Position'], User::get_user_by_id($data['Author']), $data['Title'], $data['Body'], $data['CreatedAt'], $data['ModifiedAt'], $data['DueDate']);
+        }
+    }
+    
+    public static function get_card_by_title_board_id($title, $board_id) {
+        $query = self::execute("SELECT ca.* 
+                                FROM card ca
+                                    JOIN `column` co ON co.ID = ca.Column
+                                    JOIN board bo ON bo.ID = co.Board
+                                WHERE ca.Title = :title
+                                    AND bo.ID = :board_id",
+                                     array("title" => $title, "board_id" => $board_id));
+        $data = $query->fetch(); 
         if ($query->rowCount() == 0) {
             return false;
         } else {
