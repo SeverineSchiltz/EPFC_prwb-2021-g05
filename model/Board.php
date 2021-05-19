@@ -19,7 +19,7 @@ class Board extends Model {
         $this->title = $title;
         $this->created_at = $created_at;
         $this->last_modified = $last_modified;
-        $this->collaborators = self::get_collaborators_in_db($board_id);
+        $this->collaborators = $this->get_collaborators_in_db();
     }
 
     public function get_title(){
@@ -50,11 +50,11 @@ class Board extends Model {
         return $this->collaborators;
     }
 
-    public static function get_collaborators_in_db($board_id){
+    public function get_collaborators_in_db(){
         $query = self::execute("SELECT u.*
                                 FROM collaborate c
                                 INNER JOIN user u ON u.ID = c.Collaborator
-                                WHERE c.Board = :board_id", array("board_id" => $board_id));
+                                WHERE c.Board = :board_id", array("board_id" => $this->get_board_id()));
         $data = $query->fetchAll();
         $collaborators = array();
         foreach ($data as $row) {
@@ -175,8 +175,7 @@ class Board extends Model {
     
     public function delete($initiator) {
         if ($this->author == $initiator || $initiator->is_admin()) {
-            foreach($this->get_columns() as $column)
-                $column->delete();
+            self::remove_all_columns_in_board($this->get_board_id());
             self::remove_all_collaborators_in_db($this->get_board_id());
             self::execute('DELETE FROM board WHERE ID = :id', array('id' => $this->get_board_id()));
             return true;
@@ -292,7 +291,7 @@ class Board extends Model {
     public function validate_board_new_collaborator($new_collaborator_id){
         $errors = [];
         if(!is_numeric($new_collaborator_id)){
-            $errors = "Not a user!";
+            $errors[] = "Not a user!";
         }
         return $errors;
     }
@@ -331,9 +330,22 @@ class Board extends Model {
         ));
     }
 
-    public static function remove_all_collaborators_in_db($board_id){
+    public function remove_all_collaborators_in_db(){
         self::execute('DELETE FROM collaborate WHERE board = :board', array(
-            'board' => $board_id));
+            'board' => $this->get_board_id()));
+    }
+
+    public function remove_all_columns_in_board(){
+        $this->remove_all_cards_in_board();
+        self::execute('DELETE FROM `column` WHERE board = :board', array(
+            'board' => $this->get_board_id()));
+    }
+
+    public function remove_all_cards_in_board(){
+        self::execute('DELETE FROM card WHERE ID IN (
+            SELECT ca.ID FROM Card ca 
+            INNER JOIN `column` co ON ca.Column = co.Id 
+            WHERE co.board = :board)', array('board' => $this->get_board_id()));
     }
 
     public function update_all_columns_position($columns_id){

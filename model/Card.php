@@ -49,6 +49,10 @@ class Card extends Model {
         return $this->due_date;
     } 
 
+    public function get_creation_date() {
+        return $this->created_at;
+    } 
+
     public function get_formatted_due_date() {
         return MyTools::format_date($this->due_date);
     } 
@@ -146,7 +150,7 @@ class Card extends Model {
     public function update_content() {
         $errors = $this->validate();
         if(empty($errors)){
-            self::update();
+            $this->update();
             return true;
         }
         return false;
@@ -313,7 +317,7 @@ class Card extends Model {
             $pos_temp = $this->position;
             $this->position = $card_to_exchange->position;
             $card_to_exchange->position = $pos_temp;
-            self::update();
+            $this->update();
             $card_to_exchange->update();
         }
         return $errors;
@@ -342,7 +346,7 @@ class Card extends Model {
             $new_position = self::get_last_card_position_in_column($column_to_exchange->get_column_id()) +1;
             $this->column = $column_to_exchange;
             $this->position = $new_position;
-            self::update();
+            $this->update();
         }
         return $errors;
     }

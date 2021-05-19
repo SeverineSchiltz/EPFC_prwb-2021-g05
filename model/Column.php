@@ -286,4 +286,9 @@ class Column extends Model {
             ++$pos;
         }
     }
+
+    public function remove_all_cards_in_column(){
+        self::execute('DELETE FROM card WHERE `column` = :column', array(
+            'column' => $this->get_column_id()));
+    }
 }

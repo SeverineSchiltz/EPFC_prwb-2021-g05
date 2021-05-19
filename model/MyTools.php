@@ -1,9 +1,7 @@
 <?php
-
-require_once "framework/Model.php";
 require_once "User.php";
 
-class MyTools extends Model {
+class MyTools {
 
     public static function get_duration_since_date($date) {
         $date = new DateTime($date);

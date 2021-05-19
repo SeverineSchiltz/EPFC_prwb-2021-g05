@@ -156,7 +156,7 @@ class User extends Model {
     }
 
     //le user est soit admin, soit l'auteur, soit collaborateur
-    public function has_permission($board_id){
+    public function has_permission_aac($board_id){
         if($this->role === "admin"){
             return true;
         }
@@ -173,6 +173,11 @@ class User extends Model {
                 return true;
             }
         }
+    }
+
+    //le user est soit admin, soit l'auteur, mais pas collaborateur
+    public function has_permission_aa($author_board_id){
+        return $this->is_admin() || $author_board_id === $this->get_user_id();
     }
 
     public function is_admin(){

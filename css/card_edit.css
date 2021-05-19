@@ -57,3 +57,10 @@
   background-color: #157ffb;
   color: white;
 }
+
+label.error {
+    font-weight: bold;
+    color: red;
+    position: relative;
+    left: 14px;
+}
