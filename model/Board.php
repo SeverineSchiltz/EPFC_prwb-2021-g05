@@ -341,9 +341,11 @@ class Board extends Model {
         foreach($columns_id as $column_id){
             $column = Column::get_column($column_id);
             $column->set_position($pos);
-            $column->set_column($this);
-            $column->update_content();
+            $column->set_board($this);
+            $column->update();
             ++$pos;
         }
     }
+
+
  }

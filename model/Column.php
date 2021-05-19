@@ -49,6 +49,10 @@ class Column extends Model {
     public function set_title($title) {
         $this->title = $title;
     }
+
+    public function set_board($board) {
+        $this->board = $board;
+    } 
     
     public static function get_columns($board) {
         $query = self::execute("select * from `column` where Board = :board_id order by Position ASC", array("board_id" => $board->get_board_id()));

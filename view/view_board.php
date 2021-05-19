@@ -92,86 +92,90 @@
                     </ul>
                 </div>
             <?php endif; ?>
-            <div class="columns">
-                <?php foreach($board->get_columns() as $column): ?>
-                    <div class="column">
-                        <div class="column-title">
-                            <span><?= $column->get_title()?> </span>
-                            <a href=<?= "column/edit/".$column->get_column_id() ?> class="invisible-link"><i class="fa fa-edit"></i></a> 
-                            <a href=<?= "column/delete/".$column->get_column_id() ?> class="invisible-link"><i class="fa fa-trash"></i></a>
-                            <?php if($column->get_position() != $column->get_first_position()): ?>
-                                <form  action="column/move" method="post" id=<?= "move-left".$column->get_column_id() ?>>
-                                    <input type="hidden" name="direction" value="left">
-                                    <input type="hidden" name="board_id" value=<?= $board->get_board_id() ?>>
-                                    <input type="hidden" name="column_id" value=<?= $column->get_column_id() ?>>
-                                    <button type="submit" class="invisible-btn" form=<?= "move-left".$column->get_column_id() ?>>
-                                        <i class="fa fa-arrow-circle-left"></i>
-                                    </button>
-                                </form>
-                            <?php endif; ?>                            
-                            <?php if($column->get_position() != $column->get_last_position()): ?>
-                                <form  action="column/move" method="post" id=<?= "move-right".$column->get_column_id() ?>>
-                                    <input type="hidden" name="direction" value="right">
-                                    <input type="hidden" name="board_id" value=<?= $board->get_board_id() ?>>
-                                    <input type="hidden" name="column_id" value=<?= $column->get_column_id() ?>>
-                                    <button type="submit" class="invisible-btn" form=<?= "move-right".$column->get_column_id() ?>>
-                                        <i class="fa fa-arrow-circle-right"></i>
-                                    </button>
-                                </form>
-                            <?php endif; ?>
-                        </div>  
-                        <div column-id="<?=$column->get_column_id()?>" class="cards">                  
-                            <?php foreach($column->get_cards() as $card): ?>
-                                    <div card-id="<?=$card->get_card_id()?>" class="<?="card".($card->past_due_date() ? " expired" : "")?>">
-                                        <div class="card-title">
-                                        <a href=<?= "card/index/".$card->get_card_id() ?>><?=$card->get_title()?></a>
+            <div class="board">
+                <div class="columns">
+                    <?php foreach($board->get_columns() as $column): ?>
+                        <div column-id="<?=$column->get_column_id()?>" class="column">
+                            <div class="column-title">
+                                <span><?= $column->get_title()?> </span>
+                                <a href=<?= "column/edit/".$column->get_column_id() ?> class="invisible-link"><i class="fa fa-edit"></i></a> 
+                                <a href=<?= "column/delete/".$column->get_column_id() ?> class="invisible-link"><i class="fa fa-trash"></i></a>
+                                <noscript>
+                                    <?php if($column->get_position() != $column->get_first_position()): ?>
+                                        <form  action="column/move" method="post" id=<?= "move-left".$column->get_column_id() ?>>
+                                            <input type="hidden" name="direction" value="left">
+                                            <input type="hidden" name="board_id" value=<?= $board->get_board_id() ?>>
+                                            <input type="hidden" name="column_id" value=<?= $column->get_column_id() ?>>
+                                            <button type="submit" class="invisible-btn" form=<?= "move-left".$column->get_column_id() ?>>
+                                                <i class="fa fa-arrow-circle-left"></i>
+                                            </button>
+                                        </form>
+                                    <?php endif; ?>                            
+                                    <?php if($column->get_position() != $column->get_last_position()): ?>
+                                        <form  action="column/move" method="post" id=<?= "move-right".$column->get_column_id() ?>>
+                                            <input type="hidden" name="direction" value="right">
+                                            <input type="hidden" name="board_id" value=<?= $board->get_board_id() ?>>
+                                            <input type="hidden" name="column_id" value=<?= $column->get_column_id() ?>>
+                                            <button type="submit" class="invisible-btn" form=<?= "move-right".$column->get_column_id() ?>>
+                                                <i class="fa fa-arrow-circle-right"></i>
+                                            </button>
+                                        </form>
+                                    <?php endif; ?>
+                                </noscript>
+                            </div>  
+                            <div column-id="<?=$column->get_column_id()?>" class="cards">                  
+                                <?php foreach($column->get_cards() as $card): ?>
+                                        <div card-id="<?=$card->get_card_id()?>" class="<?="card".($card->past_due_date() ? " expired" : "")?>">
+                                            <div class="card-title">
+                                            <a href=<?= "card/index/".$card->get_card_id() ?>><?=$card->get_title()?></a>
+                                            </div>
+                                            <div class="card-buttons">
+                                                <form  action="card/move/" method="post">
+                                                    <a href=<?= "card/view/".$card->get_card_id() ?> class="invisible-link"><i class="fa fa-eye"></i></a> 
+                                                    <a href=<?= "card/edit/".$card->get_card_id() ?> class="invisible-link"><i class="fa fa-edit"></i></a> 
+                                                    <a href=<?= "card/delete_confirm/".$card->get_card_id() ?> class="invisible-link"><i class="fa fa-trash"></i></a> 
+                                                    <noscript>
+                                                    <input type="hidden" name="card_id" value=<?= $card->get_card_id() ?>>
+                                                    <?php if($card->get_position() != $card->get_first_position()): ?>
+                                                        <button type="submit" class="invisible-btn-card" name="direction" value="up">
+                                                            <i class="fa fa-arrow-circle-up"></i>
+                                                        </button>
+                                                    <?php endif; ?>
+                                                    <?php if($card->get_position() != $card->get_last_position()): ?>
+                                                        <button type="submit" class="invisible-btn-card" name="direction" value="down">
+                                                            <i class="fa fa-arrow-circle-down"></i>
+                                                        </button>
+                                                    <?php endif; ?>
+                                                    <?php if($column->get_position() != $column->get_first_position()): ?>
+                                                        <button type="submit" class="invisible-btn-card" name="direction" value="left">
+                                                            <i class="fa fa-arrow-circle-left"></i>
+                                                        </button>
+                                                    <?php endif; ?>
+                                                    <?php if($column->get_position() != $column->get_last_position()): ?>
+                                                        <button type="submit" class="invisible-btn-card" name="direction" value="right" >
+                                                            <i class="fa fa-arrow-circle-right"></i>
+                                                        </button>
+                                                    <?php endif; ?>
+                                                    </noscript>
+                                                </form>
+                                            </div>
                                         </div>
-                                        <div class="card-buttons">
-                                            <form  action="card/move/" method="post">
-                                                <a href=<?= "card/view/".$card->get_card_id() ?> class="invisible-link"><i class="fa fa-eye"></i></a> 
-                                                <a href=<?= "card/edit/".$card->get_card_id() ?> class="invisible-link"><i class="fa fa-edit"></i></a> 
-                                                <a href=<?= "card/delete_confirm/".$card->get_card_id() ?> class="invisible-link"><i class="fa fa-trash"></i></a> 
-                                                <noscript>
-                                                <input type="hidden" name="card_id" value=<?= $card->get_card_id() ?>>
-                                                <?php if($card->get_position() != $card->get_first_position()): ?>
-                                                    <button type="submit" class="invisible-btn-card" name="direction" value="up">
-                                                        <i class="fa fa-arrow-circle-up"></i>
-                                                    </button>
-                                                <?php endif; ?>
-                                                <?php if($card->get_position() != $card->get_last_position()): ?>
-                                                    <button type="submit" class="invisible-btn-card" name="direction" value="down">
-                                                        <i class="fa fa-arrow-circle-down"></i>
-                                                    </button>
-                                                <?php endif; ?>
-                                                <?php if($column->get_position() != $column->get_first_position()): ?>
-                                                    <button type="submit" class="invisible-btn-card" name="direction" value="left">
-                                                        <i class="fa fa-arrow-circle-left"></i>
-                                                    </button>
-                                                <?php endif; ?>
-                                                <?php if($column->get_position() != $column->get_last_position()): ?>
-                                                    <button type="submit" class="invisible-btn-card" name="direction" value="right" >
-                                                        <i class="fa fa-arrow-circle-right"></i>
-                                                    </button>
-                                                <?php endif; ?>
-                                                </noscript>
-                                            </form>
-                                        </div>
-                                    </div>
-                               
-                            <?php endforeach; ?>   
-                        </div>  
-                        <form action=<?= "card/add/" ?> class="input-group add-card" method="post">
-                            <?php if(isset($new_card) && $new_card->get_column_id() === $column->get_column_id()): ?>
-                                <input name="title" type="text" placeholder="Add a card" class="form-control card-name" value="<?= $new_card->get_title()?>">
-                            <?php else: ?>
-                                <input name="title" type="text" placeholder="Add a card" class="form-control">
-                            <?php endif; ?>
-                            <button class="input-group-text" type="submit" name="column_id" value="<?=$column->get_column_id()?>">    
-                                <i class="fa fa-plus"></i>
-                            </button>
-                        </form>  
-                    </div>
-                <?php endforeach; ?> 
+                                
+                                    <?php endforeach; ?>   
+                                </div>  
+                            <form action=<?= "card/add/" ?> class="input-group add-card" method="post">
+                                <?php if(isset($new_card) && $new_card->get_column_id() === $column->get_column_id()): ?>
+                                    <input name="title" type="text" placeholder="Add a card" class="form-control card-name" value="<?= $new_card->get_title()?>">
+                                <?php else: ?>
+                                    <input name="title" type="text" placeholder="Add a card" class="form-control">
+                                <?php endif; ?>
+                                <button class="input-group-text" type="submit" name="column_id" value="<?=$column->get_column_id()?>">    
+                                    <i class="fa fa-plus"></i>
+                                </button>
+                            </form>  
+                        </div>
+                    <?php endforeach; ?> 
+                </div>
                 <div class="column">
                     <form action=<?= "column/index/".$board->get_board_id() ?> id="add-column" class="input-group add-column" method="post">
                         <?php if(isset($add_column_title)): ?>

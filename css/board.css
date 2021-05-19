@@ -8,9 +8,14 @@ a {
   text-decoration: none;
 }
 
-.columns {
+.board {
   display: flex;
   margin: 1em 1em 0 0;
+  align-items: flex-start;
+}
+
+.columns {
+  display: flex;
   align-items: flex-start;
 }
 
