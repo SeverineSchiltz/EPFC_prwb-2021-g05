@@ -34,3 +34,10 @@ a {
 .errors p{
   margin : 0px;
 }
+
+label.error {
+  font-weight: bold;
+  color: red;
+  position: relative;
+  left: 14px;
+}

@@ -10,6 +10,36 @@
         <link href="css/style.css" rel="stylesheet" type="text/css"/>
         <link href="css/menu.css" rel="stylesheet" type="text/css"/>
         <link href="css/edit.css" rel="stylesheet" type="text/css"/>
+        <script src="lib/jquery-3.6.0.min.js" type="text/javascript"></script>
+        <script src="lib/jquery-validation-1.19.3/jquery.validate.min.js" type="text/javascript"></script>
+        <script src="lib/MyLib.js" type="text/javascript"></script>
+        <script>
+            $(function(){
+                $('#column-edit').validate({
+                    rules: {
+                        column_title: {
+                            minlength: 3,
+                            remote: {
+                                url: 'column/available_column_title_service',
+                                type: 'post',
+                                data:  {
+                                    column_id: <?= $column->get_column_id() ?>,
+                                    column_title: function() { return $("#column-title").val();},
+                                    board_id: <?= $column->get_board_id() ?>
+                                }
+                            }
+                        }
+                    },
+                    messages: {
+                        column_title: {
+                            minlength: 'minimum 3 characters',
+                            remote: 'this column title already exists in your board'
+                        }
+                    }
+                });
+            });
+
+        </script>
     </head>
     <body>
         <?php
