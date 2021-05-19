@@ -52,3 +52,14 @@
 .errors p{
   margin : 0px;
 }
+
+label.error {
+  position: relative;
+  font-weight: bold;
+  left: 30px;
+  white-space : nowrap;
+  color: red;
+  padding-left: 0px;
+  width: 0;
+  top: 10px;
+}

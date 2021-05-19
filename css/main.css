@@ -84,14 +84,15 @@ a {
 .errors{
     color: red;
     font-weight: bold;
-  }
+}
 
-  .errors p{
-    margin : 0px;
-  }
+.errors p{
+margin : 0px;
+}
 
-  label.error {
+label.error {
     position: relative;
+    font-weight: bold;
     left: 50px;
     white-space : nowrap;
     color: red;

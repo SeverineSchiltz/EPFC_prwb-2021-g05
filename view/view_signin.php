@@ -10,6 +10,38 @@
         <link href="css/style.css" rel="stylesheet" type="text/css"/>
         <link href="css/menu.css" rel="stylesheet" type="text/css"/>
         <link href="css/signin.css" rel="stylesheet" type="text/css"/>
+        <script src="lib/jquery-3.6.0.min.js" type="text/javascript"></script>
+        <script src="lib/jquery-validation-1.19.3/jquery.validate.min.js" type="text/javascript"></script>
+        <script src="lib/MyLib.js" type="text/javascript"></script>
+        <script>
+            $(function(){
+                $('#signinForm').validate({
+                    rules: {
+                        mail: {
+                            required: true,
+                            regex: /^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,})$/i,
+                        },
+                        password: {
+                            required: true,
+                            minlength: 8,
+                            regex: [/[A-Z]/, /\d/, /['";:,.\/?\\-]/],
+                        }
+                    },
+                    messages: {
+                        mail: {
+                            required: 'required',
+                            regex: 'bad format for email',
+                        },
+                        password: {
+                            required: 'required',
+                            minlength: 'minimum 8 characters',
+                            regex: 'bad password format',
+                        }
+                    }
+                });
+                $("input:text:first").focus();
+            });
+        </script>
     </head>
     <body>
         <?php
@@ -23,7 +55,7 @@
                 <div class="col-sm-6 form">
                     <h2>Sign in</h2>
                     <hr>
-                    <form action="user/login" method="post">
+                    <form action="user/login" method="post" id="signinForm">
                         <div class="form-group">
                             <div class="input-group mail">
                                 <div class="input-group-prepend">

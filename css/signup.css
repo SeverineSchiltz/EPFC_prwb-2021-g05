@@ -55,7 +55,8 @@
 
   label.error {
     position: relative;
-    left: 50px;
+    font-weight: bold;
+    left: 30px;
     white-space : nowrap;
     color: red;
     padding-left: 0px;
