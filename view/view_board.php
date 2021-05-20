@@ -64,28 +64,31 @@
                     }
                 }).disableSelection();
 
-                $('#add-card').validate({
-                    rules: {
-                        title: {
-                            minlength: 3,
-                            remote: {
-                                url: 'card/available_card_title_service',
-                                type: 'post',
-                                data:  {
-                                    card_title: function() { 
-                                        return $("#input-card-name").val();
-                                    },
-                                    board_id: <?= $board->get_board_id() ?>
+                $('.add-card').each(function() {
+                    let form = $(this);
+                    form.validate({
+                        rules: {
+                            title: {
+                                minlength: 3,
+                                remote: {
+                                    url: 'card/available_card_title_service',
+                                    type: 'post',
+                                    data:  {
+                                        card_title: function() { 
+                                            return form.children("[name=title]")[0].value;
+                                        },
+                                        board_id: <?= $board->get_board_id() ?>
+                                    }
                                 }
                             }
+                        },
+                        messages: {
+                            title: {
+                                minlength: 'minimum 3 characters',
+                                remote: 'this card title already exists'
+                            }
                         }
-                    },
-                    messages: {
-                        title: {
-                            minlength: 'minimum 3 characters',
-                            remote: 'this card title already exists'
-                        }
-                    }
+                    });
                 });
 
                 $('#add-column').validate({
