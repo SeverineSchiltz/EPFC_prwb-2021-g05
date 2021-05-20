@@ -12,6 +12,10 @@
     <link href="css/style.css" rel="stylesheet" type="text/css"/>
     <link href="css/menu.css" rel="stylesheet" type="text/css"/>
     <script src="lib/jquery-3.6.0.min.js" type="text/javascript"></script>
+    <script src="lib/jquery-ui-1.12.1.ui-lightness/jquery-ui.min.js" type="text/javascript"></script>
+    <link href="lib/jquery-ui-1.12.1.ui-lightness/jquery-ui.min.css" rel="stylesheet" type="text/css"/>
+    <link href="lib/jquery-ui-1.12.1.ui-lightness/jquery-ui.theme.min.css" rel="stylesheet" type="text/css"/>
+    <link href="lib/jquery-ui-1.12.1.ui-lightness/jquery-ui.structure.min.css" rel="stylesheet" type="text/css"/>
     <script src="lib/jquery-validation-1.19.3/jquery.validate.min.js" type="text/javascript"></script>
     <script src="https://unpkg.com/popper.js/dist/umd/popper.min.js" type="text/javascript"></script>
     <script src="https://unpkg.com/tooltip.js/dist/umd/tooltip.min.js" type="text/javascript"></script>
@@ -40,6 +44,22 @@
             });
           },
 
+          eventClick: function(event) {
+            changeModalInfo(event.event._def);
+            $('#details_modal').dialog({
+                    resizable: false,
+                    height: 300,
+                    width: 600,
+                    modal: true,
+                    autoOpen: true,
+                    buttons: {
+                        Close: function () {
+                            $(this).dialog("close");
+                        }
+                    }
+                });
+          },
+
           headerToolbar: {
             left: 'prev,next today',
             center: 'title',
@@ -51,6 +71,18 @@
 
         displayCheckboxBoard();
       });
+
+      function changeModalInfo(event) {
+        // console.log('event:', event);
+        let modal = document.getElementById('details_modal');
+
+        let title = event.title;
+        let description = event.extendedProps.description;
+
+        modal.innerHTML = "<h2>" + title + "</h2>"
+                        + "</br>"
+                        + "<p>" + description + "</p>";
+      }
 
       function toggleCards(idBoard) {
         let checkBoard = document.getElementById(idBoard);
@@ -130,6 +162,11 @@
       <noscript>
         Your browser does not support JavaScript!
       </noscript>
+    </div>
+    <div id="details_modal" hidden>
+        <h2>Title</h2>
+        </br>
+        <p>Description</p>
     </div>
   </body>
 </html>

@@ -142,3 +142,8 @@ label.error {
 .ui-dialog-content{
   display: block !important;
 }
+
+.ui-widget-header {
+  background: #157ffb !important;
+  border: #1473e0 !important;
+}
