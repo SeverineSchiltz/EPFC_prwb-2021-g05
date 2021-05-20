@@ -30,6 +30,7 @@
                                 cards_id: $(this).sortable('toArray', { attribute: 'card-id' })
                             }
                         };
+                        clearErrors();
                     },
                     stop:function(){
                         $.post("card/change_cards_in_column_service/",
@@ -52,6 +53,7 @@
                                 columns_id: $(this).sortable('toArray', { attribute: 'column-id' })
                             }
                         };
+                        clearErrors();
                     },
                     stop:function(){
                         $.post("column/change_columns_in_board_service/",
@@ -141,8 +143,11 @@
             function deleteBoard(id){
                 $.post("board/delete_service/",
                     {"board_id": id},
-                    function (data) {
-                        window.location.replace("board/index");
+                    function (success) {
+                        if(success == "true")
+                            window.location.replace("board/index");
+                        else
+                            addError('You do not have the permission to delete this board');
                     }
                 ).fail(function(){
                     alert("<p>Error encountered while retrieving the messages!</p>");
@@ -209,6 +214,21 @@
                 });
             }
 
+            function addError(error) {
+                let errors = document.getElementById('errors');
+                let errorsList = document.getElementById('errors-ul');
+
+                errors.hidden = false;
+                errorsList.innerHTML+="<li>" + error + "</li>";
+            }
+
+            function clearErrors() {
+                let errors = document.getElementById('errors');
+                let errorsList = document.getElementById('errors-ul');
+
+                errors.hidden = true;
+                errorsList.innerHTML = "";
+            }
         </script>
     </head>
     <body>
@@ -228,6 +248,11 @@
                     <a id="delete_board" href=<?= "board/delete/".$board->get_board_id() ?> class="invisible-link"><i class="fa fa-trash"></i></a>
                 </h2>
                 Created <?= $board->get_duration_since_creation() ?> ago by <a href="board/index"><?= $board->get_author_name() ?></a>. <?= $board->get_last_modification()?"Modified ".$board->get_duration_since_last_edit()." ago.":"Never modified." ?>
+            </div>
+            <div id='errors' class='errors' hidden>
+                <p>The following error(s) occured :</p>
+                <ul id='errors-ul'>
+                </ul>
             </div>
             <?php if (count($errors) != 0): ?>
                 <div class='errors'>
