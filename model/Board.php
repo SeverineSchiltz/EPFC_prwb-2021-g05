@@ -342,8 +342,25 @@ class Board extends Model {
     }
 
     public function remove_all_cards_in_board(){
+        $this->remove_all_participants_in_cards_in_board();
+        $this->remove_all_comments_in_cards_in_board();
         self::execute('DELETE FROM card WHERE ID IN (
-            SELECT ca.ID FROM Card ca 
+            SELECT ca.ID FROM card ca 
+            INNER JOIN `column` co ON ca.Column = co.Id 
+            WHERE co.board = :board)', array('board' => $this->get_board_id()));
+    }
+
+    public function remove_all_participants_in_cards_in_board(){
+        self::execute('DELETE FROM participate WHERE Card IN (
+    		SELECT ca.ID FROM card ca 
+            INNER JOIN `column` co ON ca.Column = co.Id 
+            WHERE co.board = :board)', array('board' => $this->get_board_id()));
+    }
+
+    public function remove_all_comments_in_cards_in_board(){
+        self::execute('DELETE FROM comment WHERE ID IN (
+    		SELECT com.ID FROM comment com
+            INNER JOIN card ca ON ca.ID = com.Card
             INNER JOIN `column` co ON ca.Column = co.Id 
             WHERE co.board = :board)', array('board' => $this->get_board_id()));
     }
