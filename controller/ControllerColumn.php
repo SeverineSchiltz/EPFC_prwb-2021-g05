@@ -201,8 +201,12 @@ class ControllerColumn extends Controller {
             $board_info = $_POST["board_info"];
             $board_to_update = Board::get_board($board_info["id"]);
             $columns_id = $board_info["columns_id"];
-            $board_to_update->update_all_columns_position($columns_id);
-            echo "true";
+            if($board_to_update && $user->has_permission_aac($board_to_update->get_board_id())){
+                $board_to_update->update_all_columns_position($columns_id);
+                echo "true";
+            }else{
+                echo "false";
+            }
         }else{
             echo "false";
         }

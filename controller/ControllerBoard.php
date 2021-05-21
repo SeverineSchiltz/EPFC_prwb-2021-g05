@@ -100,7 +100,7 @@ class ControllerBoard extends Controller {
         $user = $this->get_user_or_redirect();
         if(isset($_POST["board_id"])){
             $board = Board::get_board($_POST["board_id"]);
-            if($board)
+            if($board && $user->has_permission_aac($board->get_board_id()))
                 if($board->delete($user)) 
                     echo "true";
                 else

@@ -52,6 +52,11 @@ a {
   overflow-wrap: anywhere;
 }
 
+.column-title noscript{
+  display: flex;
+  flex-direction: row;
+}
+
 .card {
   margin: 0.25em 0;
   padding: 0.5em;
