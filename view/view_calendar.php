@@ -26,12 +26,16 @@
       let events = new Array();
       let calendar;
       let boardCheck;
+      let boards_js;
+
       $(function(){
         boardCheck = $('#boardCheck');
 
-        boards.forEach(b => {events = events.concat(b.events)});
+        displayCheckboxBoard();
+        updateBoards();
 
         let calendarEl = document.getElementById('calendar');
+
         calendar = new FullCalendar.Calendar(calendarEl, {
           initialView: 'dayGridMonth',
 
@@ -65,11 +69,23 @@
             center: 'title',
             right: 'dayGridMonth,timeGridWeek,listWeek'
           },
-          events
+
+          eventSources: [
+            {
+              url: 'calendar/get_events_service',
+              method: 'POST', 
+              extraParams: {
+                boards: JSON.stringify(boards_js)
+              },
+              failure: function() {
+                alert('there was an error while fetching events!');
+              }
+            }
+          ]
+
+
         });
         calendar.render();
-
-        displayCheckboxBoard();
       });
 
       function changeModalInfo(event) {
@@ -84,39 +100,28 @@
                         + "<p>" + description + "</p>";
       }
 
-      function toggleCards(idBoard) {
-        let checkBoard = document.getElementById(idBoard);
-        if(checkBoard.checked) {
-          console.log('You showed ' + idBoard);
-          showCards(idBoard);           
-        }
-        else {
-          console.log('You hid ' + idBoard);
-          hideCards(idBoard);
-        }
+      function refreshCalendar(){
+        updateBoards();
+        calendar.refetchEvents();
       }
 
-      function getBoard(idBoard) {
-        for(let board of boards) {
-          if(board.id == idBoard)
-            return board;
-        }
-        return null;
+      function updateBoards() {
+        console.log('update boards');
+        boards_js = getCheckedBoards();
+        console.log(boards_js);
       }
 
-      function showCards(idBoard) {
-        let board = getBoard(idBoard);
-        for(let event of board.events) {
-          calendar.addEvent(event);
-        }
-      }
-
-      function hideCards(idBoard) {
-        let board = getBoard(idBoard);
-        for(let event of board.events) { 
-          let eventCalendar = calendar.getEventById(event.id);
-          eventCalendar.remove();
-        }
+      function getCheckedBoards() {
+        let boards_html = document.getElementsByClassName('board');
+        let checkedBoards = [];
+        for(let board_html of boards_html)
+          if(board_html.checked)
+            checkedBoards.push(
+              {
+                id: board_html.getAttribute('board_id'), 
+                color: board_html.getAttribute('color')
+              });
+        return checkedBoards;
       }
 
       function displayCheckboxBoard(){
@@ -125,13 +130,13 @@
         let htmlNotSharedBoard = "";
           for (let b of boards) {
               if(b.type === "my_boards"){
-                htmlMyBoard += "<input type='checkbox' id='" + b.id + "' onclick='toggleCards(" + b.id + ")' checked>";
+                htmlMyBoard += "<input class='board' color='" + b.color + "' type='checkbox' board_id='" + b.id + "' onclick='refreshCalendar()' checked>";
                 htmlMyBoard += "<label style='color: " + b.color + ";'>&ensp;" + b.title + "&ensp;&ensp;</label> ";
               }else if(b.type === "other_boards"){
-                htmlOtherBoard += "<input type='checkbox' id='" + b.id + "' onclick='toggleCards(" + b.id + ")' checked>";
+                htmlOtherBoard += "<input class='board' color='" + b.color + "' type='checkbox' board_id='" + b.id + "' onclick='refreshCalendar()' checked>";
                 htmlOtherBoard += "<label style='color: " + b.color + ";'>&ensp;" + b.title + "&ensp;&ensp;</label> ";
               }else if(b.type === "not_shared_boards"){
-                htmlNotSharedBoard += "<input type='checkbox' id='" + b.id + "' onclick='toggleCards(" + b.id + ")' checked>";
+                htmlNotSharedBoard += "<input class='board' color='" + b.color + "' type='checkbox' board_id='" + b.id + "' onclick='refreshCalendar()' checked>";
                 htmlNotSharedBoard += "<label style='color: " + b.color + ";'>&ensp;" + b.title + "&ensp;&ensp;</label> ";
               }
           }

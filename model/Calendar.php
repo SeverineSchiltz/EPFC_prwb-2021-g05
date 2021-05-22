@@ -17,55 +17,54 @@
             return $this->boardColors[array_rand($this->boardColors)];
         }
 
-        public function get_boards_with_events(){
+        public function get_boards(){
             $boards = [];
             foreach (Board::get_my_boards($this->user) as $myBoard)
             {
-                $boards[] = $this->get_board_with_event($myBoard, "my_boards");
+                $boards[] = $this->get_board_js($myBoard, "my_boards");
             }
             foreach (Board::get_other_shared_boards($this->user) as $otherBoard)
             {
-                $boards[] = $this->get_board_with_event($otherBoard, "other_boards");
+                $boards[] = $this->get_board_js($otherBoard, "other_boards");
             }
             if($this->user->is_admin()){
                 foreach (Board::get_other_not_shared_boards($this->user) as $not_shared_Board)
                 {
-                    $boards[] = $this->get_board_with_event($not_shared_Board, "not_shared_boards");
+                    $boards[] = $this->get_board_js($not_shared_Board, "not_shared_boards");
                 }
             }
             return json_encode($boards);
         }
 
-        private function get_board_with_event($board, $type){
+        private function get_board_js($board, $type){
             $board_js =  array(
                 "id" => $board->get_board_id(),
                 "color" => $this->get_random_color(),
                 "title" => $board->get_title(),
                 "type" => $type
             );
-            $board_js['events'] = $this->get_events($board_js);
             return $board_js;
         }
 
-        public function get_events($board_js) {
+        public function get_events($boards_js) {
             $events = [];
+            foreach($boards_js as $bjs) {
+                $board = Board::get_board($bjs->id);
+                $cards = $board->get_cards();
+                foreach($cards as $card) 
+                    if($card->get_due_date() != null)
+                        $events[] = array(
+                            "id" => $card->get_card_id(),
+                            "title" => $card->get_title(),
+                            "start" => $card->get_due_date(),
+                            "backgroundColor" => $bjs->color,
+                            "className" => $card->past_due_date() ? "redBorder" : "blackBorder",
+                            "textColor" => "white",
+                            "description" => $card->get_body()
+                        );
+            }
 
-            $board = Board::get_board($board_js['id']);
-            $cards = $board->get_cards();
-            foreach($cards as $card) 
-                if($card->get_due_date() != null)
-                    $events[] = array(
-                        "id" => $card->get_card_id(),
-                        "title" => $card->get_title(),
-                        "start" => $card->get_due_date(),
-                        "backgroundColor" => $board_js['color'],
-                        "className" => $card->past_due_date() ? "redBorder" : "blackBorder",
-                        "textColor" => "white",
-                        "board" => $board_js['id'],
-                        "description" => $card->get_body()
-                    );
-
-            return $events;
+            return json_encode($events);
         }
     }
 
