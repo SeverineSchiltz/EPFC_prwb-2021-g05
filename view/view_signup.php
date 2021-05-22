@@ -19,7 +19,7 @@
                     rules: {
                         mail: {
                             remote: {
-                                url: 'user/email_available_service',
+                                url: 'user/email_not_available_service',
                                 type: 'post',
                                 data:  {
                                     email: function() { 

@@ -18,6 +18,15 @@
                 $('#signinForm').validate({
                     rules: {
                         mail: {
+                            remote: {
+                                url: 'user/email_available_service',
+                                type: 'post',
+                                data:  {
+                                    email: function() { 
+                                        return $("#mail").val();
+                                    }
+                                }
+                            },
                             required: true,
                             regex: /^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,})$/i,
                         },
@@ -29,6 +38,7 @@
                     },
                     messages: {
                         mail: {
+                            remote: "this email doesn't exist",
                             required: 'required',
                             regex: 'bad format for email',
                         },

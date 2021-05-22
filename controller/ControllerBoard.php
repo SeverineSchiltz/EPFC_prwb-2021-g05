@@ -242,6 +242,7 @@ class ControllerBoard extends Controller {
     }
 
     public function available_board_title_service(){
+        $user = $this->get_user_or_redirect();
         $res = "true";
         if(isset($_POST["board_title"]) && $_POST["board_title"] !== ""){
             $registered_board_id = 0;

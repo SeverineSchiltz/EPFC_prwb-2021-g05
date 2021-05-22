@@ -55,12 +55,23 @@ class ControllerUser extends Controller {
                                          "password_confirm" => $password_confirm, "errors" => $errors));
     }
 
-    public function email_available_service(){
+    public function email_not_available_service(){
         $res = "true";
         if(isset($_POST["email"]) && $_POST["email"] !== ""){
             $user = User::get_user_by_mail($_POST["email"]);
             if($user){
                 $res = "false";
+            }
+        }
+        echo $res;
+    }
+
+    public function email_available_service(){
+        $res = "false";
+        if(isset($_POST["email"]) && $_POST["email"] !== ""){
+            $user = User::get_user_by_mail($_POST["email"]);
+            if($user){
+                $res = "true";
             }
         }
         echo $res;

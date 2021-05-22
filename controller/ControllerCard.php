@@ -216,6 +216,7 @@ class ControllerCard extends Controller {
     }
 
     public function available_card_title_service(){
+        $user = $this->get_user_or_redirect();
         $res = "true";
         if(isset($_POST["card_title"]) && $_POST["card_title"] !== "" && isset($_POST["board_id"]) && $_POST["board_id"] !== ""){
             if(isset($_POST["board_id"]) && $_POST["board_id"] !== "")

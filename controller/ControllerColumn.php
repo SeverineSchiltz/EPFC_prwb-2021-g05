@@ -213,6 +213,7 @@ class ControllerColumn extends Controller {
     }
 
     public function available_column_title_service(){
+        $user = $this->get_user_or_redirect();
         $res = "true";
         if(isset($_POST["column_title"]) && $_POST["column_title"] !== "" && isset($_POST["board_id"]) && $_POST["board_id"] !== ""){
             if(isset($_POST["board_id"]) && $_POST["board_id"] !== "")
