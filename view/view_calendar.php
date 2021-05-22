@@ -74,8 +74,10 @@
             {
               url: 'calendar/get_events_service',
               method: 'POST', 
-              extraParams: {
-                boards: JSON.stringify(boards_js)
+              extraParams: function(){
+                return {
+                  boards: JSON.stringify(boards_js)
+                }
               },
               failure: function() {
                 alert('there was an error while fetching events!');
