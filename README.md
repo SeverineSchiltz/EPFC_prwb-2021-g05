@@ -17,7 +17,7 @@ Bugs:
 Pas de remarques particulières. Après nos tests, tout semble en ordre.
 
 ## Notes de livraison itération 3
-
+Les messages de confirmation de suppression des boards et columns en js apparaissent même si le board ou la colonne est vide. Pour le reste, nos tests n'ont pas détecté de bug.
 
 ## Installation
 
