@@ -25,9 +25,9 @@
                     update: function(event, ui) {  
                         cardsUpdate = {
                             column_info: {
-                                id: $(this).attr('column-id'),
-                                moved_card_id: $(ui.item).attr('card-id'),
-                                cards_id: $(this).sortable('toArray', { attribute: 'card-id' })
+                                id: $(this).attr('data-column-id'),
+                                moved_card_id: $(ui.item).attr('data-card-id'),
+                                cards_id: $(this).sortable('toArray', { attribute: 'data-card-id' })
                             }
                         };
                         clearErrors();
@@ -49,8 +49,8 @@
                         columnsUpdate = {
                             board_info: {
                                 id: <?= $board->get_board_id() ?>,
-                                moved_column_id: $(ui.item).attr('column-id'),
-                                columns_id: $(this).sortable('toArray', { attribute: 'column-id' })
+                                moved_column_id: $(ui.item).attr('data-column-id'),
+                                columns_id: $(this).sortable('toArray', { attribute: 'data-column-id' })
                             }
                         };
                         clearErrors();
@@ -270,7 +270,7 @@
             <div class="board">
                 <div class="columns">
                     <?php foreach($board->get_columns() as $column): ?>
-                        <div column-id="<?=$column->get_column_id()?>" class="column">
+                        <div data-column-id="<?=$column->get_column_id()?>" class="column">
                             <div class="column-title">
                                 <span><?= $column->get_title()?> </span>
                                 <a href=<?= "column/edit/".$column->get_column_id() ?> class="invisible-link"><i class="fa fa-edit"></i></a> 
@@ -298,9 +298,9 @@
                                     <?php endif; ?>
                                 </noscript>
                             </div>  
-                            <div column-id="<?=$column->get_column_id()?>" class="cards">                  
+                            <div data-column-id="<?=$column->get_column_id()?>" class="cards">                  
                                 <?php foreach($column->get_cards() as $card): ?>
-                                        <div card-id="<?=$card->get_card_id()?>" class="<?="card".($card->past_due_date() ? " expired" : "")?>">
+                                        <div data-card-id="<?=$card->get_card_id()?>" class="<?="card".($card->past_due_date() ? " expired" : "")?>">
                                             <div class="card-title">
                                             <a href=<?= "card/index/".$card->get_card_id() ?>><?=$card->get_title()?></a>
                                             </div>
@@ -338,11 +338,11 @@
                                 
                                     <?php endforeach; ?>   
                                 </div>  
-                            <form action=<?= "card/add/" ?> class="input-group add-card" method="post" id="add-card">
+                            <form action=<?= "card/add/" ?> class="input-group add-card" method="post">
                                 <?php if(isset($new_card) && $new_card->get_column_id() === $column->get_column_id()): ?>
-                                    <input id="input-card-name" name="title" type="text" placeholder="Add a card" class="form-control card-name" value="<?= $new_card->get_title()?>">
+                                    <input name="title" type="text" placeholder="Add a card" class="form-control card-name" value="<?= $new_card->get_title()?>">
                                 <?php else: ?>
-                                    <input id="input-card-name" name="title" type="text" placeholder="Add a card" class="form-control">
+                                    <input name="title" type="text" placeholder="Add a card" class="form-control">
                                 <?php endif; ?>
                                 <button class="input-group-text" type="submit" name="column_id" value="<?=$column->get_column_id()?>">    
                                     <i class="fa fa-plus"></i>

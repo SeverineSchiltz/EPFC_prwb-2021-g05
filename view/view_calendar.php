@@ -172,7 +172,7 @@
     </div>
     <div id="details_modal" hidden>
         <h2>Title</h2>
-        </br>
+        <p></p>
         <p>Description</p>
     </div>
   </body>
