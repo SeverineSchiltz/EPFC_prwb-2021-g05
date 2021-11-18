@@ -3,6 +3,7 @@
 ## Description du projet
 - Il s'agit d'une application web qui imite le site Trello (outil de gestion de projet en ligne).
 - L'application a été codée en php, JavaScript, html, css en respectant le modèle MVC.
+- L'application a été codée sous visual studio code
 
 ## Notes de livraison itération 1
 
