@@ -52,6 +52,8 @@ abstract class Controller
                 }
             }
         }
+
+//	$header = "Location: $web_root/?controller= $controller & action= $action & param1= $param1 & param2= $param2 & param3= $param3";
         header($header, true, $statusCode);
         die();
     }

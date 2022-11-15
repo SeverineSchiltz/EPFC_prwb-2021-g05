@@ -39,16 +39,16 @@ class User extends Model {
 
     public function update() {
         if(self::get_user_by_mail($this->mail))
-            self::execute("UPDATE User SET password=:password WHERE mail=:mail ", 
+            self::execute("UPDATE user SET password=:password WHERE mail=:mail ", 
                           array("mail"=>$this->mail, "password"=>$this->hashed_password));
         else
-            self::execute("INSERT INTO User(Mail, FullName, Password) VALUES(:mail,:full_name,:password)", 
+            self::execute("INSERT INTO user(Mail, FullName, Password) VALUES(:mail,:full_name,:password)", 
                           array("mail"=>$this->mail, "full_name"=>$this->full_name, "password"=>$this->hashed_password));
         return $this;
     }
 
     public static function get_user_by_mail($mail) {
-        $query = self::execute("SELECT * FROM User where mail = :mail", array("mail"=>$mail));
+        $query = self::execute("SELECT * FROM user where mail = :mail", array("mail"=>$mail));
         $data = $query->fetch(); // un seul résultat au maximum
         if ($query->rowCount() == 0) {
             return false;
@@ -58,7 +58,7 @@ class User extends Model {
     }
 
     public static function get_user_by_id($id) {
-        $query = self::execute("SELECT * FROM User where ID = :id", array("id"=>$id));
+        $query = self::execute("SELECT * FROM user where ID = :id", array("id"=>$id));
         $data = $query->fetch(); // un seul résultat au maximum
         if ($query->rowCount() == 0) {
             return false;
@@ -68,7 +68,7 @@ class User extends Model {
     }
 
     public static function get_users() {
-        $query = self::execute("SELECT * FROM User", array());
+        $query = self::execute("SELECT * FROM user", array());
         $data = $query->fetchAll();
         $results = [];
         foreach ($data as $row) {
